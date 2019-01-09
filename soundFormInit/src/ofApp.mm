@@ -49,15 +49,16 @@ void ofApp::setup(){
     pd.addReceiver(*this);
     
     pd.start();
-//    pd.openPatch(brush.getPatch());
     
-//    test.setStrokeWidth(10);
-//    test.setFilled(false);
-//    test.setStrokeColor(ofColor::yellow);
-//    test.moveTo(ofGetWidth()/2, ofGetHeight()/2);
-//    test.curveTo(0, 0);
-//    test.curveTo(0, ofGetHeight());
-//    test.close();
+    //    pd.openPatch(brush.getPatch());
+    
+    //    test.setStrokeWidth(10);
+    //    test.setFilled(false);
+    //    test.setStrokeColor(ofColor::yellow);
+    //    test.moveTo(ofGetWidth()/2, ofGetHeight()/2);
+    //    test.curveTo(0, 0);
+    //    test.curveTo(0, ofGetHeight());
+    //    test.close();
     
     
 }
@@ -69,6 +70,7 @@ void ofApp::update(){
         pd.receiveMessages();
         //pd.receiveMidi();
     }
+    
 }
 
 //--------------------------------------------------------------
@@ -99,6 +101,8 @@ void ofApp::exit(){
 void ofApp::touchDown(ofTouchEventArgs & touch){
     
     ofRectangle s = gui.getShape();
+    if(touch.id == 0) firstTouch = glm::vec2(touch.x, touch.y);
+    if(touch.id == 1) secondTouch = glm::vec2(touch.x, touch.y);
     
     (s.inside(touch.x, touch.y)) ? bGuiMode = true : bGuiMode = false;
     
@@ -120,11 +124,11 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             
             //This one is for sinewithamp, needs three floats.
             /*
-            pd.startMessage();
-            pd.addFloat(f);
-            pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 500, 0, 1, true));
-            pd.addFloat(22.1f);
-            pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
+             pd.startMessage();
+             pd.addFloat(f);
+             pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 500, 0, 1, true));
+             pd.addFloat(22.1f);
+             pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
              */
             
             
@@ -133,17 +137,17 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             pd.addFloat(fm);
             pd.addFloat(ofRandom(3)); //arbitrarily select the waveform.
             pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOFinit");
-
+            
             
             
             //This is for detune-chorus, int (MIDI), float (index), float (frequency?), int (wavetable).
-//            pd.startMessage();
-//            pd.addFloat(fm);
-//            pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 500, 0, 100, true));
-//            pd.addFloat(10);
-//            pd.addFloat(1);
-//            pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
-
+            //            pd.startMessage();
+            //            pd.addFloat(fm);
+            //            pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 500, 0, 100, true));
+            //            pd.addFloat(10);
+            //            pd.addFloat(1);
+            //            pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
+            
             
             //pd.sendFloat(brushPatches[brushPatches.size() - 1].dollarZeroStr()+"-fromOF", f); //The last float value is being sent.
             init = false;
@@ -151,36 +155,35 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
         }
     }
     
-//    cout << touch.id << endl;
-
-    
     
 }
 
 //--------------------------------------------------------------
 void ofApp::touchMoved(ofTouchEventArgs & touch){
     
+    if(touch.id == 0) firstTouch = glm::vec2(touch.x, touch.y);
+    
     if(brushes.size() > 0 && bWasTouching){
         //Add points to the last brush instance.
-        brushes[brushes.size() - 1].addPoint(glm::vec2(touch.x, touch.y));
+        brushes[brushes.size() - 1].addPoint(firstTouch);
         //Keep updating //TODO: HOW? //This is one option!
         
         float f = nlMap(guiWidth, 1.f, 100.f, 6000.f, 80.f, .3);
         int fm = ofMap(guiWidth, 1.f, 100.f, 127, 0); //midi mapping
-
         
-//        pd.startMessage();
-//        pd.addFloat(f);
-//        pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 500, 0, 1, true));
-//        pd.addFloat(22.1f);
-//        pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
+        
+        //        pd.startMessage();
+        //        pd.addFloat(f);
+        //        pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 500, 0, 1, true));
+        //        pd.addFloat(22.1f);
+        //        pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
         
         pd.startMessage();
         pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 500, 0, 100, true));
         pd.addFloat(ofMap(brushes[brushes.size()-1].getJitterOnMinorAxis(), 0, 500, 0, 1, true));
         pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
         
-//        pd.sendFloat(brushPatches[brushPatches.size() - 1].dollarZeroStr()+"-fromOF", touch.x);
+        //        pd.sendFloat(brushPatches[brushPatches.size() - 1].dollarZeroStr()+"-fromOF", touch.x);
     }
     
     
@@ -195,17 +198,23 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
         bWasTouching = false;
     }
     
+    
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::touchDoubleTap(ofTouchEventArgs & touch){
     
-    for(int i = 0; i<brushPatches.size(); i++){
-        pd.closePatch(brushPatches[i]);
-    }
+    ofRectangle s = gui.getShape();
     
-    brushes.clear();
-    brushPatches.clear();
+    if(s.inside(touch)){
+        for(int i = 0; i<brushPatches.size(); i++){
+            pd.closePatch(brushPatches[i]);
+        }
+        
+        brushes.clear();
+        brushPatches.clear();
+    }
 }
 
 //--------------------------------------------------------------

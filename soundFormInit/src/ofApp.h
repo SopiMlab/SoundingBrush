@@ -79,6 +79,9 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     bool bGuiMode = false;
     bool bWasTouching = false;
     
+    glm::vec2 firstTouch;
+    glm::vec2 secondTouch;
+    
     //TODO: SETUP AND STORE A STRUCT FOR INFO BEING SENT.
     
     
@@ -107,6 +110,7 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
      If shaper is < 1 and > 0 you can get non linear range weighted towards the end.
      There are plenty of other shaper functions that take a pct (a number between 0 and 1) and output a pct, which might help.
      */
+    
 
 };
 

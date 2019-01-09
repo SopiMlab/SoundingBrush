@@ -17,8 +17,9 @@ int main() {
     settings.depthType = ofxiOSRendererDepthFormat::DEPTH_NONE; // depth format (16/24) if depth enabled
     settings.stencilType = ofxiOSRendererStencilFormat::STENCIL_NONE; // stencil mode
     settings.windowMode = OF_FULLSCREEN;
-    ofCreateWindow(settings);
     settings.enableMultiTouch = true;
+    ofCreateWindow(settings);
+    
     
 	return ofRunApp(new ofApp);
 }
