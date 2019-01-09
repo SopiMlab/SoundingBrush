@@ -65,6 +65,7 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     //----------------------------ofxGuiStuff here.
     ofParameter<float> guiWidth;
     ofParameter<ofColor> guiColor;
+    ofParameter<int> guiBrushSelector;
     ofxPanel gui;
     
     //*******************************************************
@@ -81,6 +82,12 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     
     glm::vec2 firstTouch;
     glm::vec2 secondTouch;
+    
+    
+    //Should the pinch geesture be made into a proper thing?
+    float pinchParam;
+    float pinchDistLast, pinchDistCurrent;
+    bool bSecondFinger;
     
     //TODO: SETUP AND STORE A STRUCT FOR INFO BEING SENT.
     

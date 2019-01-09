@@ -22,6 +22,7 @@ void ofApp::setup(){
     
     
     gui.setup();
+    gui.add(guiBrushSelector.set("Brush", 0, 0, 1));
     gui.add(guiWidth.set("Width", 1, 1, 100));
     gui.add(guiColor.set("Color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255)));
     
@@ -49,6 +50,9 @@ void ofApp::setup(){
     pd.addReceiver(*this);
     
     pd.start();
+    
+    pinchParam = 0.5f;
+    pinchDistCurrent = pinchDistLast = 0;
     
     //    pd.openPatch(brush.getPatch());
     
@@ -118,7 +122,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             brushPatches.push_back(pd.openPatch(brushes[brushes.size() - 1].getPatch()));
             //Map brush size to frequency //TODO: This needs to be handled better per brush type.
             float f = nlMap(guiWidth, 1.f, 100.f, 6000.f, 40.f, .3); //frequency mapping.
-            int fm = ofMap(guiWidth, 1.f, 100.f, 127, 0); //midi mapping
+            int fm = ofMap(guiWidth, 1.f, 100.f, 70, 40); //midi mapping
             
             //Sending three floats. TODO: This has to be dependant on the type of synth engine, yolo.
             
@@ -155,6 +159,12 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
         }
     }
     
+    if (touch.numTouches == 2){
+        float d = ofDist(firstTouch.x, firstTouch.y, secondTouch.x, secondTouch.y);
+        pinchDistLast = pinchDistCurrent = d;
+        pinchParam = 0.5;
+    }
+    
     
 }
 
@@ -162,6 +172,20 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
 void ofApp::touchMoved(ofTouchEventArgs & touch){
     
     if(touch.id == 0) firstTouch = glm::vec2(touch.x, touch.y);
+    if(touch.id == 1) secondTouch = glm::vec2(touch.x, touch.y);
+    
+    if(touch.id == 1){
+    pinchDistCurrent = ofDist(firstTouch.x, firstTouch.y, secondTouch.x, secondTouch.y);
+
+    if(pinchDistCurrent > pinchDistLast) {
+        pinchParam += 0.01;
+        pinchDistLast = pinchDistCurrent;
+    } else if (pinchDistCurrent < pinchDistLast) {
+        pinchParam -= 0.01;
+        pinchDistLast = pinchDistCurrent;
+    }
+    }
+    
     
     if(brushes.size() > 0 && bWasTouching){
         //Add points to the last brush instance.
@@ -179,8 +203,9 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
         //        pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
         
         pd.startMessage();
-        pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 500, 0, 100, true));
-        pd.addFloat(ofMap(brushes[brushes.size()-1].getJitterOnMinorAxis(), 0, 500, 0, 1, true));
+        pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 700, 200, 500, true));
+        pd.addFloat(ofMap(brushes[brushes.size()-1].getJitterOnMinorAxis(), 0, 800, 0.1, 0.3, true));
+        pd.addFloat(ofClamp(pinchParam, 0.1, 1));
         pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
         
         //        pd.sendFloat(brushPatches[brushPatches.size() - 1].dollarZeroStr()+"-fromOF", touch.x);
@@ -198,6 +223,10 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
         bWasTouching = false;
     }
     
+    if(touch.id == 0){
+        pinchParam = 0.5;
+        pinchDistCurrent = pinchDistLast = 0.0f;
+    }
     
     
 }
