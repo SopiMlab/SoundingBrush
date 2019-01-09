@@ -1,0 +1,18 @@
+#N canvas 260 194 918 530 10;
+#X obj 371 79 r \$0-fromOF;
+#X obj 372 143 unpack f f f;
+#X obj 373 231 osc~ 440;
+#X obj 433 337 *~;
+#X obj 427 416 dac~;
+#X msg 515 235 \$1 20;
+#X obj 515 267 line~;
+#X obj 579 149 print PD;
+#X connect 0 0 1 0;
+#X connect 0 0 7 0;
+#X connect 1 0 2 0;
+#X connect 1 1 5 0;
+#X connect 2 0 3 0;
+#X connect 3 0 4 0;
+#X connect 3 0 4 1;
+#X connect 5 0 6 0;
+#X connect 6 0 3 1;
