@@ -68,6 +68,8 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     ofParameter<int> guiBrushSelector;
     ofxPanel gui;
     
+//    int guiBrushSelector;
+    
     //*******************************************************
     //App Stuff Below!
     
