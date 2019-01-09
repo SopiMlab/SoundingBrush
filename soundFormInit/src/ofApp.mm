@@ -131,7 +131,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             //DTC Init.
             pd.startMessage();
             pd.addFloat(fm);
-            pd.addFloat(2);
+            pd.addFloat(ofRandom(3)); //arbitrarily select the waveform.
             pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOFinit");
 
             
@@ -177,7 +177,7 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
         
         pd.startMessage();
         pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 500, 0, 100, true));
-        pd.addFloat(ofMap(brushes[brushes.size()-1].getJitterOnMinorAxis(), 0, 500, 0, 100, true));
+        pd.addFloat(ofMap(brushes[brushes.size()-1].getJitterOnMinorAxis(), 0, 500, 0, 1, true));
         pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
         
 //        pd.sendFloat(brushPatches[brushPatches.size() - 1].dollarZeroStr()+"-fromOF", touch.x);
