@@ -26,7 +26,7 @@ void ofApp::setup(){
     gui.add(guiWidth.set("Width", 1, 1, 100));
     gui.add(guiColor.set("Color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255)));
     
-//    guiBrushSelector = 0;
+    //    guiBrushSelector = 0;
     
     //Doing audio setup now.
     float sampleRate = setAVSessionSampleRate(44100);
@@ -132,9 +132,12 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             b.setVariables(guiWidth, guiColor); //Setup the colour and width of the brush.
             
             brushes.push_back(b);
+            
             //Also instantiate the pd patch for the same!
             Patch p = pd.openPatch(brushes[brushes.size() - 1].getPatch());
-            brushPatches.push_back(pd.openPatch(brushes[brushes.size() - 1].getPatch()));
+            brushPatches.push_back(p);
+            
+            std::cout << "Brushpatches size is now: " << brushPatches.size() << endl;
             
             //Map brush size to frequency
             float f = nlMap(guiWidth, 1.f, 100.f, 6000.f, 40.f, .3); //frequency mapping.
@@ -157,6 +160,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     break;
                 case 2:
                     //Do stuff.
+                    pd.addFloat(100);
                     break;
             }
             
@@ -183,15 +187,15 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
     if(touch.id == 1) secondTouch = glm::vec2(touch.x, touch.y);
     
     if(touch.id == 1){
-    pinchDistCurrent = ofDist(firstTouch.x, firstTouch.y, secondTouch.x, secondTouch.y);
-
-    if(pinchDistCurrent > pinchDistLast) {
-        pinchParam += 0.01;
-        pinchDistLast = pinchDistCurrent;
-    } else if (pinchDistCurrent < pinchDistLast) {
-        pinchParam -= 0.01;
-        pinchDistLast = pinchDistCurrent;
-    }
+        pinchDistCurrent = ofDist(firstTouch.x, firstTouch.y, secondTouch.x, secondTouch.y);
+        
+        if(pinchDistCurrent > pinchDistLast) {
+            pinchParam += 0.01;
+            pinchDistLast = pinchDistCurrent;
+        } else if (pinchDistCurrent < pinchDistLast) {
+            pinchParam -= 0.01;
+            pinchDistLast = pinchDistCurrent;
+        }
     }
     
     
@@ -214,6 +218,7 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
                 break;
             case 2:
                 //Do stuff.
+                pd.addFloat(100);
                 break;
         }
         
@@ -249,15 +254,16 @@ void ofApp::touchDoubleTap(ofTouchEventArgs & touch){
     ofRectangle s = gui.getShape();
     
     if(s.inside(touch)){
-        for(int i = 0; i<brushPatches.size(); i++){
-            pd.closePatch(brushPatches[i]);
+        if(brushPatches.size() > 0){
+            for(int i = 0; i<brushPatches.size(); ++i){
+                pd.closePatch(brushPatches[i]);
+            }
+            brushes.clear();
+            brushPatches.clear();
+            std::cout << "All patches cleared!" << endl;
         }
-        
-        brushes.clear();
-        brushPatches.clear();
+       //Anything else on double tap can come here!
     }
-    
-    cout << brushPatches.size() << endl;
 }
 
 //--------------------------------------------------------------

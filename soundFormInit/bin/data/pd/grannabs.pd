@@ -1,4 +1,4 @@
-#N canvas 241 23 672 560 10;
+#N canvas 241 23 761 655 10;
 #X obj 247 16 inlet;
 #X obj 247 50 unpack 0 0 0 0 0;
 #X text 190 34 position;
@@ -32,8 +32,8 @@
 #X obj 448 181 t b b;
 #X obj 387 451 tabread4~ \$1;
 #X obj 388 406 *~ \$2;
-#X obj 155 531 throw~ \$3;
-#X obj 156 419 tabread4~ \$4;
+#X obj 341 594 outlet~;
+#X obj 156 419 tabread4~ \$3;
 #X connect 0 0 1 0;
 #X connect 1 0 23 0;
 #X connect 1 1 10 1;
