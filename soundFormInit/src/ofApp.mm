@@ -22,7 +22,7 @@ void ofApp::setup(){
     
     
     gui.setup();
-    gui.add(guiBrushSelector.set("Brush", 0, 0, 1));
+    gui.add(guiBrushSelector.set("Brush", 0, 0, 2));
     gui.add(guiWidth.set("Width", 1, 1, 100));
     gui.add(guiColor.set("Color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255)));
     
@@ -124,6 +124,9 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                 case 1:
                     b.setup("pd/dtc_mod.pd");
                     break;
+                case 2:
+                    b.setup("pd/granular-redux.pd");
+                    break;
             }
             
             b.setVariables(guiWidth, guiColor); //Setup the colour and width of the brush.
@@ -146,11 +149,14 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                 case 0: //sinewithamp, needs just one parameter.
                     pd.addFloat(f);
                     break;
-                case 1: //detune chorus, need midi note, type of waveform,
+                case 1: //detune chorus, need midi note, type of waveform, index and ratio.
                     pd.addFloat(fm);
                     pd.addFloat(ofRandom(3)); //selects waveform randomly :)
                     pd.addFloat(200);
                     pd.addFloat(.1); //These two are the lowest values of index and ratio, sending to initialize them.
+                    break;
+                case 2:
+                    //Do stuff.
                     break;
             }
             
@@ -206,6 +212,9 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
                 pd.addFloat(ofMap(brushes[brushes.size()-1].getJitterOnMinorAxis(), 0, 800, 0.1, 0.3, true));
                 pd.addFloat(ofClamp(pinchParam, 0.1, 1));
                 break;
+            case 2:
+                //Do stuff.
+                break;
         }
         
         pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
@@ -247,6 +256,8 @@ void ofApp::touchDoubleTap(ofTouchEventArgs & touch){
         brushes.clear();
         brushPatches.clear();
     }
+    
+    cout << brushPatches.size() << endl;
 }
 
 //--------------------------------------------------------------
