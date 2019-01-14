@@ -133,31 +133,20 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             Patch p = pd.openPatch(brushes[brushes.size() - 1].getPatch());
             brushPatches.push_back(pd.openPatch(brushes[brushes.size() - 1].getPatch()));
             
-            //Map brush size to frequency //TODO: This needs to be handled better per brush type.
+            //Map brush size to frequency
             float f = nlMap(guiWidth, 1.f, 100.f, 6000.f, 40.f, .3); //frequency mapping.
             int fm = ofMap(guiWidth, 1.f, 100.f, 70, 40); //midi mapping
-            
-            //Sending three floats. TODO: This has to be dependant on the type of synth engine, yolo.
-            
-            //This one is for sinewithamp, needs three floats.
-            /*
-             pd.startMessage();
-             pd.addFloat(f);
-             pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 500, 0, 1, true));
-             pd.addFloat(22.1f);
-             pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
-             */
             
             //This will initialize the brush/synth combo.
             pd.startMessage();
             
             //next part depends on the kind of brush...
-            
+            //init goes to $0-fromOFinit
             switch(guiBrushSelector){
-                case 0:
+                case 0: //sinewithamp, needs just one parameter.
                     pd.addFloat(f);
                     break;
-                case 1:
+                case 1: //detune chorus, need midi note, type of waveform,
                     pd.addFloat(fm);
                     pd.addFloat(ofRandom(3)); //selects waveform randomly :)
                     pd.addFloat(200);
@@ -167,24 +156,6 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             
             pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOFinit");
             
-            //DTC Init.
-//            pd.startMessage();
-//            pd.addFloat(fm);
-//            pd.addFloat(ofRandom(3)); //arbitrarily select the waveform.
-//            pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOFinit");
-            
-            
-            
-            //This is for detune-chorus, int (MIDI), float (index), float (frequency?), int (wavetable).
-            //            pd.startMessage();
-            //            pd.addFloat(fm);
-            //            pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 500, 0, 100, true));
-            //            pd.addFloat(10);
-            //            pd.addFloat(1);
-            //            pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
-            
-            
-            //pd.sendFloat(brushPatches[brushPatches.size() - 1].dollarZeroStr()+"-fromOF", f); //The last float value is being sent.
             init = false;
             bWasTouching = true;
         }
@@ -221,18 +192,8 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
     if(brushes.size() > 0 && bWasTouching){
         //Add points to the last brush instance.
         brushes[brushes.size() - 1].addPoint(firstTouch);
-        //Keep updating //TODO: HOW? //This is one option!
         
-        float f = nlMap(guiWidth, 1.f, 100.f, 6000.f, 80.f, .3);
-        int fm = ofMap(guiWidth, 1.f, 100.f, 127, 0); //midi mapping
-        
-        
-        //        pd.startMessage();
-        //        pd.addFloat(f);
-        //        pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 500, 0, 1, true));
-        //        pd.addFloat(22.1f);
-        //        pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
-        
+        //Updates go to $0-fromOF
         pd.startMessage();
         
         //Again, switch according to brush type!
@@ -249,13 +210,6 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
         
         pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
         
-//
-//        pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 700, 200, 500, true));
-//        pd.addFloat(ofMap(brushes[brushes.size()-1].getJitterOnMinorAxis(), 0, 800, 0.1, 0.3, true));
-//        pd.addFloat(ofClamp(pinchParam, 0.1, 1));
-//        pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
-//
-        //        pd.sendFloat(brushPatches[brushPatches.size() - 1].dollarZeroStr()+"-fromOF", touch.x);
     }
     
     
@@ -265,7 +219,6 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
 void ofApp::touchUp(ofTouchEventArgs & touch){
     
     if(brushes.size() > 0 && bWasTouching){
-        //pd.sendFloat(brushPatches[brushPatches.size() - 1].dollarZeroStr()+"-fromOF", touch.x);
         //If there's an EOC to send, send it here.
         
         
