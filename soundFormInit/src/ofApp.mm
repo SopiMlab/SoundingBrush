@@ -26,8 +26,6 @@ void ofApp::setup(){
     gui.add(guiWidth.set("Width", 1, 1, 100));
     gui.add(guiColor.set("Color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255)));
     
-    //    guiBrushSelector = 0;
-    
     //Doing audio setup now.
     float sampleRate = setAVSessionSampleRate(44100);
     int ticksPerBuffer = 8;
