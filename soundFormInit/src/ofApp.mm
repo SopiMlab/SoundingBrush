@@ -22,7 +22,7 @@ void ofApp::setup(){
     
     
     gui.setup();
-    gui.add(guiBrushSelector.set("Brush", 0, 0, 2));
+    gui.add(guiBrushSelector.set("Brush", 0, 0, 3));
     gui.add(guiWidth.set("Width", 1, 1, 100));
     gui.add(guiColor.set("Color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255)));
     
@@ -44,6 +44,9 @@ void ofApp::setup(){
         OF_EXIT_APP(1);
     }
     
+    pd.subscribe("toOF");
+    pd.subscribe("toOFKill");
+    
     ofFilePath::getCurrentWorkingDirectory();
     pd.addToSearchPath("pd");
     
@@ -53,17 +56,6 @@ void ofApp::setup(){
     
     pinchParam = 0.5f;
     pinchDistCurrent = pinchDistLast = 0;
-    
-    //    pd.openPatch(brush.getPatch());
-    
-    //    test.setStrokeWidth(10);
-    //    test.setFilled(false);
-    //    test.setStrokeColor(ofColor::yellow);
-    //    test.moveTo(ofGetWidth()/2, ofGetHeight()/2);
-    //    test.curveTo(0, 0);
-    //    test.curveTo(0, ofGetHeight());
-    //    test.close();
-    
     
 }
 
@@ -125,6 +117,9 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                 case 2:
                     b.setup("pd/granular-redux.pd");
                     break;
+                case 3:
+                    b.setup("pd/karplus.pd");
+                    break;
             }
             
             b.setVariables(guiWidth, guiColor); //Setup the colour and width of the brush.
@@ -159,6 +154,9 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                 case 2:
                     //Do stuff.
                     pd.addFloat(100);
+                    break;
+                case 3:
+                    //Do stuff.
                     break;
             }
             
@@ -218,6 +216,9 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
                 //Do stuff.
                 pd.addFloat(100);
                 break;
+            case 3:
+                //Do stuff.
+                break;
         }
         
         pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
@@ -232,6 +233,27 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
     
     if(brushes.size() > 0 && bWasTouching){
         //If there's an EOC to send, send it here.
+        
+        pd.startMessage();
+        switch(guiBrushSelector){
+            case 0:
+                //do stuff.
+                break;
+            case 1:
+                //do stuff.
+                break;
+            case 2:
+                //do stuff.
+                break;
+            case 3:
+                float karpValue;
+                karpValue = brushes[brushes.size()-1].getNumVertices();
+                karpValue = ofMap(karpValue, 0, 1000, 40, 70);
+                pd.addFloat(karpValue);
+                break;
+        }
+        
+        pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOFeoc");
         
         
         init = true;
@@ -302,6 +324,43 @@ void ofApp::audioRequested(float * output, int bufferSize, int nChannels) {
 //--------------------------------------------------------------
 void ofApp::print(const std::string& message) {
     cout << message << endl;
+}
+
+//--------------------------------------------------------------
+void ofApp::receiveBang(const std::string& dest){
+    cout << "OF: Bang " << dest << endl;
+}
+
+//--------------------------------------------------------------
+void ofApp::receiveFloat(const std::string& dest, float value){
+    cout << "OF: Float " << dest << ": " << value << endl;
+    
+    if (dest == "toOFKill") closePatchByDollarString(value);
+    
+}
+
+//--------------------------------------------------------------
+void ofApp::closePatchByDollarString(int _dString){
+    
+    int index = -1;
+    
+    for(int i = 0; i < brushPatches.size(); i++){
+        cout << brushPatches[i].dollarZeroStr() << endl;
+        if(brushPatches[i].dollarZeroStr() == ofToString(_dString)){
+            index = i;
+            cout << "Index updated to: " << index << endl;
+        }
+    }
+    
+    //NOTE: This is a bit hacky as the patch itself is not closing - it's causing crashes :(
+    //Might need to add in a thing in the pd patch to make sure it gets muted, not necessary for karplus though.
+    
+    //pd.closePatch(brushPatches[index]);
+    brushPatches.erase(brushPatches.begin() + index);
+    brushes.erase(brushes.begin() + index);
+    
+    cout << "Removed element: " << index << endl;
+    
 }
 
 //--------------------------------------------------------------

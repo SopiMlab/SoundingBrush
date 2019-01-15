@@ -60,6 +60,9 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     void receiveMidiByte(const int port, const int byte);
      */
     
+    void receiveBang(const std::string& dest);
+    void receiveFloat(const std::string& dest, float value);
+    
     float setAVSessionSampleRate(float preferredSampleRate);
     
     //----------------------------ofxGuiStuff here.
@@ -84,6 +87,8 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     
     glm::vec2 firstTouch;
     glm::vec2 secondTouch;
+    
+    void closePatchByDollarString(int _dString);
     
     
     //Should the pinch geesture be made into a proper thing?
