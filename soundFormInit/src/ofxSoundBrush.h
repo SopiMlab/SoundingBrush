@@ -26,7 +26,7 @@ public:
     int getNumVertices() {return points.size();};
     float getJitterOnMinorAxis();
     
-    void setDollarZeroString(string _dZero);
+    void setDollarZeroString(string _dZero) {dollarZeroString = _dZero;};
     string getDollarZeroString() {return dollarZeroString;};
     
 private:

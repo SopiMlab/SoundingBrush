@@ -133,7 +133,8 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             
             //Get the dollar zero value from the patch to the brush.
             //This will come in handy when I'm receiving stuff from PD.
-            brushes.end()->setDollarZeroString(brushPatches.end()->dollarZeroStr());
+            string s = brushPatches[brushPatches.size() - 1].dollarZeroStr();
+            brushes[brushes.size() - 1].setDollarZeroString(s);
             
             std::cout << "Brushpatches size is now: " << brushPatches.size() << endl;
             
@@ -352,7 +353,7 @@ void ofApp::receiveList(const std::string& dest, const List& list){
     
     if(dest == "toOFStream"){
         
-        dollarZero = list.getSymbol(0);
+        dollarZero = ofToString(list.getFloat(0));
         
         for(int i = 1; i < list.len(); i++){
             float v = list.getFloat(i);
