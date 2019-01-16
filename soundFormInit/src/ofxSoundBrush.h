@@ -17,6 +17,7 @@ public:
     
     void setColor(ofColor _c);
     void setSize(float _s);
+    void setAlpha(float _a);
     
     void calculateDataSet();
     void calculateSD();
@@ -24,6 +25,9 @@ public:
     string getPatch() {return patch;};
     int getNumVertices() {return points.size();};
     float getJitterOnMinorAxis();
+    
+    void setDollarZeroString(string _dZero);
+    string getDollarZeroString() {return dollarZeroString;};
     
 private:
     string patch;
@@ -39,6 +43,8 @@ private:
     
     glm::vec2 sumsXY;
     glm::vec2 average;
+    
+    string dollarZeroString;
     
 //    ofPath path;
 };

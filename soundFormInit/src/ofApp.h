@@ -62,6 +62,7 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     
     void receiveBang(const std::string& dest);
     void receiveFloat(const std::string& dest, float value);
+    void receiveList(const std::string& dest, const List& list);
     
     float setAVSessionSampleRate(float preferredSampleRate);
     

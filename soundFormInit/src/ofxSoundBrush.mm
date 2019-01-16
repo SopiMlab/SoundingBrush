@@ -102,6 +102,11 @@ void ofxSoundBrush::setSize(float _s){
 }
 
 //--------------------------------------------------
+void ofxSoundBrush::setAlpha(float _a){
+    color = ofColor(color, _a);
+}
+
+//--------------------------------------------------
 void ofxSoundBrush::calculateDataSet(){
     
     float xSum = 0.0f;

@@ -45,6 +45,7 @@ void ofApp::setup(){
     }
     
     pd.subscribe("toOF");
+    pd.subscribe("toOFStream");
     pd.subscribe("toOFKill");
     
     ofFilePath::getCurrentWorkingDirectory();
@@ -129,6 +130,10 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             //Also instantiate the pd patch for the same!
             Patch p = pd.openPatch(brushes[brushes.size() - 1].getPatch());
             brushPatches.push_back(p);
+            
+            //Get the dollar zero value from the patch to the brush.
+            //This will come in handy when I'm receiving stuff from PD.
+            brushes.end()->setDollarZeroString(brushPatches.end()->dollarZeroStr());
             
             std::cout << "Brushpatches size is now: " << brushPatches.size() << endl;
             
@@ -336,6 +341,36 @@ void ofApp::receiveFloat(const std::string& dest, float value){
     cout << "OF: Float " << dest << ": " << value << endl;
     
     if (dest == "toOFKill") closePatchByDollarString(value);
+    
+}
+
+//--------------------------------------------------------------
+void ofApp::receiveList(const std::string& dest, const List& list){
+    
+    string dollarZero; //the first item is always going to be the dollar zero string.
+    vector<float> values; //followed by the rest of the stuff!
+    
+    if(dest == "toOFStream"){
+        
+        dollarZero = list.getSymbol(0);
+        
+        for(int i = 1; i < list.len(); i++){
+            float v = list.getFloat(i);
+            values.push_back(v);
+        }
+    
+        //TODO: This is going to be super hacky for now, so fix this later. :)
+        
+        //Match the dollarZero string to a brush.
+        int index = -1;
+        
+        for(int i = 0; i<brushes.size(); i++){
+            if (brushes[i].getDollarZeroString() == dollarZero) index = i;
+        }
+        
+        brushes[index].setAlpha(values[0]);
+        
+    }
     
 }
 
