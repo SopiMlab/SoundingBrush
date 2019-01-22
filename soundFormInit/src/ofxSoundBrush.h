@@ -54,6 +54,9 @@ private:
     string dollarZeroString;
     
     ofPolyline line;
-    ofFbo drawingFbo; //not implemented yet.
+    int brushType;
+    
+    void drawThickLine();
+    bool isDebug;
     
 };

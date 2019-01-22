@@ -12,24 +12,25 @@ ofxSoundBrush::ofxSoundBrush(){
     average = glm::vec2(0, 0);
     standardDeviationX = standardDeviationY = 0.0f;
     varianceX = varianceY = 0.0f;
-
-    drawingFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    
+    brushType = 0;
+    isDebug = false;
     
     /*
-    int totalVertices = 100;
-    float yInc = (ofGetHeight()-100)/totalVertices;
-    for (int i = 0; i<= totalVertices; i++) {
-        pointsF.push_back(ofDefaultVec3(ofGetWidth()* ofRandomuf(), ofGetHeight() * ofRandomuf(), 0));
-        ofFloatColor c; c.setHsb(ofRandom(1), 1, 1 );
-        colors.push_back(c);
-        weights.push_back(10);
-    }
-    
-    fatLine.setCapType(OFX_FATLINE_CAP_ROUND);
-    fatLine.setJointType(OFX_FATLINE_JOINT_ROUND);
-                          
-    fatLine.setFeather(2);
-    fatLine.add(pointsF, colors, weights);
+     int totalVertices = 100;
+     float yInc = (ofGetHeight()-100)/totalVertices;
+     for (int i = 0; i<= totalVertices; i++) {
+     pointsF.push_back(ofDefaultVec3(ofGetWidth()* ofRandomuf(), ofGetHeight() * ofRandomuf(), 0));
+     ofFloatColor c; c.setHsb(ofRandom(1), 1, 1 );
+     colors.push_back(c);
+     weights.push_back(10);
+     }
+     
+     fatLine.setCapType(OFX_FATLINE_CAP_ROUND);
+     fatLine.setJointType(OFX_FATLINE_JOINT_ROUND);
+     
+     fatLine.setFeather(2);
+     fatLine.add(pointsF, colors, weights);
      */
     
 }
@@ -53,125 +54,51 @@ void ofxSoundBrush::addPoint(glm::vec2 _p){
     
     //------IGNORE THIS NOW
     
-//    //This makes sure the size of the vector is always 3n + 1.
-//    if(points.size() == 0){
-//        points.push_back(_p);
-//    } else {
-//        glm::vec2 lastPoint = points[points.size() - 1];
-//        float icr = 3;
-//        for(int i = 1; i <= icr; i++){
-//            glm::vec2 intermediate = lerp(_p, lastPoint, i/icr);
-//            points.push_back(intermediate);
-//        }
-//    }
-    
-   //--------
-//    fatLine.clear();
-//    ofFloatColor c;
-//    c.setHsb(ofRandom(1), 1, 1 );
-//
-//    fatLine.clear();
-//    fatLine.setFeather(2);
-//    fatLine.add(points, fatCols, fatWeights);
-//    fatLine.update();
+    //    //This makes sure the size of the vector is always 3n + 1.
+    //    if(points.size() == 0){
+    //        points.push_back(_p);
+    //    } else {
+    //        glm::vec2 lastPoint = points[points.size() - 1];
+    //        float icr = 3;
+    //        for(int i = 1; i <= icr; i++){
+    //            glm::vec2 intermediate = lerp(_p, lastPoint, i/icr);
+    //            points.push_back(intermediate);
+    //        }
+    //    }
     
     calculateDataSet();
     calculateSD();
-
+    
 }
 
 //--------------------------------------------------
 void ofxSoundBrush::draw(){
     
-//    --------------------------from ofZach/drawing-examples/thickness
-//    ----------------------------------------------------------------
-
-    
-    ofMesh meshy;
-    meshy.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
-    
-    float widthSmooth = 10;
-    float angleSmooth;
-    
-    for (int i = 0;  i < line.getVertices().size(); i++){
-        
-        int me_m_one = i-1;
-        int me_p_one = i+1;
-        if (me_m_one < 0) me_m_one = 0;
-        if (me_p_one ==  line.getVertices().size()) me_p_one =  line.getVertices().size()-1;
-        
-        ofPoint diff = line.getVertices()[me_p_one] - line.getVertices()[me_m_one];
-        float angle = atan2(diff.y, diff.x);
-        
-        if (i == 0) angleSmooth = angle;
-        else {
-            
-            angleSmooth = ofLerpRadians(angleSmooth, angle, 1.0);
-            
-        }
-        
-        float dist = diff.length();
-        
-        float w = ofMap(dist, 0, size, 40, 2, true);
-        
-        widthSmooth = 0.9f * widthSmooth + 0.1f * w;
-        
-        ofPoint offset;
-        offset.x = cos(angleSmooth + PI/2) * widthSmooth;
-        offset.y = sin(angleSmooth + PI/2) * widthSmooth;
-        
-        meshy.addVertex(  line.getVertices()[i] +  offset );
-        meshy.addVertex(  line.getVertices()[i] -  offset );
-        
+    switch(brushType){
+        case 0:
+            drawThickLine();
+            break;
     }
     
-    ofSetColor(color);
-    meshy.draw();
-//    ofSetColor(100,100,100);
-//    meshy.drawWireframe();
     
-//    ----------------------------------------------------------------
-    
-    
-//    fatLine.draw();
-//    fatLine.printDebug();
-//    fatLine.drawDebug();
-    
-    ofPushStyle();
-    ofSetColor(color);
-    ofFill();
-  
-    
-    
-    
-//    for(int i = 0; i< points.size(); i++){
-//        ofDrawCircle(points[i], size);
-//    }
-//
-//    ofSetLineWidth(size);
-//    if(points.size() > 2){
-//        for(int i = 0; i < points.size() - 1; i++){
-//            ofDrawLine(points[i], points [i+1]);
-//        }
-//    }
-    
-    ofPopStyle();
-    
-    ofNoFill();
-    ofSetColor(ofColor::red);
-    glm::vec2 topLeft = glm::vec2(left, top);
-    
-    ofDrawRectangle(topLeft, width, height);
-    
-    stringstream s1, s2;
-    
-    s1 << "Standard deviation in X is: " << ofToString(standardDeviationX) << " " << "Standard deviation in Y is: " << ofToString(standardDeviationY) << endl;
-    
-    
-    s2 << "Number of vertices: " << ofToString(points.size()) << " " << "width is: " << ofToString(width) << " height is: " << " " << ofToString(height) << endl;
-    
-    ofDrawBitmapStringHighlight(s1.str(), topLeft);
-    ofDrawBitmapStringHighlight(s2.str(), topLeft.x, topLeft.y + height);
+    //Below for debug.
+    if(isDebug){
+        ofNoFill();
+        ofSetColor(ofColor::red);
+        glm::vec2 topLeft = glm::vec2(left, top);
+        
+        ofDrawRectangle(topLeft, width, height);
+        
+        stringstream s1, s2;
+        
+        s1 << "Standard deviation in X is: " << ofToString(standardDeviationX) << " " << "Standard deviation in Y is: " << ofToString(standardDeviationY) << endl;
+        
+        
+        s2 << "Number of vertices: " << ofToString(points.size()) << " " << "width is: " << ofToString(width) << " height is: " << " " << ofToString(height) << endl;
+        
+        ofDrawBitmapStringHighlight(s1.str(), topLeft);
+        ofDrawBitmapStringHighlight(s2.str(), topLeft.x, topLeft.y + height);
+    }
 }
 
 //--------------------------------------------------
@@ -252,3 +179,55 @@ float ofxSoundBrush::getJitterOnMinorAxis(){
     return a;
 }
 
+
+//---------------------------------------------------
+//DIFFERENT KINDS OF BRUSHES. WILL BE A SWITCH CALL
+//---------------------------------------------------
+
+void ofxSoundBrush::drawThickLine(){
+    //    --------------------------from ofZach/drawing-examples/thickness
+    //    ----------------------------------------------------------------
+    
+    ofMesh meshy;
+    meshy.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+    
+    float widthSmooth = 10;
+    float angleSmooth;
+    
+    for (int i = 0;  i < line.getVertices().size(); i++){
+        
+        int me_m_one = i-1;
+        int me_p_one = i+1;
+        if (me_m_one < 0) me_m_one = 0;
+        if (me_p_one ==  line.getVertices().size()) me_p_one =  line.getVertices().size()-1;
+        
+        ofPoint diff = line.getVertices()[me_p_one] - line.getVertices()[me_m_one];
+        float angle = atan2(diff.y, diff.x);
+        
+        if (i == 0) angleSmooth = angle;
+        else {
+            
+            angleSmooth = ofLerpRadians(angleSmooth, angle, 1.0);
+            
+        }
+        
+        float dist = diff.length();
+        
+        float w = ofMap(dist, 0, size, 40, 2, true);
+        
+        widthSmooth = 0.9f * widthSmooth + 0.1f * w;
+        
+        ofPoint offset;
+        offset.x = cos(angleSmooth + PI/2) * widthSmooth;
+        offset.y = sin(angleSmooth + PI/2) * widthSmooth;
+        
+        meshy.addVertex(  line.getVertices()[i] +  offset );
+        meshy.addVertex(  line.getVertices()[i] -  offset );
+        
+    }
+    
+    ofSetColor(color);
+    meshy.draw();
+    //    ofSetColor(100,100,100);
+    //    meshy.drawWireframe();
+}
