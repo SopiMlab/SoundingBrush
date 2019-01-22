@@ -3,6 +3,12 @@
 
 //TODO: Patch names? Methods of sending params?
 
+#include "ofxCurve.h"
+
+static glm::vec2 lerp( const glm::vec2 A, const glm::vec2 B, float t ){
+    return A*t + B*(1.0f-t) ;
+}
+
 class ofxSoundBrush{
 public:
     ofxSoundBrush(); //default contructor
@@ -33,7 +39,8 @@ private:
     string patch;
     ofColor color;
     float size;
-    vector<glm::vec2> points;
+    vector<glm::vec3> points;
+//    vector<glm::vec3> interpolatedPoints;
 
     float left, right, top, bottom;
     float width, height;
@@ -46,5 +53,7 @@ private:
     
     string dollarZeroString;
     
-//    ofPath path;
+    ofPolyline line;
+    ofFbo drawingFbo; //not implemented yet.
+    
 };

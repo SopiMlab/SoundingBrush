@@ -1,2 +1,4 @@
+ofxCurve
+ofxFatLines
 ofxGui
 ofxPd

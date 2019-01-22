@@ -7,7 +7,7 @@ int main() {
     ofiOSWindowSettings settings;
     settings.enableRetina = true; // enables retina resolution if the device supports it.
     settings.enableDepth = false; // enables depth buffer for 3d drawing.
-    settings.enableAntiAliasing = false; // enables anti-aliasing which smooths out graphics on the screen.
+    settings.enableAntiAliasing = true; // enables anti-aliasing which smooths out graphics on the screen.
     settings.numOfAntiAliasingSamples = 0; // number of samples used for anti-aliasing.
     settings.enableHardwareOrientation = false; // enables native view orientation.
     settings.enableHardwareOrientationAnimation = false; // enables native orientation changes to be animated.
@@ -15,7 +15,7 @@ int main() {
     settings.windowControllerType = ofxiOSWindowControllerType::GL_KIT; // Window Controller Type
     settings.colorType = ofxiOSRendererColorFormat::RGBA8888; // color format used default RGBA8888
     settings.depthType = ofxiOSRendererDepthFormat::DEPTH_NONE; // depth format (16/24) if depth enabled
-    settings.stencilType = ofxiOSRendererStencilFormat::STENCIL_NONE; // stencil mode
+    settings.stencilType = ofxiOSRendererStencilFormat::STENCIL_8 ; // stencil mode
     settings.windowMode = OF_FULLSCREEN;
     settings.enableMultiTouch = true;
     ofCreateWindow(settings);

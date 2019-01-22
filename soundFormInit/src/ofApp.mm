@@ -22,7 +22,7 @@ void ofApp::setup(){
     
     
     gui.setup();
-    gui.add(guiBrushSelector.set("Brush", 0, 0, 3));
+    gui.add(guiBrushSelector.set("Brush", 0, 0, 5));
     gui.add(guiWidth.set("Width", 1, 1, 100));
     gui.add(guiColor.set("Color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255)));
     
@@ -73,6 +73,7 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     
+//    path.draw();
     gui.draw();
     
     for(int i = 0; i < brushes.size(); i++){
@@ -121,6 +122,12 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                 case 3:
                     b.setup("pd/karplus.pd");
                     break;
+                case 4:
+                    b.setup("pd/granular_andy.pd");
+                    break;
+                case 5:
+                    b.setup("pd/crackture.pd");
+                    break;
             }
             
             b.setVariables(guiWidth, guiColor); //Setup the colour and width of the brush.
@@ -162,6 +169,12 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     pd.addFloat(100);
                     break;
                 case 3:
+                    //Do stuff.
+                    break;
+                case 4:
+                    pd.addFloat(ofMap(guiWidth, 1, 100, 2, 0.1, true));
+                    break;
+                case 5:
                     //Do stuff.
                     break;
             }
@@ -225,6 +238,13 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
             case 3:
                 //Do stuff.
                 break;
+            case 4:
+                pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 1000, 0, 2000));
+                break;
+            case 5:
+                pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 1000, 0, 1));
+                pd.addFloat(ofMap(brushes[brushes.size()-1].getJitterOnMinorAxis(), 0, 800, 100, 2000, true));
+                break;
         }
         
         pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
@@ -260,7 +280,6 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
         }
         
         pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOFeoc");
-        
         
         init = true;
         bWasTouching = false;
