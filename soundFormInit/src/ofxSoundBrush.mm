@@ -13,7 +13,7 @@ ofxSoundBrush::ofxSoundBrush(){
     standardDeviationX = standardDeviationY = 0.0f;
     varianceX = varianceY = 0.0f;
     
-    brushType = 0;
+    brushType = 3;
     isDebug = false;
     
     /*
@@ -77,6 +77,15 @@ void ofxSoundBrush::draw(){
     switch(brushType){
         case 0:
             drawThickLine();
+            break;
+        case 1:
+            drawWithThicknessFunction(size);
+            break;
+        case 2:
+            drawJigglyLines(size, 10);
+            break;
+        case 3:
+            drawJigglyLinesByDist(10);
             break;
     }
     
@@ -184,9 +193,11 @@ float ofxSoundBrush::getJitterOnMinorAxis(){
 //DIFFERENT KINDS OF BRUSHES. WILL BE A SWITCH CALL
 //---------------------------------------------------
 
+//    --------------------------from ofZach/drawing-examples/thickness
+//    ----------------------------------------------------------------
+
+
 void ofxSoundBrush::drawThickLine(){
-    //    --------------------------from ofZach/drawing-examples/thickness
-    //    ----------------------------------------------------------------
     
     ofMesh meshy;
     meshy.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
@@ -228,6 +239,145 @@ void ofxSoundBrush::drawThickLine(){
     
     ofSetColor(color);
     meshy.draw();
+    
     //    ofSetColor(100,100,100);
     //    meshy.drawWireframe();
+}
+
+//---------------------------------------------------
+
+
+//    --------------------------from ofZach/drawing-examples/thickness-function
+//    ----------------------------------------------------------------
+
+void ofxSoundBrush::drawWithThicknessFunction(int thickness){
+    ofMesh meshy;
+    meshy.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+    
+    float widthSmooth = 10;
+    float angleSmooth;
+    
+    for (int i = 0;  i < line.getVertices().size(); i++){
+        int me_m_one = i-1;
+        int me_p_one = i+1;
+        if (me_m_one < 0) me_m_one = 0;
+        if (me_p_one ==  line.getVertices().size()) me_p_one =  line.getVertices().size()-1;
+        ofPoint diff = line.getVertices()[me_p_one] - line.getVertices()[me_m_one];
+        float angle = atan2(diff.y, diff.x);
+        float dist = diff.length();
+        ofPoint offset;
+        offset.x = cos(angle + PI/2) * thickness;
+        offset.y = sin(angle + PI/2) * thickness;
+        meshy.addVertex(  line.getVertices()[i] +  offset );
+        meshy.addVertex(  line.getVertices()[i] -  offset );
+    }
+    
+    ofSetColor(color);
+    meshy.draw();
+    
+}
+
+//---------------------------------------------------
+
+void ofxSoundBrush::drawJigglyLines(int thickness, int jiggleAmount){
+    ofMesh meshy;
+    meshy.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+    
+    auto wiggledPoints = line.getVertices();
+    
+    if (wiggledPoints.size() > 3){
+        for(int i = 3; i < wiggledPoints.size()-3; i++){
+            wiggledPoints[i].x += ofRandomf() * jiggleAmount;
+            wiggledPoints[i].y += ofRandomf() * jiggleAmount;
+        }
+    }
+    
+    ofPolyline wiggledLine;
+    wiggledLine.addVertices(wiggledPoints);
+    
+    for (int i = 0;  i < wiggledLine.getVertices().size(); i++){
+        int me_m_one = i-1;
+        int me_p_one = i+1;
+        if (me_m_one < 0) me_m_one = 0;
+        if (me_p_one ==  wiggledLine.getVertices().size()) me_p_one =  wiggledLine.getVertices().size()-1;
+        ofPoint diff = wiggledLine.getVertices()[me_p_one] - wiggledLine.getVertices()[me_m_one];
+        float angle = atan2(diff.y, diff.x);
+        float dist = diff.length();
+        ofPoint offset;
+        offset.x = cos(angle + PI/2) * thickness;
+        offset.y = sin(angle + PI/2) * thickness;
+        meshy.addVertex(  wiggledLine.getVertices()[i] +  offset );
+        meshy.addVertex(  wiggledLine.getVertices()[i] -  offset );
+    }
+    
+    ofSetColor(color);
+    meshy.draw();
+    
+    
+}
+
+//---------------------------------------------------
+
+void ofxSoundBrush::drawJigglyLinesByDist(int weight){
+    ofMesh meshy;
+    meshy.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+    
+    
+    auto wiggledPoints = line.getVertices();
+    
+    int midPoint = wiggledPoints.size() / 2;
+    
+    if(wiggledPoints.size() > 4){
+    for(int i = 0; i < wiggledPoints.size(); i++){
+        int steps = abs(midPoint - steps);
+        int normalizedSteps = 1 - (steps / midPoint);
+        
+        wiggledPoints[i].x +=  ofRandom(weight) * normalizedSteps;
+        wiggledPoints[i].y += ofRandom(weight) * normalizedSteps;
+    }
+    }
+    
+    ofPolyline wiggledLine;
+    wiggledLine.addVertices(wiggledPoints);
+    
+    
+    float widthSmooth = 10;
+    float angleSmooth;
+    
+    for (int i = 0;  i < wiggledLine.getVertices().size(); i++){
+        
+        int me_m_one = i-1;
+        int me_p_one = i+1;
+        if (me_m_one < 0) me_m_one = 0;
+        if (me_p_one ==  wiggledLine.getVertices().size()) me_p_one =  wiggledLine.getVertices().size()-1;
+        
+        ofPoint diff = wiggledLine.getVertices()[me_p_one] - wiggledLine.getVertices()[me_m_one];
+        float angle = atan2(diff.y, diff.x);
+        
+        if (i == 0) angleSmooth = angle;
+        else {
+            
+            angleSmooth = ofLerpRadians(angleSmooth, angle, 1.0);
+            
+        }
+        
+        float dist = diff.length();
+        
+        float w = ofMap(dist, 0, size, 40, 2, true);
+        
+        widthSmooth = 0.9f * widthSmooth + 0.1f * w;
+        
+        ofPoint offset;
+        offset.x = cos(angleSmooth + PI/2) * widthSmooth;
+        offset.y = sin(angleSmooth + PI/2) * widthSmooth;
+        
+        meshy.addVertex(  wiggledLine.getVertices()[i] +  offset );
+        meshy.addVertex(  wiggledLine.getVertices()[i] -  offset );
+        
+    }
+    
+    ofSetColor(color);
+    meshy.draw();
+    
+    
 }

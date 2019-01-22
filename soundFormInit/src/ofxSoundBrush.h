@@ -57,6 +57,11 @@ private:
     int brushType;
     
     void drawThickLine();
+    void drawWithThicknessFunction(int thickness);
+    void drawJigglyLines(int thickness, int jiggleAmount);
+    void drawJigglyLinesByDist(int weight);
+    
+    
     bool isDebug;
     
 };
