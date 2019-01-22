@@ -61,6 +61,7 @@ private:
     void drawJigglyLines(int thickness, int jiggleAmount);
     void drawJigglyLinesByDist(int weight);
     
+    ofShader shades;
     
     bool isDebug;
     

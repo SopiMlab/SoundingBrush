@@ -13,8 +13,10 @@ ofxSoundBrush::ofxSoundBrush(){
     standardDeviationX = standardDeviationY = 0.0f;
     varianceX = varianceY = 0.0f;
     
-    brushType = 3;
+    brushType = 1;
     isDebug = false;
+    
+    shades.load("shaders/alpha.vert", "shaders/alpha.frag");
     
     /*
      int totalVertices = 100;
@@ -69,6 +71,8 @@ void ofxSoundBrush::addPoint(glm::vec2 _p){
     calculateDataSet();
     calculateSD();
     
+    line = line.getSmoothed(1); //TODO or Not TODO?
+
 }
 
 //--------------------------------------------------
@@ -256,6 +260,7 @@ void ofxSoundBrush::drawWithThicknessFunction(int thickness){
     
     float widthSmooth = 10;
     float angleSmooth;
+    
     
     for (int i = 0;  i < line.getVertices().size(); i++){
         int me_m_one = i-1;

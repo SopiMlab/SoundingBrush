@@ -125,7 +125,10 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
      If shaper is < 1 and > 0 you can get non linear range weighted towards the end.
      There are plenty of other shaper functions that take a pct (a number between 0 and 1) and output a pct, which might help.
      */
-
+    
+    ofFbo fbo;
+    ofShader shader;
+    
 };
 
 

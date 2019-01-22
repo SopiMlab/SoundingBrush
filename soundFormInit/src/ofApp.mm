@@ -10,6 +10,7 @@ void ofApp::setup(){
     ofSetBackgroundColor(ofColor::white);
     ofEnableSmoothing();
     ofEnableAntiAliasing();
+    ofDisableArbTex();
     
     ofRegisterTouchEvents(this);
     ofxiOSAlerts.addListener(this);
@@ -58,6 +59,9 @@ void ofApp::setup(){
     pinchParam = 0.5f;
     pinchDistCurrent = pinchDistLast = 0;
     
+    fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGB);
+    shader.load("shaders/alpha.vert", "shaders/alpha.frag");
+    
 }
 
 //--------------------------------------------------------------
@@ -68,10 +72,25 @@ void ofApp::update(){
         //pd.receiveMidi();
     }
     
+    fbo.begin();
+    ofClear(ofColor::yellow);
+    shader.begin();
+    shader.setUniform1f("alpha", .33);
+    glm::vec3 c = glm::vec3(1.0, ofRandomf(), 0.0);
+    shader.setUniform3f("col", c.x, c.y, c.z);
+    ofSetColor(ofColor::blue);
+    ofFill();
+    ofDrawCircle(ofGetWidth()/2, ofGetHeight()/2, 300);
+    shader.end();
+    
+    fbo.end();
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    
+    fbo.draw(0, 0);
     
 //    path.draw();
     gui.draw();
