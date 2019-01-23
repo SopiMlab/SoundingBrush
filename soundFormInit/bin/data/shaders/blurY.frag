@@ -44,9 +44,7 @@ float noise(vec2 x) {
 
 void main() {
 vec4 color = texture2D(tex0, texCoordVarying);
-if(color.a != 0.0){
-	color = vec4(color.r, color.g, color.b, alpha);
-}
+color = vec4(color.r, color.g, color.b, alpha);
 
 gl_FragColor = color;
 }

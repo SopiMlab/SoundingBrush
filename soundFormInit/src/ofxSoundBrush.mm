@@ -17,6 +17,12 @@ ofxSoundBrush::ofxSoundBrush(){
     isDebug = false;
     
     baseFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    
+    blurX.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    blurY.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    sBlurX.load("shaders/blurX");
+    sBlurY.load("shaders/blurY");
+
     finalFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
     
     mainShader.load("shaders/base");
@@ -101,21 +107,30 @@ void ofxSoundBrush::addPoint(glm::vec2 _p){
     mainShader.end();
     baseFbo.end();
     
-//    finalFbo.begin();
-//    ofClear(0, 0);
-//    alphaShader.begin();
-//    alphaShader.setUniform1f("alpha", color.a/float(255));
+//    blurX.begin();
+//    sBlurX.begin();
+//    sBlurX.setUniform2f("resolution", ofGetWidth(), ofGetHeight());
+//    sBlurX.setUniform1f("bAmount", 10);
 //    baseFbo.draw(0, 0);
-//    alphaShader.end();
-//    finalFbo.end();
+//    sBlurX.end();
+//    blurX.end();
+    
+    finalFbo.begin();
+    ofClear(0, 0);
+    alphaShader.begin();
+    alphaShader.setUniform1f("alpha", color.a/float(255));
+    baseFbo.draw(0, 0);
+    alphaShader.end();
+    finalFbo.end();
 
 }
 
 //--------------------------------------------------
 void ofxSoundBrush::draw(){
     
-    baseFbo.draw(0, 0);
-//    finalFbo.draw(0, 0);
+//    baseFbo.draw(0, 0);
+//    blurX.draw(0, 0);
+    finalFbo.draw(0, 0);
     
     //Below for debug.
     if(isDebug){

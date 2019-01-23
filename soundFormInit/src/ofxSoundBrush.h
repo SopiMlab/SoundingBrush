@@ -64,7 +64,10 @@ private:
     ofShader mainShader;
     ofShader alphaShader;
     
+    ofShader sBlurX, sBlurY;
+    
     ofFbo baseFbo;
+    ofFbo blurX, blurY;
     ofFbo finalFbo;
     
     bool isDebug;
