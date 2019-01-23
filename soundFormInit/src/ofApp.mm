@@ -11,6 +11,7 @@ void ofApp::setup(){
     ofEnableSmoothing();
     ofEnableAntiAliasing();
     ofDisableArbTex();
+//    ofEnableDepthTest();
     
     ofRegisterTouchEvents(this);
     ofxiOSAlerts.addListener(this);
@@ -59,7 +60,9 @@ void ofApp::setup(){
     pinchParam = 0.5f;
     pinchDistCurrent = pinchDistLast = 0;
     
-    fbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGB);
+    ping.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    pong.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    
     shader.load("shaders/alpha.vert", "shaders/alpha.frag");
     
 }
@@ -72,28 +75,35 @@ void ofApp::update(){
         //pd.receiveMidi();
     }
     
-    fbo.begin();
-    ofClear(ofColor::yellow);
-    shader.begin();
-    shader.setUniform1f("alpha", .33);
-    glm::vec3 c = glm::vec3(1.0, ofRandomf(), 0.0);
-    shader.setUniform3f("col", c.x, c.y, c.z);
-    ofSetColor(ofColor::blue);
-    ofFill();
-    ofDrawCircle(ofGetWidth()/2, ofGetHeight()/2, 300);
-    shader.end();
+//    ping.begin();
+//    ofClear(ofColor::yellow);
+//    ofSetColor(ofColor::blue);
+//    ofFill();
+//    ofDrawCircle(ofGetWidth()/2, ofGetHeight()/2, 300);
+//    ping.end();
+//
+//    pong.begin();
+//    ofClear(0, 0, 0, 255);
+//    shader.begin();
+//    shader.setUniform1f("blurAmnt", .005);
+//    ping.draw(0, 0);
+//    shader.end();
+//    pong.end();
     
-    fbo.end();
-    
+  
+   
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     
-    fbo.draw(0, 0);
+//    pong.draw(0, 0);
     
 //    path.draw();
-    gui.draw();
+//    gui.draw();
+    
+    ofSetColor(ofColor::white);
+    ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
     
     for(int i = 0; i < brushes.size(); i++){
         brushes[i].draw();

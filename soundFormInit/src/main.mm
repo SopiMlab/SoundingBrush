@@ -14,7 +14,7 @@ int main() {
     settings.glesVersion = OFXIOS_RENDERER_ES2; // type of renderer to use, ES1, ES2, ES3
     settings.windowControllerType = ofxiOSWindowControllerType::GL_KIT; // Window Controller Type
     settings.colorType = ofxiOSRendererColorFormat::RGBA8888; // color format used default RGBA8888
-    settings.depthType = ofxiOSRendererDepthFormat::DEPTH_NONE; // depth format (16/24) if depth enabled
+    settings.depthType = ofxiOSRendererDepthFormat::DEPTH_16; // depth format (16/24) if depth enabled
     settings.stencilType = ofxiOSRendererStencilFormat::STENCIL_8 ; // stencil mode
     settings.windowMode = OF_FULLSCREEN;
     settings.enableMultiTouch = true;

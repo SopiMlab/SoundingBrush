@@ -9,7 +9,9 @@ varying float depth;
 varying vec4 colorVarying;
 varying vec2 texCoordVarying;
 
-uniform float alpha;
+uniform vec4 c;
+uniform vec2 resolution;
+// uniform float alpha;
 
 float hash(float n) { return fract(sin(n) * 1e4); }
 float hash(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
@@ -43,8 +45,9 @@ float noise(vec2 x) {
 }
 
 void main() {
-vec4 color = texture2D(tex0, texCoordVarying);
-color = vec4(color.r, color.g, color.b, alpha);
+
+vec4 color = c;
+//do other stuff here!
 
 gl_FragColor = color;
 }

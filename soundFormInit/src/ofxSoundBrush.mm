@@ -16,7 +16,11 @@ ofxSoundBrush::ofxSoundBrush(){
     brushType = 1;
     isDebug = false;
     
-    shades.load("shaders/alpha.vert", "shaders/alpha.frag");
+    baseFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    finalFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    
+    mainShader.load("shaders/base");
+    alphaShader.load("shaders/alpha");
     
     /*
      int totalVertices = 100;
@@ -72,12 +76,14 @@ void ofxSoundBrush::addPoint(glm::vec2 _p){
     calculateSD();
     
     line = line.getSmoothed(1); //TODO or Not TODO?
-
-}
-
-//--------------------------------------------------
-void ofxSoundBrush::draw(){
     
+    baseFbo.begin();
+    ofClear(0,0);
+    mainShader.begin();
+    glm::vec4 c = glm::vec4(color.r/float(255), color.g/float(255), color.b/float(255), 1.0);
+    mainShader.setUniform4f("c", c);
+    mainShader.setUniform2f("resolution", glm::vec2(ofGetWidth(), ofGetHeight()));
+//    mainShader.setUniform1f("alpha", color.a/float(255));
     switch(brushType){
         case 0:
             drawThickLine();
@@ -92,7 +98,24 @@ void ofxSoundBrush::draw(){
             drawJigglyLinesByDist(10);
             break;
     }
+    mainShader.end();
+    baseFbo.end();
     
+//    finalFbo.begin();
+//    ofClear(0, 0);
+//    alphaShader.begin();
+//    alphaShader.setUniform1f("alpha", color.a/float(255));
+//    baseFbo.draw(0, 0);
+//    alphaShader.end();
+//    finalFbo.end();
+
+}
+
+//--------------------------------------------------
+void ofxSoundBrush::draw(){
+    
+    baseFbo.draw(0, 0);
+//    finalFbo.draw(0, 0);
     
     //Below for debug.
     if(isDebug){
