@@ -19,6 +19,7 @@ public:
     
     void addPoint(glm::vec2 _p);
     
+    void update(){handleShaders();};
     void draw();
     
     void setColor(ofColor _c);
@@ -71,5 +72,7 @@ private:
     ofFbo finalFbo;
     
     bool isDebug;
+    
+    void handleShaders(); //this needs to be wrapped in an update function?
     
 };

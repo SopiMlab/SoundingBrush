@@ -11,6 +11,7 @@ varying vec2 texCoordVarying;
 
 uniform vec4 c;
 uniform vec2 resolution;
+uniform float length;
 // uniform float alpha;
 
 float hash(float n) { return fract(sin(n) * 1e4); }
@@ -48,6 +49,8 @@ void main() {
 
 vec4 color = c;
 //do other stuff here!
+// color.rgb -= max((gl_FragCoord.x/resolution.x * gl_FragCoord.y/resolution.y), .33);
+// color.a = noise(length);
 
 gl_FragColor = color;
 }

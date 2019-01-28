@@ -91,6 +91,9 @@ void ofApp::update(){
 //    pong.end();
     
   
+    for(auto &b : brushes){
+        b.update();
+    }
    
 }
 

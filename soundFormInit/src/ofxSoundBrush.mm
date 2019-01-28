@@ -82,14 +82,19 @@ void ofxSoundBrush::addPoint(glm::vec2 _p){
     calculateSD();
     
     line = line.getSmoothed(1); //TODO or Not TODO?
-    
+
+}
+
+//--------------------------------------------------
+void ofxSoundBrush::handleShaders(){
     baseFbo.begin();
     ofClear(0,0);
     mainShader.begin();
     glm::vec4 c = glm::vec4(color.r/float(255), color.g/float(255), color.b/float(255), 1.0);
     mainShader.setUniform4f("c", c);
     mainShader.setUniform2f("resolution", glm::vec2(ofGetWidth(), ofGetHeight()));
-//    mainShader.setUniform1f("alpha", color.a/float(255));
+    mainShader.setUniform1f("length", points.size());
+    //    mainShader.setUniform1f("alpha", color.a/float(255));
     switch(brushType){
         case 0:
             drawThickLine();
@@ -107,22 +112,23 @@ void ofxSoundBrush::addPoint(glm::vec2 _p){
     mainShader.end();
     baseFbo.end();
     
-//    blurX.begin();
-//    sBlurX.begin();
-//    sBlurX.setUniform2f("resolution", ofGetWidth(), ofGetHeight());
-//    sBlurX.setUniform1f("bAmount", 10);
-//    baseFbo.draw(0, 0);
-//    sBlurX.end();
-//    blurX.end();
+    //    blurX.begin();
+    //    sBlurX.begin();
+    //    sBlurX.setUniform2f("resolution", ofGetWidth(), ofGetHeight());
+    //    sBlurX.setUniform1f("bAmount", 10);
+    //    baseFbo.draw(0, 0);
+    //    sBlurX.end();
+    //    blurX.end();
     
     finalFbo.begin();
     ofClear(0, 0);
     alphaShader.begin();
+    mainShader.setUniform2f("resolution", glm::vec2(ofGetWidth(), ofGetHeight()));
     alphaShader.setUniform1f("alpha", color.a/float(255));
+    alphaShader.setUniform1f("length", points.size());
     baseFbo.draw(0, 0);
     alphaShader.end();
     finalFbo.end();
-
 }
 
 //--------------------------------------------------
