@@ -72,6 +72,7 @@ private:
     ofFbo finalFbo;
     
     bool isDebug;
+    float rSeed;
     
     void handleShaders(); //this needs to be wrapped in an update function?
     

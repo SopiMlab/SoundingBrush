@@ -9,42 +9,22 @@ varying float depth;
 varying vec4 colorVarying;
 varying vec2 texCoordVarying;
 
-uniform float alpha;
+uniform float bAmount;
+uniform vec2 resolution;
 
-float hash(float n) { return fract(sin(n) * 1e4); }
-float hash(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
-
-float noise(float x) {
-	float i = floor(x);
-	float f = fract(x);
-	float u = f * f * (3.0 - 2.0 * f);
-	return mix(hash(i), hash(i + 1.0), u);
-}
-
-float noise(vec2 x) {
-	vec2 i = floor(x);
-	vec2 f = fract(x);
-
-	// Four corners in 2D of a tile
-	float a = hash(i);
-	float b = hash(i + vec2(1.0, 0.0));
-	float c = hash(i + vec2(0.0, 1.0));
-	float d = hash(i + vec2(1.0, 1.0));
-
-	// Simple 2D lerp using smoothstep envelope between the values.
-	// return vec3(mix(mix(a, b, smoothstep(0.0, 1.0, f.x)),
-	//			mix(c, d, smoothstep(0.0, 1.0, f.x)),
-	//			smoothstep(0.0, 1.0, f.y)));
-
-	// Same code, with the clamps in smoothstep and common subexpressions
-	// optimized away.
-	vec2 u = f * f * (3.0 - 2.0 * f);
-	return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
-}
-
-void main() {
-vec4 color = texture2D(tex0, texCoordVarying);
-color = vec4(color.r, color.g, color.b, alpha);
-
-gl_FragColor = color;
+void main()
+{
+	vec2 st = texCoordVarying;
+	vec4 color = texture2D(tex0, texCoordVarying);
+	color += 0.0004 * 1.0 * texture2D(tex0, st + vec2(0.0, bAmount * -4.0));
+	color += 0.004 * 2.0 * texture2D(tex0, st + vec2(0.0, bAmount * -3.0));
+	color += 0.004 * 3.0 * texture2D(tex0, st + vec2(0.0, bAmount * -2.0));
+	color += 0.04 * 4.0 * texture2D(tex0, st + vec2(0.0, bAmount * -1.0));
+	// color += 0.4 * 5.0 * texture2D(tex0, st + vec2(0.0, bAmount));
+	color += 0.04 * 4.0 * texture2D(tex0, st + vec2(0.0, bAmount * 1.0));
+	color += 0.004 * 3.0 * texture2D(tex0, st + vec2(0.0, bAmount * 2.0));
+	color += 0.0004 * 2.0 * texture2D(tex0, st + vec2(0.0, bAmount * 3.0));
+	color += 0.00004 * 1.0 * texture2D(tex0, st + vec2(bAmount * 4.0));
+	//color /= 25.0;
+  gl_FragColor = vec4(color);
 }

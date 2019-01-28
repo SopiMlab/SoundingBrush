@@ -12,6 +12,7 @@ varying vec2 texCoordVarying;
 uniform float alpha;
 uniform vec2 resolution;
 uniform float length;
+uniform float time;
 
 float hash(float n) { return fract(sin(n) * 1e4); }
 float hash(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
@@ -52,6 +53,7 @@ if(color.a != 0.0){
 	// color = vec4(color.r, color.g, color.b, color.a - noise(gl_FragCoord.xy) * 0.33);
 	// float setAlpha = length/1000.0;
 	color = vec4(color.r, color.g, color.b, alpha);
+	// color -= clamp(sin(time), 0.25, 0.5);
 	// color.a = max(length/100.0, .1);
 }
 

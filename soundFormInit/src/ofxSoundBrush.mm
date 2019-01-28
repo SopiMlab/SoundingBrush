@@ -12,6 +12,7 @@ ofxSoundBrush::ofxSoundBrush(){
     average = glm::vec2(0, 0);
     standardDeviationX = standardDeviationY = 0.0f;
     varianceX = varianceY = 0.0f;
+    rSeed = ofRandom(360);
     
     brushType = 1;
     isDebug = false;
@@ -92,7 +93,9 @@ void ofxSoundBrush::handleShaders(){
     mainShader.begin();
     glm::vec4 c = glm::vec4(color.r/float(255), color.g/float(255), color.b/float(255), 1.0);
     mainShader.setUniform4f("c", c);
-    mainShader.setUniform2f("resolution", glm::vec2(ofGetWidth(), ofGetHeight()));
+    mainShader.setUniform2f("area", width/float(ofGetWidth()), height/float(ofGetHeight()));
+    mainShader.setUniform2f("screenResolution", glm::vec2(ofGetWidth(), ofGetHeight()));
+    alphaShader.setUniform1f("time", rSeed);
     mainShader.setUniform1f("length", points.size());
     //    mainShader.setUniform1f("alpha", color.a/float(255));
     switch(brushType){
@@ -126,9 +129,26 @@ void ofxSoundBrush::handleShaders(){
     mainShader.setUniform2f("resolution", glm::vec2(ofGetWidth(), ofGetHeight()));
     alphaShader.setUniform1f("alpha", color.a/float(255));
     alphaShader.setUniform1f("length", points.size());
+    alphaShader.setUniform1f("time", ofGetElapsedTimef());
     baseFbo.draw(0, 0);
     alphaShader.end();
     finalFbo.end();
+    
+//    blurX.begin();
+//    sBlurX.begin();
+//    sBlurX.setUniformTexture("tex0", finalFbo.getTexture(), 0);
+//    sBlurX.setUniform1f("bAmount", size/float(100000));
+//    finalFbo.draw(0, 0);
+//    sBlurX.end();
+//    blurX.end();
+//
+//    blurY.begin();
+//    sBlurY.begin();
+//    sBlurY.setUniformTexture("tex0", blurX.getTexture(), 0);
+//    sBlurY.setUniform1f("bAmount", size/float(100000));
+//    blurX.draw(0, 0);
+//    sBlurY.end();
+//    blurY.end();
 }
 
 //--------------------------------------------------
@@ -136,7 +156,8 @@ void ofxSoundBrush::draw(){
     
 //    baseFbo.draw(0, 0);
 //    blurX.draw(0, 0);
-    finalFbo.draw(0, 0);
+//    blurY.draw(0, 0);
+//    finalFbo.draw(0, 0);
     
     //Below for debug.
     if(isDebug){
