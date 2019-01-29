@@ -15,7 +15,8 @@ public:
     
     void setup(string _patch); //constructor with patch name!
     
-    void setVariables(float _w, ofColor _c);
+    void setVariables(float _w, ofColor _c); //cam dynamic variables work? Check!
+    void setBrushType(int _bType) {brushType = _bType;}; //selects the drawing algo to draw - pair with setup?
     
     void addPoint(glm::vec2 _p);
     

@@ -29,23 +29,6 @@ ofxSoundBrush::ofxSoundBrush(){
     mainShader.load("shaders/base");
     alphaShader.load("shaders/alpha");
     
-    /*
-     int totalVertices = 100;
-     float yInc = (ofGetHeight()-100)/totalVertices;
-     for (int i = 0; i<= totalVertices; i++) {
-     pointsF.push_back(ofDefaultVec3(ofGetWidth()* ofRandomuf(), ofGetHeight() * ofRandomuf(), 0));
-     ofFloatColor c; c.setHsb(ofRandom(1), 1, 1 );
-     colors.push_back(c);
-     weights.push_back(10);
-     }
-     
-     fatLine.setCapType(OFX_FATLINE_CAP_ROUND);
-     fatLine.setJointType(OFX_FATLINE_JOINT_ROUND);
-     
-     fatLine.setFeather(2);
-     fatLine.add(pointsF, colors, weights);
-     */
-    
 }
 //--------------------------------------------------
 void ofxSoundBrush::setup(string _patch){
@@ -82,7 +65,7 @@ void ofxSoundBrush::addPoint(glm::vec2 _p){
     calculateDataSet();
     calculateSD();
     
-    line = line.getSmoothed(1); //TODO or Not TODO?
+    line = line.getSmoothed(1); //TODO or Not TODO? Comment 29.1 can work w/ update of a few sounds...
 
 }
 
@@ -157,7 +140,7 @@ void ofxSoundBrush::draw(){
 //    baseFbo.draw(0, 0);
 //    blurX.draw(0, 0);
 //    blurY.draw(0, 0);
-//    finalFbo.draw(0, 0);
+    finalFbo.draw(0, 0);
     
     //Below for debug.
     if(isDebug){
