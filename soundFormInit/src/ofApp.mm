@@ -152,8 +152,8 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             std::cout << "Brushpatches size is now: " << brushPatches.size() << endl;
             
             //Map brush size to frequency
-            float f = nlMap(guiWidth, 1.f, 100.f, 6000.f, 40.f, .3); //frequency mapping.
-            int fm = ofMap(guiWidth, 1.f, 100.f, 70, 40); //midi mapping
+            float f = nlMap(guiWidth, 1.f, 100.f, 4186.009f, 27.5f, .3); //frequency mapping.
+            int fm = ofMap(guiWidth, 1.f, 100.f, 108, 21); //midi mapping
             
             //This will initialize the brush/synth combo.
             pd.startMessage();
@@ -172,7 +172,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     break;
                 case 2:
                     //Do stuff.
-                    pd.addFloat(100);
+                    pd.addFloat(100); //???
                     break;
                 case 3:
                     //Do stuff.

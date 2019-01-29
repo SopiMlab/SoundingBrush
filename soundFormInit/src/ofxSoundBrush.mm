@@ -19,10 +19,10 @@ ofxSoundBrush::ofxSoundBrush(){
     
     baseFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
     
-    blurX.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
-    blurY.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
-    sBlurX.load("shaders/blurX");
-    sBlurY.load("shaders/blurY");
+//    blurX.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+//    blurY.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+//    sBlurX.load("shaders/blurX");
+//    sBlurY.load("shaders/blurY");
 
     finalFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
     
