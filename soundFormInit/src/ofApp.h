@@ -126,9 +126,6 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
      There are plenty of other shaper functions that take a pct (a number between 0 and 1) and output a pct, which might help.
      */
     
-    ofFbo ping, pong;
-    ofShader shader;
-    
 };
 
 

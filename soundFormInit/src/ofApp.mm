@@ -60,11 +60,6 @@ void ofApp::setup(){
     pinchParam = 0.5f;
     pinchDistCurrent = pinchDistLast = 0;
     
-    ping.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
-    pong.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
-    
-    shader.load("shaders/alpha.vert", "shaders/alpha.frag");
-    
 }
 
 //--------------------------------------------------------------
@@ -75,22 +70,6 @@ void ofApp::update(){
         //pd.receiveMidi();
     }
     
-//    ping.begin();
-//    ofClear(ofColor::yellow);
-//    ofSetColor(ofColor::blue);
-//    ofFill();
-//    ofDrawCircle(ofGetWidth()/2, ofGetHeight()/2, 300);
-//    ping.end();
-//
-//    pong.begin();
-//    ofClear(0, 0, 0, 255);
-//    shader.begin();
-//    shader.setUniform1f("blurAmnt", .005);
-//    ping.draw(0, 0);
-//    shader.end();
-//    pong.end();
-    
-  
     for(auto &b : brushes){
         b.update();
     }
@@ -99,11 +78,6 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
-//    pong.draw(0, 0);
-    
-//    path.draw();
-//    gui.draw();
     
     ofSetColor(ofColor::white);
     ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
