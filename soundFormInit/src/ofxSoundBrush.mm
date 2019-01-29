@@ -97,10 +97,10 @@ void ofxSoundBrush::handleShaders(){
             drawWithThicknessFunction(size);
             break;
         case 2:
-            drawJigglyLines(size, 10);
+            drawJigglyLines(size, 4);
             break;
         case 3:
-            drawJigglyLinesByDist(10);
+            drawJigglyLinesByDist(1);
             break;
     }
     mainShader.end();
@@ -470,6 +470,21 @@ void ofxSoundBrush::drawJigglyLinesByDist(int weight){
         mesh = meshy;
         meshy.draw();
     } else {
+        
+        auto & vertices = mesh.getVertices();
+        
+        int midPoint = vertices.size() / 2;
+        
+        if(vertices.size() > 4){
+            for(int i = 0; i < vertices.size(); i++){
+                int steps = abs(midPoint - steps);
+                int normalizedSteps = 1 - (steps / midPoint);
+                
+                vertices[i].x +=  ofRandom(-weight, weight) * normalizedSteps;
+                vertices[i].y += ofRandom(-weight, weight) * normalizedSteps;
+            }
+        }
+        
         mesh.draw();
     }
     
