@@ -38,6 +38,8 @@ public:
     void setDollarZeroString(string _dZero) {dollarZeroString = _dZero;};
     string getDollarZeroString() {return dollarZeroString;};
     
+    bool drawing;
+    
 private:
     string patch;
     ofColor color;
@@ -77,5 +79,7 @@ private:
     float rSeed;
     
     void handleShaders(); //this needs to be wrapped in an update function?
+    
+    ofMesh mesh;
     
 };

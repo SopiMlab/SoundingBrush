@@ -289,6 +289,8 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
         
         init = true;
         bWasTouching = false;
+        
+        brushes[brushes.size() - 1].drawing = false;
     }
     
     if(touch.id == 0){
@@ -395,7 +397,7 @@ void ofApp::receiveList(const std::string& dest, const List& list){
             //need an update params function here by brush type, hmm.
         }
         
-        brushes[index].setAlpha(values[0]);
+        if (brushes[index].drawing == false) brushes[index].setAlpha(values[0]);
         
     }
     
