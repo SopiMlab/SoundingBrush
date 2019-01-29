@@ -393,6 +393,12 @@ void ofxSoundBrush::drawJigglyLines(int thickness, int jiggleAmount){
         meshy.draw();
         
     } else {
+        
+        for(auto & vertex : mesh.getVertices()){
+            vertex.x += ofRandomf() * jiggleAmount;
+            vertex.y += ofRandomf() * jiggleAmount;
+        }
+        
         mesh.draw();
     }
     
