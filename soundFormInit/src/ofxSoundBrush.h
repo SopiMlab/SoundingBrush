@@ -14,6 +14,7 @@ public:
     ofxSoundBrush(); //default contructor
     
     void setup(string _patch); //constructor with patch name!
+    void setup(string _patch, int _bType);
     
     void setVariables(float _w, ofColor _c); //cam dynamic variables work? Check!
     void setBrushType(int _bType) {brushType = _bType;}; //selects the drawing algo to draw - pair with setup?

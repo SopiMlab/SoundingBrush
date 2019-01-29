@@ -14,7 +14,7 @@ ofxSoundBrush::ofxSoundBrush(){
     varianceX = varianceY = 0.0f;
     rSeed = ofRandom(360);
     
-    brushType = 1;
+    brushType = 0;
     isDebug = false;
     
     baseFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
@@ -33,7 +33,14 @@ ofxSoundBrush::ofxSoundBrush(){
 //--------------------------------------------------
 void ofxSoundBrush::setup(string _patch){
     patch = _patch;
+    
 }
+//--------------------------------------------------
+void ofxSoundBrush::setup(string _patch, int _bType){
+    patch = _patch;
+    brushType = _bType;
+}
+
 //--------------------------------------------------
 void ofxSoundBrush::setVariables(float _w, ofColor _c){
     color = _c;

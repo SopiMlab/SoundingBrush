@@ -392,6 +392,7 @@ void ofApp::receiveList(const std::string& dest, const List& list){
         
         for(int i = 0; i<brushes.size(); i++){
             if (brushes[i].getDollarZeroString() == dollarZero) index = i;
+            //need an update params function here by brush type, hmm.
         }
         
         brushes[index].setAlpha(values[0]);
