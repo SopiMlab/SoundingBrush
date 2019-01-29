@@ -117,22 +117,22 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             //Setup the kind of brush depending on selection!
             switch(guiBrushSelector){
                 case 0:
-                    b.setup("pd/sinewithamp.pd");
+                    b.setup("pd/sinewithamp.pd", 0);
                     break;
                 case 1:
-                    b.setup("pd/dtc_mod.pd");
+                    b.setup("pd/dtc_mod.pd", 1);
                     break;
                 case 2:
-                    b.setup("pd/granular-redux.pd");
+                    b.setup("pd/granular-redux.pd", 0);
                     break;
                 case 3:
-                    b.setup("pd/karplus.pd");
+                    b.setup("pd/karplus.pd", 2);
                     break;
                 case 4:
-                    b.setup("pd/granular_andy.pd");
+                    b.setup("pd/granular_andy.pd", 3);
                     break;
                 case 5:
-                    b.setup("pd/crackture.pd");
+                    b.setup("pd/crackture.pd", 1);
                     break;
             }
             
