@@ -97,7 +97,7 @@ void ofxSoundBrush::handleShaders(){
             drawWithThicknessFunction(size);
             break;
         case 2:
-            drawJigglyLines(size, 4);
+            drawJigglyLines(size, size/25.0);
             break;
         case 3:
             drawJigglyLinesByDist(1);

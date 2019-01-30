@@ -25,7 +25,7 @@ void ofApp::setup(){
     
     gui.setup();
     gui.add(guiBrushSelector.set("Brush", 0, 0, 5));
-    gui.add(guiWidth.set("Width", 1, 1, 100));
+    gui.add(guiWidth.set("Width", 1, 1, 150));
     gui.add(guiColor.set("Color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255)));
     
     //Doing audio setup now.
@@ -152,8 +152,8 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             std::cout << "Brushpatches size is now: " << brushPatches.size() << endl;
             
             //Map brush size to frequency
-            float f = nlMap(guiWidth, 1.f, 100.f, 4186.009f, 27.5f, .3); //frequency mapping.
-            int fm = ofMap(guiWidth, 1.f, 100.f, 108, 21); //midi mapping
+            float f = nlMap(guiWidth, 1.f, 150.f, 4186.009f, 27.5f, .3); //frequency mapping.
+            int fm = ofMap(guiWidth, 1.f, 150.f, 108, 21); //midi mapping
             
             //This will initialize the brush/synth combo.
             pd.startMessage();
@@ -397,7 +397,10 @@ void ofApp::receiveList(const std::string& dest, const List& list){
             //need an update params function here by brush type, hmm.
         }
         
-        if (brushes[index].drawing == false) brushes[index].setAlpha(values[0]);
+        if (brushes[index].drawing == false){
+            float mappedValue = nlMap(values[0], 0, 100, 0, 255, 2);
+            brushes[index].setAlpha(mappedValue);
+        }
         
     }
     
