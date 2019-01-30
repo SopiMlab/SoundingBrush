@@ -24,7 +24,7 @@ void ofApp::setup(){
     
     
     gui.setup();
-    gui.add(guiBrushSelector.set("Brush", 0, 0, 5));
+    gui.add(guiBrushSelector.set("Brush", 0, 0, 6));
     gui.add(guiWidth.set("Width", 1, 1, 150));
     gui.add(guiColor.set("Color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255)));
     
@@ -134,6 +134,9 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                 case 5:
                     b.setup("pd/crackture.pd", 1);
                     break;
+                case 6:
+                    b.setup("pd/bassline.pd", 1);
+                    break;
             }
             
             b.setVariables(guiWidth, guiColor); //Setup the colour and width of the brush.
@@ -182,6 +185,11 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     break;
                 case 5:
                     //Do stuff.
+                    break;
+                case 6:
+                    pd.addFloat(f);
+                    pd.addFloat(guiWidth * 10);
+                    pd.addFloat(ofRandomuf());
                     break;
             }
             
@@ -251,6 +259,9 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
                 pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 1000, 0, 1));
                 pd.addFloat(ofMap(brushes[brushes.size()-1].getJitterOnMinorAxis(), 0, 800, 100, 2000, true));
                 break;
+            case 6:
+                //do stuff.
+                break;
         }
         
         pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
@@ -282,6 +293,16 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
                 karpValue = brushes[brushes.size()-1].getNumVertices();
                 karpValue = ofMap(karpValue, 0, 1000, 40, 70);
                 pd.addFloat(karpValue);
+                break;
+            case 4:
+                //do stuff.
+                break;
+            case 5:
+                //do stuff.
+                break;
+            case 6:
+                float v = brushes[brushes.size()-1].getNumVertices();
+                pd.addFloat(v);
                 break;
         }
         
