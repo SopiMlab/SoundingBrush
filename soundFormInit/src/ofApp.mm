@@ -287,7 +287,8 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
                 
                 if (d > .1){
                     cout << "adding" << endl;
-                    filterParam += 0.5;
+                    filterParam += 0.01;
+                    filterParam = ofClamp(filterParam, 0.0, 1.0);
                     env = 1;
                 } else {
                     cout << "zeroing out!" << endl;
