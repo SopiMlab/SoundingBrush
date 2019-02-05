@@ -148,14 +148,16 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             
             brushes.push_back(b);
             
+            ofxSoundBrush * currentBrush = &brushes[brushes.size() - 1];
+            
             //Also instantiate the pd patch for the same!
-            Patch p = pd.openPatch(brushes[brushes.size() - 1].getPatch());
+            Patch p = pd.openPatch(currentBrush->getPatch());
             brushPatches.push_back(p);
             
             //Get the dollar zero value from the patch to the brush.
             //This will come in handy when I'm receiving stuff from PD.
             string s = brushPatches[brushPatches.size() - 1].dollarZeroStr();
-            brushes[brushes.size() - 1].setDollarZeroString(s);
+            currentBrush->setDollarZeroString(s);
             
             std::cout << "Brushpatches size is now: " << brushPatches.size() << endl;
             
@@ -243,8 +245,10 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
     
     if(brushes.size() > 0 && bWasTouching){
         
+        ofxSoundBrush * currentBrush = &brushes[brushes.size() - 1];
+        
         //Add points to the last brush instance.
-        brushes[brushes.size() - 1].addPoint(firstTouch);
+        currentBrush->addPoint(firstTouch);
         
         //Updates go to $0-fromOF
         pd.startMessage();
@@ -252,11 +256,11 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
         //Again, switch according to brush type!
         switch(guiBrushSelector){
             case 0:
-                pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 800, 0, 1, true));
+                pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 800, 0, 1, true));
                 break;
             case 1:
-                pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 700, 200, 500, true));
-                pd.addFloat(ofMap(brushes[brushes.size()-1].getJitterOnMinorAxis(), 0, 800, 0.1, 0.3, true));
+                pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 700, 200, 500, true));
+                pd.addFloat(ofMap(currentBrush->getJitterOnMinorAxis(), 0, 800, 0.1, 0.3, true));
                 pd.addFloat(ofClamp(pinchParam, 0.1, 1));
                 break;
             case 2:
@@ -267,11 +271,11 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
                 //Do stuff.
                 break;
             case 4:
-                pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 1000, 0, 2000));
+                pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 1000, 0, 2000));
                 break;
             case 5:
-                pd.addFloat(ofMap(brushes[brushes.size()-1].getNumVertices(), 1, 1000, 0, 1));
-                pd.addFloat(ofMap(brushes[brushes.size()-1].getJitterOnMinorAxis(), 0, 800, 100, 2000, true));
+                pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 1000, 0, 1));
+                pd.addFloat(ofMap(currentBrush->getJitterOnMinorAxis(), 0, 800, 100, 2000, true));
                 break;
             case 6:
                 //do stuff.
@@ -281,20 +285,26 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
                 cout << firstTouch << endl;
                 
                 float d;
-                d = brushes[brushes.size() - 1].getLastDistance();
+                d = currentBrush->getLastDistance();
                 float env;
                 cout << d << endl;
                 
+                float dd;
+                dd = ofMap(d, 0, 100, 0, .5);
+                
                 if (d > .1){
                     cout << "adding" << endl;
-                    filterParam += 0.01;
-                    filterParam = ofClamp(filterParam, 0.0, 1.0);
+                    filterParam += dd;
+                    filterParam *= filterParam;
                     env = 1;
                 } else {
                     cout << "zeroing out!" << endl;
-                    filterParam = 0;
+                    filterParam -= 0.1;
+//                    filterParam = 0;
                     env = 0;
                 }
+                
+                filterParam = ofClamp(filterParam, 0.0, 20.0);
                 
                 pd.addFloat(filterParam);
                 pd.addFloat(env);
