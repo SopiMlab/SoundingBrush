@@ -40,6 +40,9 @@ public:
     
     bool drawing;
     
+    glm::vec3 getLastVertex() { return points[points.size() - 1];};
+    float getLastDistance();
+    
 private:
     string patch;
     ofColor color;

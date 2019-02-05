@@ -5,7 +5,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    ofSetFrameRate(120);
+    ofSetFrameRate(60);
     ofSetVerticalSync(true);
     ofSetBackgroundColor(ofColor::white);
     ofEnableSmoothing();
@@ -24,7 +24,7 @@ void ofApp::setup(){
     
     
     gui.setup();
-    gui.add(guiBrushSelector.set("Brush", 0, 0, 6));
+    gui.add(guiBrushSelector.set("Brush", 0, 0, 7));
     gui.add(guiWidth.set("Width", 1, 1, 150));
     gui.add(guiColor.set("Color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255)));
     
@@ -59,6 +59,8 @@ void ofApp::setup(){
     
     pinchParam = 0.5f;
     pinchDistCurrent = pinchDistLast = 0;
+    
+    cycles = 0;
     
 }
 
@@ -137,6 +139,9 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                 case 6:
                     b.setup("pd/bassline.pd", 1);
                     break;
+                case 7:
+                    b.setup("pd/testadsr.pd", 0);
+                    break;
             }
             
             b.setVariables(guiWidth, guiColor); //Setup the colour and width of the brush.
@@ -191,6 +196,10 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     pd.addFloat(guiWidth * 10);
                     pd.addFloat(ofRandomuf());
                     break;
+                case 7:
+                    //do stuff.
+                    filterParam = 0;
+                    break;
             }
             
             pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOFinit");
@@ -212,6 +221,10 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
 //--------------------------------------------------------------
 void ofApp::touchMoved(ofTouchEventArgs & touch){
     
+    cycles ++;
+    
+    if(cycles%2 == 0){
+    
     if(touch.id == 0) firstTouch = glm::vec2(touch.x, touch.y);
     if(touch.id == 1) secondTouch = glm::vec2(touch.x, touch.y);
     
@@ -229,6 +242,7 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
     
     
     if(brushes.size() > 0 && bWasTouching){
+        
         //Add points to the last brush instance.
         brushes[brushes.size() - 1].addPoint(firstTouch);
         
@@ -262,10 +276,38 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
             case 6:
                 //do stuff.
                 break;
+            case 7:
+                
+                cout << firstTouch << endl;
+                
+                float d;
+                d = brushes[brushes.size() - 1].getLastDistance();
+                float env;
+                cout << d << endl;
+                
+                if (d > .1){
+                    cout << "adding" << endl;
+                    filterParam += 0.5;
+                    env = 1;
+                } else {
+                    cout << "zeroing out!" << endl;
+                    filterParam = 0;
+                    env = 0;
+                }
+                
+                pd.addFloat(filterParam);
+                pd.addFloat(env);
+                
+                
+                //pd.addFloat(ofRandomf());
+                pd.addFloat(1.0); //value doesn't matter!
+                
         }
+        
         
         pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
         
+    }
     }
     
     
@@ -301,8 +343,12 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
                 //do stuff.
                 break;
             case 6:
-                float v = brushes[brushes.size()-1].getNumVertices();
+                float v;
+                v = brushes[brushes.size()-1].getNumVertices();
                 pd.addFloat(v);
+                break;
+            case 7:
+                pd.addFloat(1.0); //value doesn't matter.
                 break;
         }
         

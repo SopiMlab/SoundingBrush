@@ -248,6 +248,18 @@ float ofxSoundBrush::getJitterOnMinorAxis(){
     return a;
 }
 
+//---------------------------------------------------
+float ofxSoundBrush::getLastDistance(){
+    
+    float d = 0;
+    
+    if(points.size() > 2){
+        d = glm::distance(points[points.size()-1], points[points.size()-2]);
+    }
+    
+    return d;
+}
+
 
 //---------------------------------------------------
 //DIFFERENT KINDS OF BRUSHES. WILL BE A SWITCH CALL

@@ -97,6 +97,9 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     float pinchDistLast, pinchDistCurrent;
     bool bSecondFinger;
     
+    float filterParam;
+    unsigned long cycles;
+    
     //TODO: SETUP AND STORE A STRUCT FOR INFO BEING SENT.
     
     

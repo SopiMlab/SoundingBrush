@@ -287,22 +287,22 @@
 #X obj 161 79 loadbang;
 #X text 57 233 filesize;
 #N canvas 0 22 450 278 (subpatch) 0;
-#X array \$0-sample 507150 float 2;
-#X coords 0 1 507150 -1 200 140 1;
+#X array \$0-sample 47113 float 2;
+#X coords 0 1 47113 -1 200 140 1;
 #X restore 392 31 graph;
 #X obj 33 363 hsl 90 10 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 1406 1;
+-1 -1 2500 1;
 #X obj 30 380 t f b;
 #X obj 101 415 f;
 #X obj 31 457 *;
 #X floatatom 31 483 9 0 0 0 - - -;
 #X text 94 483 grainstart;
 #X obj 265 274 hsl 90 10 0 2000 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 0 1;
+-1 -1 100 1;
 #X obj 390 242 hsl 90 10 0.1 2 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 900 1;
+-1 -1 100 1;
 #X obj 508 274 hsl 90 10 1 2 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 6568 1;
+-1 -1 1078 1;
 #X floatatom 262 320 5 0 0 0 - - -;
 #X floatatom 454 259 5 0 0 0 - - -;
 #X floatatom 535 300 5 0 0 0 - - -;
