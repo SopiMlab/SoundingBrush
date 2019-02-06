@@ -57,6 +57,7 @@
 		75B90CF8644FE0FB9344C7D2 /* m_pd.c in Sources */ = {isa = PBXBuildFile; fileRef = 2FE1CE2510D6011389D5961F /* m_pd.c */; };
 		76D57156444CB9BF58E6E01F /* z_hooks.c in Sources */ = {isa = PBXBuildFile; fileRef = 6BEBF1126C6E88E7A22AD7E4 /* z_hooks.c */; };
 		77164A632D452D94040D6BB9 /* g_clone.c in Sources */ = {isa = PBXBuildFile; fileRef = 2EA7ED6EF5D63899EA3E1EE2 /* g_clone.c */; };
+		793F30A2F593AE1FFD098A03 /* ofxCoreMotion.mm in Sources */ = {isa = PBXBuildFile; fileRef = 165FF5B3324DB8B94488AFCA /* ofxCoreMotion.mm */; };
 		7A4EDAB9E3A0942248B588A4 /* g_hslider.c in Sources */ = {isa = PBXBuildFile; fileRef = A3C9F26BBF6CBA68755EAEB6 /* g_hslider.c */; };
 		7AF773C3595A333EF6C49A6B /* z_print_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 68444A0DC8A969728CC4E656 /* z_print_util.c */; };
 		7B2651CDC15D43638F6D2807 /* g_bang.c in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E6361E3947F0ED5300A1A /* g_bang.c */; };
@@ -162,6 +163,8 @@
 		11FDFBEE0118F4F0FFBC8F4B /* m_binbuf.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = m_binbuf.c; path = "../../../addons/ofxPd/libs/libpd/pure-data/src/m_binbuf.c"; sourceTree = SOURCE_ROOT; };
 		1432C49539CC5A34A4FB81FF /* g_guiconnect.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = g_guiconnect.c; path = "../../../addons/ofxPd/libs/libpd/pure-data/src/g_guiconnect.c"; sourceTree = SOURCE_ROOT; };
 		15F2C6477A769C03A56D1401 /* ofxSlider.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ofxSlider.cpp; path = ../../../addons/ofxGui/src/ofxSlider.cpp; sourceTree = SOURCE_ROOT; };
+		165FF5B3324DB8B94488AFCA /* ofxCoreMotion.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; fileEncoding = 4; name = ofxCoreMotion.mm; path = ../../../addons/ofxCoreMotion/src/ofxCoreMotion.mm; sourceTree = SOURCE_ROOT; };
+		1752625BD38B74D99B3A0215 /* ofxCoreMotion.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ofxCoreMotion.h; path = ../../../addons/ofxCoreMotion/src/ofxCoreMotion.h; sourceTree = SOURCE_ROOT; };
 		17D3A4637D93017C179D6B8A /* g_all_guis.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = g_all_guis.h; path = "../../../addons/ofxPd/libs/libpd/pure-data/src/g_all_guis.h"; sourceTree = SOURCE_ROOT; };
 		17E65988300FBD9AAA2CD0CA /* ofxGui.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ofxGui.h; path = ../../../addons/ofxGui/src/ofxGui.h; sourceTree = SOURCE_ROOT; };
 		181D363B6DD54D1FA6309C43 /* ofxColorPicker.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ofxColorPicker.cpp; path = ../../../addons/ofxGui/src/ofxColorPicker.cpp; sourceTree = SOURCE_ROOT; };
@@ -379,6 +382,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1D4E986E464DF366A11DC960 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				1752625BD38B74D99B3A0215 /* ofxCoreMotion.h */,
+				165FF5B3324DB8B94488AFCA /* ofxCoreMotion.mm */,
+			);
+			name = src;
+			sourceTree = "<group>";
+		};
 		27699C56EB9BEF85DDCEFD14 /* libpd */ = {
 			isa = PBXGroup;
 			children = (
@@ -496,6 +508,14 @@
 				0273C141CFED8EFF16B43469 /* choice.c */,
 			);
 			name = choice;
+			sourceTree = "<group>";
+		};
+		6556EA30FD2ABB5BE7B762E8 /* ofxCoreMotion */ = {
+			isa = PBXGroup;
+			children = (
+				1D4E986E464DF366A11DC960 /* src */,
+			);
+			name = ofxCoreMotion;
 			sourceTree = "<group>";
 		};
 		6948EE371B920CB800B5AC1A /* local_addons */ = {
@@ -639,6 +659,7 @@
 		BB16F26B0F2B646B00518274 /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				6556EA30FD2ABB5BE7B762E8 /* ofxCoreMotion */,
 				BB77385E1FF08919BB8B2C7A /* ofxCurve */,
 				8A3DD780D89619FC9FE77FBA /* ofxFatLines */,
 				480A780D8D0308AE4A368801 /* ofxGui */,
@@ -920,6 +941,7 @@
 				E4D8936E11527B74007E1F53 /* main.mm in Sources */,
 				E4D8936F11527B74007E1F53 /* ofApp.mm in Sources */,
 				55F17A1E1FDC49C0115CB2D2 /* ofxSoundBrush.mm in Sources */,
+				793F30A2F593AE1FFD098A03 /* ofxCoreMotion.mm in Sources */,
 				9D2E0E22E880FED1E1D4CC75 /* ofxCurve.cpp in Sources */,
 				B3A9A95BCDE7FF1B89486968 /* ofxFatLine.cpp in Sources */,
 				0A03A75CD4D4AC0E1B4F6B2B /* sincosineLut.cpp in Sources */,
@@ -1116,6 +1138,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
+					../../../addons/ofxCoreMotion/src,
 					../../../addons/ofxCurve/src,
 					../../../addons/ofxFatLines/src,
 					../../../addons/ofxGui/src,
@@ -1186,6 +1209,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(OF_CORE_HEADERS)",
 					src,
+					../../../addons/ofxCoreMotion/src,
 					../../../addons/ofxCurve/src,
 					../../../addons/ofxFatLines/src,
 					../../../addons/ofxGui/src,

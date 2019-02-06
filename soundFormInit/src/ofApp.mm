@@ -24,7 +24,7 @@ void ofApp::setup(){
     
     
     gui.setup();
-    gui.add(guiBrushSelector.set("Brush", 0, 0, 7));
+    gui.add(guiBrushSelector.set("Brush", 0, 0, 8));
     gui.add(guiWidth.set("Width", 1, 1, 150));
     gui.add(guiColor.set("Color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255)));
     
@@ -60,7 +60,14 @@ void ofApp::setup(){
     pinchParam = 0.5f;
     pinchDistCurrent = pinchDistLast = 0;
     
+    //Core Motion Setup;
+    coreMotion.setupAccelerometer();
+    
     cycles = 0;
+    
+    //Let's load up the sampleSynth patch.
+    Patch p = pd.openPatch("pd/SampleSynth.pd");
+    brushPatches.push_back(p);
     
 }
 
@@ -74,6 +81,26 @@ void ofApp::update(){
     
     for(auto &b : brushes){
         b.update();
+    }
+    
+    //Get the core motion data.
+    coreMotion.update();
+    accel = coreMotion.getAccelerometerData();
+    
+    if(guiBrushSelector == 8){
+        if(bFingerDown == false){
+            pd.startMessage();
+            
+            pd.addFloat(accel.x);
+            pd.addFloat(accel.y);
+            pd.addFloat(accel.z);
+            pd.addFloat(bFingerDown);
+            pd.addFloat(firstTouch.x);
+            pd.addFloat(firstTouch.y);
+            
+            
+            pd.finishList(brushPatches[0].dollarZeroStr()+"-fromOF");
+        }
     }
    
 }
@@ -104,6 +131,8 @@ void ofApp::exit(){
 
 //--------------------------------------------------------------
 void ofApp::touchDown(ofTouchEventArgs & touch){
+    
+    bFingerDown = true;
     
     ofRectangle s = gui.getShape();
     if(touch.id == 0) firstTouch = glm::vec2(touch.x, touch.y);
@@ -223,6 +252,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
 //--------------------------------------------------------------
 void ofApp::touchMoved(ofTouchEventArgs & touch){
     
+    bFingerDown = true;
     cycles ++;
     
     if(cycles%2 == 0){
@@ -281,13 +311,10 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
                 //do stuff.
                 break;
             case 7:
-                
-                cout << firstTouch << endl;
-                
                 float d;
                 d = currentBrush->getLastDistance();
                 float env;
-                cout << d << endl;
+//                cout << d << endl;
                 
                 float dd;
                 dd = ofMap(d, 0, 100, 0, .5);
@@ -309,14 +336,27 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
                 pd.addFloat(filterParam);
                 pd.addFloat(env);
                 
-                
                 //pd.addFloat(ofRandomf());
                 pd.addFloat(1.0); //value doesn't matter!
+                break;
+                
+            case 8:
+                pd.addFloat(accel.x);
+                pd.addFloat(accel.y);
+                pd.addFloat(accel.z);
+                pd.addFloat(bFingerDown);
+                pd.addFloat(firstTouch.x);
+                pd.addFloat(firstTouch.y);
+                break;
                 
         }
         
         
-        pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
+        if(guiBrushSelector != 8){
+            pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
+        } else {
+            pd.finishList(brushPatches[0].dollarZeroStr()+"-fromOF");
+        }
         
     }
     }
@@ -376,6 +416,8 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
         pinchDistCurrent = pinchDistLast = 0.0f;
     }
     
+    bFingerDown = false;
+    
     
 }
 
@@ -386,7 +428,7 @@ void ofApp::touchDoubleTap(ofTouchEventArgs & touch){
     
     if(s.inside(touch)){
         if(brushPatches.size() > 0){
-            for(int i = 0; i<brushPatches.size(); ++i){
+            for(int i = 1; i<brushPatches.size(); ++i){
                 pd.closePatch(brushPatches[i]);
             }
             brushes.clear();

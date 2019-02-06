@@ -8,6 +8,7 @@
 //Addons
 #include "ofxPd.h"
 #include "ofxGui.h"
+#include "ofxCoreMotion.h"
 
 //Classes
 #include "ofxSoundBrush.h"
@@ -85,6 +86,7 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     bool init = true;
     bool bGuiMode = false;
     bool bWasTouching = false;
+    bool bFingerDown = false;
     
     glm::vec2 firstTouch;
     glm::vec2 secondTouch;
@@ -102,6 +104,10 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     
     //TODO: SETUP AND STORE A STRUCT FOR INFO BEING SENT.
     
+    
+    //-------------------------------------ofxCoreMotion variables.
+    ofxCoreMotion coreMotion;
+    glm::vec3 accel;
     
     //======================================Other important tidbits.
     //Non linear mapping function.

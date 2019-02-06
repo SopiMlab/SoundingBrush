@@ -1,3 +1,4 @@
+ofxCoreMotion
 ofxCurve
 ofxFatLines
 ofxGui
