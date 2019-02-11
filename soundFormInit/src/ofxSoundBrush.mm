@@ -79,6 +79,8 @@ void ofxSoundBrush::addPoint(glm::vec2 _p){
 
 //--------------------------------------------------
 void ofxSoundBrush::handleShaders(){
+    
+    if(drawing){
     baseFbo.begin();
     ofClear(0,0);
     mainShader.begin();
@@ -140,6 +142,7 @@ void ofxSoundBrush::handleShaders(){
     //    blurX.draw(0, 0);
     //    sBlurY.end();
     //    blurY.end();
+    }
 }
 
 //--------------------------------------------------
