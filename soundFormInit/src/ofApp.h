@@ -102,7 +102,7 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     float filterParam;
     unsigned long cycles;
     
-    ofFbo screen;
+    //ofFbo screen;
     
     //TODO: SETUP AND STORE A STRUCT FOR INFO BEING SENT.
     

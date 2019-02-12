@@ -69,7 +69,7 @@ void ofApp::setup(){
     Patch p = pd.openPatch("pd/SampleSynth.pd");
     brushPatches.push_back(p);
     
-    screen.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    //screen.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
     
 }
 
