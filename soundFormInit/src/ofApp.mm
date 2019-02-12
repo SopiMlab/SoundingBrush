@@ -69,6 +69,8 @@ void ofApp::setup(){
     Patch p = pd.openPatch("pd/SampleSynth.pd");
     brushPatches.push_back(p);
     
+    screen.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
+    
 }
 
 //--------------------------------------------------------------
@@ -82,6 +84,13 @@ void ofApp::update(){
     for(auto &b : brushes){
         b.update();
     }
+    
+//    screen.begin();
+//    ofClear(255, 255, 255, 255);
+//    for(auto &b : brushes){
+//        b.draw();
+//    }
+//    screen.end();
     
     //Get the core motion data.
     coreMotion.update();
@@ -111,9 +120,11 @@ void ofApp::draw(){
     ofSetColor(ofColor::white);
     ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
     
-    for(int i = 0; i < brushes.size(); i++){
-        brushes[i].draw();
+    for(auto &b : brushes){
+        b.draw();
     }
+    
+//    screen.draw(0, 0);
     
     stringstream debug;
     
