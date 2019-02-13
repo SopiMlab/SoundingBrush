@@ -11,7 +11,7 @@ void ofApp::setup(){
     ofEnableSmoothing();
     ofEnableAntiAliasing();
     ofDisableArbTex();
-//    ofEnableDepthTest();
+    //    ofEnableDepthTest();
     
     ofRegisterTouchEvents(this);
     ofxiOSAlerts.addListener(this);
@@ -85,12 +85,12 @@ void ofApp::update(){
         b.update();
     }
     
-//    screen.begin();
-//    ofClear(255, 255, 255, 255);
-//    for(auto &b : brushes){
-//        b.draw();
-//    }
-//    screen.end();
+    //    screen.begin();
+    //    ofClear(255, 255, 255, 255);
+    //    for(auto &b : brushes){
+    //        b.draw();
+    //    }
+    //    screen.end();
     
     //Get the core motion data.
     coreMotion.update();
@@ -111,7 +111,7 @@ void ofApp::update(){
             pd.finishList(brushPatches[0].dollarZeroStr()+"-fromOF");
         }
     }
-   
+    
 }
 
 //--------------------------------------------------------------
@@ -124,7 +124,7 @@ void ofApp::draw(){
         b.draw();
     }
     
-//    screen.draw(0, 0);
+    //    screen.draw(0, 0);
     
     stringstream debug;
     
@@ -159,13 +159,15 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             //Setup the kind of brush depending on selection!
             switch(guiBrushSelector){
                 case 0:
-                    b.setup("pd/sinewithamp.pd", 0);
+                    b.setup("pd/sinxy.pd", 0);
                     break;
                 case 1:
-                    b.setup("pd/dtc_mod.pd", 1);
+                    //b.setup("pd/addsin.pd", 1);
+                    b.setup("pd/sinxy.pd", 0);
                     break;
                 case 2:
-                    b.setup("pd/granular-redux.pd", 0);
+//                    b.setup("pd/granular-redux.pd", 0);
+                    b.setup("pd/basslinergb.pd", 1);
                     break;
                 case 3:
                     b.setup("pd/karplus.pd", 2);
@@ -177,7 +179,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     b.setup("pd/crackture.pd", 1);
                     break;
                 case 6:
-                    b.setup("pd/bassline.pd", 1);
+                    b.setup("pd/BasslineR.pd", 1);
                     break;
                 case 7:
                     b.setup("pd/testadsr.pd", 0);
@@ -212,17 +214,25 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             //init goes to $0-fromOFinit
             switch(guiBrushSelector){
                 case 0: //sinewithamp, needs just one parameter.
-                    pd.addFloat(f);
+                    //                    pd.addFloat(f);
                     break;
                 case 1: //detune chorus, need midi note, type of waveform, index and ratio.
-                    pd.addFloat(fm);
-                    pd.addFloat(ofRandom(3)); //selects waveform randomly :)
-                    pd.addFloat(200);
-                    pd.addFloat(.1); //These two are the lowest values of index and ratio, sending to initialize them.
+                    //                    pd.addFloat(fm);
+                    //                    pd.addFloat(ofRandom(3)); //selects waveform randomly :)
+                    //                    pd.addFloat(200);
+                    //                    pd.addFloat(.1); //These two are the lowest values of index and ratio, sending to initialize them.
+                    //                    pd.addFloat(255.0/guiColor->r);
+                    //                    pd.addFloat(255.0/guiColor->g);
+                    //                    pd.addFloat(255.0/guiColor->b);
                     break;
                 case 2:
                     //Do stuff.
-                    pd.addFloat(100); //???
+//                    pd.addFloat(100); //???
+                    
+                    pd.addFloat(guiColor->r/255.0);
+                    pd.addFloat(guiColor->g/255.0);
+                    pd.addFloat(guiColor->b/255.0);
+                    pd.addFloat(guiWidth * 10); //not 100% why I'm doing this anymore 13.2
                     break;
                 case 3:
                     //Do stuff.
@@ -267,109 +277,121 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
     cycles ++;
     
     if(cycles%2 == 0){
-    
-    if(touch.id == 0) firstTouch = glm::vec2(touch.x, touch.y);
-    if(touch.id == 1) secondTouch = glm::vec2(touch.x, touch.y);
-    
-    if(touch.id == 1){
-        pinchDistCurrent = ofDist(firstTouch.x, firstTouch.y, secondTouch.x, secondTouch.y);
         
-        if(pinchDistCurrent > pinchDistLast) {
-            pinchParam += 0.01;
-            pinchDistLast = pinchDistCurrent;
-        } else if (pinchDistCurrent < pinchDistLast) {
-            pinchParam -= 0.01;
-            pinchDistLast = pinchDistCurrent;
-        }
-    }
-    
-    
-    if(brushes.size() > 0 && bWasTouching){
+        if(touch.id == 0) firstTouch = glm::vec2(touch.x, touch.y);
+        if(touch.id == 1) secondTouch = glm::vec2(touch.x, touch.y);
         
-        ofxSoundBrush * currentBrush = &brushes[brushes.size() - 1];
-        
-        //Add points to the last brush instance.
-        currentBrush->addPoint(firstTouch);
-        
-        //Updates go to $0-fromOF
-        pd.startMessage();
-        
-        //Again, switch according to brush type!
-        switch(guiBrushSelector){
-            case 0:
-                pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 800, 0, 1, true));
-                break;
-            case 1:
-                pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 700, 200, 500, true));
-                pd.addFloat(ofMap(currentBrush->getJitterOnMinorAxis(), 0, 800, 0.1, 0.3, true));
-                pd.addFloat(ofClamp(pinchParam, 0.1, 1));
-                break;
-            case 2:
-                //Do stuff.
-                pd.addFloat(100);
-                break;
-            case 3:
-                //Do stuff.
-                break;
-            case 4:
-                pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 1000, 0, 2000));
-                break;
-            case 5:
-                pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 1000, 0, 1));
-                pd.addFloat(ofMap(currentBrush->getJitterOnMinorAxis(), 0, 800, 100, 2000, true));
-                break;
-            case 6:
-                //do stuff.
-                break;
-            case 7:
-                float d;
-                d = currentBrush->getLastDistance();
-                float env;
-//                cout << d << endl;
-                
-                float dd;
-                dd = ofMap(d, 0, 100, 0, .5);
-                
-                if (d > .1){
-                    cout << "adding" << endl;
-                    filterParam += dd;
-                    filterParam *= filterParam;
-                    env = 1;
-                } else {
-                    cout << "zeroing out!" << endl;
-                    filterParam -= 0.1;
-//                    filterParam = 0;
-                    env = 0;
-                }
-                
-                filterParam = ofClamp(filterParam, 0.0, 20.0);
-                
-                pd.addFloat(filterParam);
-                pd.addFloat(env);
-                
-                //pd.addFloat(ofRandomf());
-                pd.addFloat(1.0); //value doesn't matter!
-                break;
-                
-            case 8:
-                pd.addFloat(accel.x);
-                pd.addFloat(accel.y);
-                pd.addFloat(accel.z);
-                pd.addFloat(bFingerDown);
-                pd.addFloat(firstTouch.x);
-                pd.addFloat(firstTouch.y);
-                break;
-                
+        if(touch.id == 1){
+            pinchDistCurrent = ofDist(firstTouch.x, firstTouch.y, secondTouch.x, secondTouch.y);
+            
+            if(pinchDistCurrent > pinchDistLast) {
+                pinchParam += 0.01;
+                pinchDistLast = pinchDistCurrent;
+            } else if (pinchDistCurrent < pinchDistLast) {
+                pinchParam -= 0.01;
+                pinchDistLast = pinchDistCurrent;
+            }
         }
         
         
-        if(guiBrushSelector != 8){
-            pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
-        } else {
-            pd.finishList(brushPatches[0].dollarZeroStr()+"-fromOF");
+        if(brushes.size() > 0 && bWasTouching){
+            
+            ofxSoundBrush * currentBrush = &brushes[brushes.size() - 1];
+            
+            //Add points to the last brush instance.
+            currentBrush->addPoint(firstTouch);
+            
+            //Updates go to $0-fromOF
+            pd.startMessage();
+            
+            //Again, switch according to brush type!
+            switch(guiBrushSelector){
+                case 0:
+                    //pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 800, 0, 1, true));
+                    //pd.addFloat(ofMap(currentBrush->getLastVertex().x, 0, ofGetWidth(), 80, 1000));
+                    //pd.addFloat(ofMap(currentBrush->getLastVertex().x, 0, ofGetWidth(), 10 * (150 - guiWidth), 30 * (150 - guiWidth)));
+                    //pd.addFloat(ofMap(currentBrush->getLastVertex().x, 0, ofGetWidth(), 10 * (150 - guiWidth), 30 * (150 - guiWidth)));
+                    //pd.addFloat(ofMap(currentBrush->getLastVertex().y, 0, ofGetHeight(), 10 * (150 - guiWidth), 30 * (150 - guiWidth)));
+                    pd.addFloat(ofMap(currentBrush->getLastVertex().x, 0.0, ofGetWidth(), 80, 1000));
+                    pd.addFloat(ofClamp(pinchParam, 0.1, 1));
+                    break;
+                case 1:
+                    //pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 700, 200, 500, true));
+                    //pd.addFloat(ofMap(currentBrush->getJitterOnMinorAxis(), 0, 800, 0.1, 0.3, true));
+                    //pd.addFloat(ofClamp(pinchParam, 0.1, 1));
+                    pd.addFloat(ofMap(currentBrush->getLastVertex().y, ofGetHeight(), 0.0, 80, 1000));
+                    pd.addFloat(ofClamp(pinchParam, 0.1, 1));
+                    break;
+                case 2:
+                    //Do stuff.
+                    pd.addFloat(ofMap(currentBrush->getLastVertex().y, ofGetHeight(), 0, 80, 1000));
+                    pd.addFloat(ofMap(currentBrush->getLastVertex().x, 0.0, ofGetWidth(), 1.0, 3.0));
+                    break;
+                case 3:
+                    //Do stuff.
+                    break;
+                case 4:
+                    pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 1000, 0, 2000));
+                    break;
+                case 5:
+                    pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 1000, 0, 1));
+                    pd.addFloat(ofMap(currentBrush->getJitterOnMinorAxis(), 0, 800, 100, 2000, true));
+                    break;
+                case 6:
+                    //do stuff.
+                    //pd.addFloat(ofMap(currentBrush->getLastVertex().x, 0, ofGetWidth(), 80, 1000));
+//                    pd.addFloat(guiColor->getBrightness() * 4.0);
+                    //                cout << guiColor->getBrightness() << endl;
+                    break;
+                case 7:
+                    float d;
+                    d = currentBrush->getLastDistance();
+                    float env;
+                    //                cout << d << endl;
+                    
+                    float dd;
+                    dd = ofMap(d, 0, 100, 0, .5);
+                    
+                    if (d > .1){
+                        cout << "adding" << endl;
+                        filterParam += dd;
+                        filterParam *= filterParam;
+                        env = 1;
+                    } else {
+                        cout << "zeroing out!" << endl;
+                        filterParam -= 0.1;
+                        //                    filterParam = 0;
+                        env = 0;
+                    }
+                    
+                    filterParam = ofClamp(filterParam, 0.0, 20.0);
+                    
+                    pd.addFloat(filterParam);
+                    pd.addFloat(env);
+                    
+                    //pd.addFloat(ofRandomf());
+                    pd.addFloat(1.0); //value doesn't matter!
+                    break;
+                    
+                case 8:
+                    pd.addFloat(accel.x);
+                    pd.addFloat(accel.y);
+                    pd.addFloat(accel.z);
+                    pd.addFloat(bFingerDown);
+                    pd.addFloat(firstTouch.x);
+                    pd.addFloat(firstTouch.y);
+                    break;
+                    
+            }
+            
+            
+            if(guiBrushSelector != 8){
+                pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
+            } else {
+                pd.finishList(brushPatches[0].dollarZeroStr()+"-fromOF");
+            }
+            
         }
-        
-    }
     }
     
     
@@ -391,6 +413,9 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
                 break;
             case 2:
                 //do stuff.
+                float v;
+                v = brushes[brushes.size()-1].getNumVertices();
+                pd.addFloat(v);
                 break;
             case 3:
                 float karpValue;
@@ -405,9 +430,9 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
                 //do stuff.
                 break;
             case 6:
-                float v;
-                v = brushes[brushes.size()-1].getNumVertices();
-                pd.addFloat(v);
+//                float v;
+//                v = brushes[brushes.size()-1].getNumVertices();
+//                pd.addFloat(v);
                 break;
             case 7:
                 pd.addFloat(1.0); //value doesn't matter.
@@ -439,14 +464,14 @@ void ofApp::touchDoubleTap(ofTouchEventArgs & touch){
     
     if(s.inside(touch)){
         if(brushPatches.size() > 0){
-            for(int i = 1; i<brushPatches.size(); ++i){
+            for(int i = 0; i<brushPatches.size(); ++i){
                 pd.closePatch(brushPatches[i]);
             }
             brushes.clear();
             brushPatches.clear();
             std::cout << "All patches cleared!" << endl;
         }
-       //Anything else on double tap can come here!
+        //Anything else on double tap can come here!
     }
 }
 
@@ -517,7 +542,7 @@ void ofApp::receiveList(const std::string& dest, const List& list){
             float v = list.getFloat(i);
             values.push_back(v);
         }
-    
+        
         //TODO: This is going to be super hacky for now, so fix this later. :)
         
         //Match the dollarZero string to a brush.
