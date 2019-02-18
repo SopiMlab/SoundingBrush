@@ -83,10 +83,11 @@ st += area;
 
 vec4 color = c;
 
-color.rgb += (yuv2rgb * vec3(st.x, st.y, time)) * 0.1;
+color.rgb += (yuv2rgb * vec3(st.x, st.y, time)) * 0.1; //THIS IS HOW IT WORKS!
+
 //do other stuff here!
-// color.rgb -= max((gl_FragCoord.x/resolution.x * gl_FragCoord.y/resolution.y), .33);
-// color.a = noise(length);
+//color.rgb -= max((gl_FragCoord.x/screenResolution.x * gl_FragCoord.y/screenResolution.y), .33);
+color += sin(noise(gl_FragCoord.xy)) * .33;
 
 gl_FragColor = color;
 }

@@ -48,7 +48,7 @@ private:
     ofColor color;
     float size;
     vector<glm::vec3> points;
-//    vector<glm::vec3> interpolatedPoints;
+    vector<glm::vec3> interpolatedPoints;
 
     float left, right, top, bottom;
     float width, height;
@@ -68,6 +68,8 @@ private:
     void drawWithThicknessFunction(int thickness);
     void drawJigglyLines(int thickness, int jiggleAmount);
     void drawJigglyLinesByDist(int weight);
+    
+    void drawTestLine();
     
     ofShader mainShader;
     ofShader alphaShader;

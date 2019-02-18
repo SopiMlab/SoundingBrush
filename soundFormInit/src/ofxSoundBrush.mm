@@ -58,17 +58,17 @@ void ofxSoundBrush::addPoint(glm::vec2 _p){
     
     //------IGNORE THIS NOW
     
-    //    //This makes sure the size of the vector is always 3n + 1.
-    //    if(points.size() == 0){
-    //        points.push_back(_p);
-    //    } else {
-    //        glm::vec2 lastPoint = points[points.size() - 1];
-    //        float icr = 3;
-    //        for(int i = 1; i <= icr; i++){
-    //            glm::vec2 intermediate = lerp(_p, lastPoint, i/icr);
-    //            points.push_back(intermediate);
-    //        }
-    //    }
+//        //This makes sure the size of the vector is always 3n + 1.
+//        if(points.size() == 0){
+//            points.push_back(glm::vec3(_p.x, _p.y, 0));
+//        } else {
+//            glm::vec2 lastPoint = points[points.size() - 1];
+//            float icr = 3;
+//            for(int i = 1; i <= icr; i++){
+//                glm::vec2 intermediate = lerp(_p, lastPoint, i/icr);
+//                points.push_back(glm::vec3(intermediate.x, intermediate.y, 0));
+//            }
+//        }
     
     calculateDataSet();
     calculateSD();
@@ -151,7 +151,37 @@ void ofxSoundBrush::draw(){
     //    baseFbo.draw(0, 0);
     //    blurX.draw(0, 0);
     //    blurY.draw(0, 0);
-    finalFbo.draw(0, 0);
+    //finalFbo.draw(0, 0);
+    
+    //------TESTTESTTEST
+    
+    drawTestLine();
+    //    //This makes sure the size of the vector is always 3n + 1.
+    //    if(points.size() == 0){
+    //        points.push_back(_p);
+    //    } else {
+    //        glm::vec2 lastPoint = points[points.size() - 1];
+    //        float icr = 3;
+    //        for(int i = 1; i <= icr; i++){
+    //            glm::vec2 intermediate = lerp(_p, lastPoint, i/icr);
+    //            points.push_back(intermediate);
+    //        }
+    //    }
+    
+//    interpolatedPoints = evalCR(points, 100);
+//
+//    ofPushStyle();
+//    ofSetColor(color);
+//
+//    for(int i = 0; i<interpolatedPoints.size(); i++){
+//
+//        ofDrawCircle(interpolatedPoints[i], size);
+//    }
+//
+//    ofPopStyle();
+    
+    
+    //------------------
     
     //Below for debug.
     if(isDebug){
@@ -504,4 +534,60 @@ void ofxSoundBrush::drawJigglyLinesByDist(int weight){
     }
     
     
+}
+
+//--------------------------------------------------------------------------------------------
+
+void ofxSoundBrush::drawTestLine(){
+    
+    if(drawing){
+        ofMesh meshy;
+        meshy.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+        
+        float widthSmooth = 10;
+        float angleSmooth;
+        
+        for (int i = 0;  i < line.getVertices().size(); i++){
+            
+            int me_m_one = i-1;
+            int me_p_one = i+1;
+            if (me_m_one < 0) me_m_one = 0;
+            if (me_p_one ==  line.getVertices().size()) me_p_one =  line.getVertices().size()-1;
+            
+            ofPoint diff = line.getVertices()[me_p_one] - line.getVertices()[me_m_one];
+            float angle = atan2(diff.y, diff.x);
+            
+            if (i == 0) angleSmooth = angle;
+            else {
+                
+                angleSmooth = ofLerpDegrees(angleSmooth, angle, 1.0);
+                
+            }
+            
+            float dist = diff.length();
+            
+            float w = ofMap(dist, 0, size, 40 + 10 * sin(ofRadToDeg(i)), 1, true);
+            
+            widthSmooth = 0.5f * widthSmooth + 0.5f * w;
+            
+            ofPoint offset;
+            offset.x = cos(angleSmooth + PI/2) * widthSmooth + 20 * ofNoise(line.getVertices()[i].x/100.0 + rSeed);
+            offset.y = sin(angleSmooth + PI/2) * widthSmooth + 20 * ofNoise(line.getVertices()[i].y/100.0 + rSeed);
+            
+            meshy.addVertex(  line.getVertices()[i] +  offset );
+            meshy.addVertex(  line.getVertices()[i] -  offset );
+            
+        }
+        
+        ofSetColor(color);
+        mesh = meshy;
+        meshy.draw();
+        
+    } else {
+        
+        mesh.draw();
+    }
+    
+    //    ofSetColor(100,100,100);
+    //    meshy.drawWireframe();
 }
