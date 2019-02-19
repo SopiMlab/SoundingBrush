@@ -192,6 +192,8 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             
             ofxSoundBrush * currentBrush = &brushes[brushes.size() - 1];
             
+            currentBrush->addPoint(touch);
+            
             //Also instantiate the pd patch for the same!
             Patch p = pd.openPatch(currentBrush->getPatch());
             brushPatches.push_back(p);
@@ -298,8 +300,11 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
             
             ofxSoundBrush * currentBrush = &brushes[brushes.size() - 1];
             
+            auto lastVertex = currentBrush->getLastVertex();
+            auto distanceToLastVertex = ofDist(lastVertex.x, lastVertex.y, firstTouch.x, firstTouch.y);
+            
             //Add points to the last brush instance.
-            currentBrush->addPoint(firstTouch);
+            if(distanceToLastVertex > 10) currentBrush->addPoint(firstTouch);
             
             //Updates go to $0-fromOF
             pd.startMessage();

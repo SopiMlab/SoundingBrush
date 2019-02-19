@@ -40,7 +40,7 @@ public:
     
     bool drawing;
     
-    glm::vec3 getLastVertex() { return points[points.size() - 1];};
+    glm::vec3 getLastVertex() {return points[points.size() - 1];};
     float getLastDistance();
     
 private:
@@ -85,6 +85,6 @@ private:
     
     void handleShaders(); //this needs to be wrapped in an update function?
     
-    ofMesh mesh;
+    ofVboMesh mesh;
     
 };

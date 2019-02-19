@@ -307,7 +307,7 @@ float ofxSoundBrush::getLastDistance(){
 void ofxSoundBrush::drawThickLine(){
     
     if(drawing){
-        ofMesh meshy;
+        ofVboMesh meshy;
         meshy.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
         
         float widthSmooth = 10;
@@ -367,7 +367,7 @@ void ofxSoundBrush::drawThickLine(){
 void ofxSoundBrush::drawWithThicknessFunction(int thickness){
     
     if(drawing){
-        ofMesh meshy;
+        ofVboMesh meshy;
         meshy.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
         
         float widthSmooth = 10;
@@ -405,7 +405,7 @@ void ofxSoundBrush::drawWithThicknessFunction(int thickness){
 void ofxSoundBrush::drawJigglyLines(int thickness, int jiggleAmount){
     
     if(drawing){
-        ofMesh meshy;
+        ofVboMesh meshy;
         meshy.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
         
         auto wiggledPoints = line.getVertices();
@@ -456,7 +456,7 @@ void ofxSoundBrush::drawJigglyLines(int thickness, int jiggleAmount){
 void ofxSoundBrush::drawJigglyLinesByDist(int weight){
     
     if(drawing){
-        ofMesh meshy;
+        ofVboMesh meshy;
         meshy.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
         
         
@@ -543,7 +543,7 @@ void ofxSoundBrush::drawJigglyLinesByDist(int weight){
 void ofxSoundBrush::drawTestLine(){
     
     if(drawing){
-        ofMesh meshy;
+        ofVboMesh meshy;
         meshy.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
         
         float widthSmooth = 10;
