@@ -13,51 +13,50 @@ uniform float alpha;
 uniform vec2 resolution;
 uniform float length;
 uniform float time;
+uniform float seed;
 
-float hash(float n) { return fract(sin(n) * 1e4); }
-float hash(vec2 p) { return fract(1e4 * sin(17.0 * p.x + p.y * 0.1) * (0.1 + abs(sin(p.y * 13.0 + p.x)))); }
-
-float noise(float x) {
-	float i = floor(x);
-	float f = fract(x);
-	float u = f * f * (3.0 - 2.0 * f);
-	return mix(hash(i), hash(i + 1.0), u);
+// 2D Random
+float random (vec2 st) {
+    return fract(sin(dot(st.xy,
+                         vec2(12.9898,78.233)))
+                 * 43758.5453123);
 }
 
-float noise(vec2 x) {
-	vec2 i = floor(x);
-	vec2 f = fract(x);
+// 2D Noise based on Morgan McGuire @morgan3d
+// https://www.shadertoy.com/view/4dS3Wd
+float noise (vec2 st) {
+    vec2 i = floor(st);
+    vec2 f = fract(st);
 
-	// Four corners in 2D of a tile
-	float a = hash(i);
-	float b = hash(i + vec2(1.0, 0.0));
-	float c = hash(i + vec2(0.0, 1.0));
-	float d = hash(i + vec2(1.0, 1.0));
+    // Four corners in 2D of a tile
+    float a = random(i);
+    float b = random(i + vec2(1.0, 0.0));
+    float c = random(i + vec2(0.0, 1.0));
+    float d = random(i + vec2(1.0, 1.0));
 
-	// Simple 2D lerp using smoothstep envelope between the values.
-	// return vec3(mix(mix(a, b, smoothstep(0.0, 1.0, f.x)),
-	//			mix(c, d, smoothstep(0.0, 1.0, f.x)),
-	//			smoothstep(0.0, 1.0, f.y)));
+    // Smooth Interpolation
 
-	// Same code, with the clamps in smoothstep and common subexpressions
-	// optimized away.
-	vec2 u = f * f * (3.0 - 2.0 * f);
-	return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+    // Cubic Hermine Curve.  Same as SmoothStep()
+    vec2 u = f*f*(3.0-2.0*f);
+    // u = smoothstep(0.,1.,f);
+
+    // Mix 4 coorners percentages
+    return mix(a, b, u.x) +
+            (c - a)* u.y * (1.0 - u.x) +
+            (d - b) * u.x * u.y;
 }
 
 void main() {
+	vec4 color = texture2D(tex0, texCoordVarying);
 
-vec4 color = texture2D(tex0, texCoordVarying);
+	vec2 p = vec2(texCoordVarying	 * 3.0);
+	float n = noise(p) * seed/100.;
 
-if(color.a != 0.0){
-	// color = vec4(color.r, color.g, color.b, color.a - noise(gl_FragCoord.xy) * 0.33);
-	// float setAlpha = length/1000.0;
-	float alpha2 = alpha;
-	alpha2 -= sin(noise(gl_FragCoord.xy)) * .25;
-	color = vec4(color.r, color.g, color.b, alpha);
-	// color -= clamp(sin(time), 0.25, 0.5);
-	// color.a = max(length/100.0, .1);
-}
+	if(color.a != 0.0){
+		color = vec4(color.rgb, alpha * n);
+	} else {
+		color = vec4(1.0, 0., 0., 0.);
+	}
 
-gl_FragColor = color;
+	gl_FragColor = color;
 }

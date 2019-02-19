@@ -107,6 +107,7 @@ void ofxSoundBrush::handleShaders(){
     }
     mainShader.end();
     baseFbo.end();
+    }
     
     //    blurX.begin();
     //    sBlurX.begin();
@@ -123,6 +124,7 @@ void ofxSoundBrush::handleShaders(){
     alphaShader.setUniform1f("alpha", color.a/float(255));
     alphaShader.setUniform1f("length", points.size());
     alphaShader.setUniform1f("time", ofGetElapsedTimef());
+    alphaShader.setUniform1f("seed", rSeed);
     baseFbo.draw(0, 0);
     alphaShader.end();
     finalFbo.end();
@@ -142,7 +144,7 @@ void ofxSoundBrush::handleShaders(){
     //    blurX.draw(0, 0);
     //    sBlurY.end();
     //    blurY.end();
-    }
+    //}
 }
 
 //--------------------------------------------------
@@ -151,11 +153,11 @@ void ofxSoundBrush::draw(){
     //    baseFbo.draw(0, 0);
     //    blurX.draw(0, 0);
     //    blurY.draw(0, 0);
-    //finalFbo.draw(0, 0);
+    finalFbo.draw(0, 0);
     
     //------TESTTESTTEST
     
-    drawTestLine();
+//    drawTestLine();
     //    //This makes sure the size of the vector is always 3n + 1.
     //    if(points.size() == 0){
     //        points.push_back(_p);
