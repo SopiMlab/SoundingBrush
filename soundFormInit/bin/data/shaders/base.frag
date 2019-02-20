@@ -14,6 +14,7 @@ uniform vec2 screenResolution;
 uniform vec2 area;
 uniform float length;
 uniform float time;
+uniform float seed;
 // uniform float alpha;
 
 #define PI 3.14159265359
@@ -83,7 +84,7 @@ st += area;
 
 vec4 color = c;
 
-color.rgb += (yuv2rgb * vec3(st.x, st.y, time)) * 0.1; //THIS IS HOW IT WORKS!
+color.rgb += (yuv2rgb * vec3(st.x, st.y, 0.)) * 0.1; //THIS IS HOW IT WORKS!
 
 //do other stuff here!
 //color.rgb -= max((gl_FragCoord.x/screenResolution.x * gl_FragCoord.y/screenResolution.y), .33);

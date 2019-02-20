@@ -86,5 +86,6 @@ private:
     void handleShaders(); //this needs to be wrapped in an update function?
     
     ofVboMesh mesh;
+    vector<float> customData;
     
 };
