@@ -64,6 +64,8 @@ private:
     ofPolyline line;
     int brushType;
     
+    void computeMesh();
+    
     void drawThickLine();
     void drawWithThicknessFunction(int thickness);
     void drawJigglyLines(int thickness, int jiggleAmount);

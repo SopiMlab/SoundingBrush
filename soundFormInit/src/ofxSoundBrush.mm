@@ -80,7 +80,7 @@ void ofxSoundBrush::addPoint(glm::vec2 _p){
 //--------------------------------------------------
 void ofxSoundBrush::handleShaders(){
     
-    if(drawing){};
+    if(drawing) computeMesh();
     
     int attLoc = mainShader.getAttributeLocation("myCustomAttribute");
     
@@ -95,24 +95,9 @@ void ofxSoundBrush::handleShaders(){
     mainShader.setUniform1f("seed", rSeed);
     mainShader.setUniform1f("length", points.size());
     //    mainShader.setUniform1f("alpha", color.a/float(255));
-    switch(brushType){
-        case 0:
-            drawThickLine();
-            break;
-        case 1:
-            drawWithThicknessFunction(size);
-            break;
-        case 2:
-            drawJigglyLines(size, size/25.0);
-            break;
-        case 3:
-            drawJigglyLinesByDist(1);
-            break;
-    }
-    
     int vertices = mesh.getVertices().size();
     mesh.getVbo().setAttributeData(attLoc, &customData[0], 2, vertices * 2, GL_STATIC_DRAW, sizeof(float)*2);
-    
+    mesh.draw();
     mainShader.end();
     baseFbo.end();
     //}
@@ -303,6 +288,25 @@ float ofxSoundBrush::getLastDistance(){
     return d;
 }
 
+//---------------------------------------------------
+void ofxSoundBrush::computeMesh(){
+    
+    switch(brushType){
+        case 0:
+        drawThickLine();
+        break;
+        case 1:
+        drawWithThicknessFunction(size);
+        break;
+        case 2:
+        drawJigglyLines(size, size/25.0);
+        break;
+        case 3:
+        drawJigglyLinesByDist(1);
+        break;
+    }
+}
+
 
 //---------------------------------------------------
 //DIFFERENT KINDS OF BRUSHES. WILL BE A SWITCH CALL
@@ -355,11 +359,11 @@ void ofxSoundBrush::drawThickLine(){
         
         ofSetColor(color);
         mesh = meshy;
-        meshy.draw();
+        //meshy.draw();
         
     } else {
         
-        mesh.draw();
+       // mesh.draw();
     }
     
     //    ofSetColor(100,100,100);
@@ -412,11 +416,11 @@ void ofxSoundBrush::drawWithThicknessFunction(int thickness){
         
         ofSetColor(color);
         mesh = meshy;
-        meshy.draw();
+        //meshy.draw();
         
     } else {
         
-        mesh.draw();
+       // mesh.draw();
     }
     
 }
@@ -458,7 +462,7 @@ void ofxSoundBrush::drawJigglyLines(int thickness, int jiggleAmount){
         
         ofSetColor(color);
         mesh = meshy;
-        meshy.draw();
+        //meshy.draw();
         
     } else {
         
@@ -467,7 +471,7 @@ void ofxSoundBrush::drawJigglyLines(int thickness, int jiggleAmount){
             vertex.y += ofRandomf() * jiggleAmount;
         }
         
-        mesh.draw();
+       // mesh.draw();
     }
     
 }
