@@ -167,7 +167,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     break;
                 case 2:
 //                    b.setup("pd/granular-redux.pd", 0);
-                    b.setup("pd/basslinergb.pd", 1, "3", "0");
+                    b.setup("pd/basslinergb.pd", 1, "3", "3");
                     break;
                 case 3:
                     b.setup("pd/karplus.pd", 2);
