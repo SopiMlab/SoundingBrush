@@ -72,7 +72,7 @@ void main() {
     float f = fbm(st+r);
 
 		if(color.a != 0.0){
-			color = vec4(color.rgb, step(f, .66));
+			color = vec4(color.rgb, f);
 		} else {
 			color = vec4(1.0, 0., 0., 0.);
 		}
