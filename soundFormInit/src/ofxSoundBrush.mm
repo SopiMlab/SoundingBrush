@@ -43,6 +43,17 @@ void ofxSoundBrush::setup(string _patch, int _bType){
 }
 
 //--------------------------------------------------
+void ofxSoundBrush::setup(string _patch, int _bType, string _baseShader, string _alphaShader){
+    patch = _patch;
+    brushType = _bType;
+    string bShader = "shaders/base_" + _baseShader;
+    string aShader = "shaders/alpha_" + _alphaShader;
+    
+    mainShader.load(bShader);
+    alphaShader.load(aShader);
+}
+
+//--------------------------------------------------
 void ofxSoundBrush::setVariables(float _w, ofColor _c){
     color = _c;
     size = _w;
@@ -96,7 +107,7 @@ void ofxSoundBrush::handleShaders(){
     mainShader.setUniform1f("length", points.size());
     //    mainShader.setUniform1f("alpha", color.a/float(255));
     int vertices = mesh.getVertices().size();
-    mesh.getVbo().setAttributeData(attLoc, &customData[0], 2, vertices * 2, GL_STATIC_DRAW, sizeof(float)*2);
+    mesh.getVbo().setAttributeData(attLoc, &customAttributeData[0], 2, vertices * 2, GL_STATIC_DRAW, sizeof(float)*2);
     mesh.draw();
     mainShader.end();
     baseFbo.end();
@@ -381,7 +392,7 @@ void ofxSoundBrush::drawWithThicknessFunction(int thickness){
     if(drawing){
         ofVboMesh meshy;
         meshy.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
-        customData.clear();
+        customAttributeData.clear();
         
         float widthSmooth = 10;
         float angleSmooth;
@@ -404,14 +415,14 @@ void ofxSoundBrush::drawWithThicknessFunction(int thickness){
             auto nIndex = fabs(float(i) - line.getVertices().size()/2.0); // absolute distance from centre of the array
             nIndex /= line.getVertices().size()/2.0; // normalized between 1 - 0.
             
-            customData.push_back(nIndex);
+            customAttributeData.push_back(nIndex);
             cout << nIndex << endl;
-            customData.push_back(distance(line.getVertices()[i], vertexOne));
+            customAttributeData.push_back(distance(line.getVertices()[i], vertexOne));
             
             auto vertexTwo = line.getVertices()[i] - offset;
             meshy.addVertex(vertexTwo);
-            customData.push_back(nIndex);
-            customData.push_back(distance(line.getVertices()[i], vertexTwo));
+            customAttributeData.push_back(nIndex);
+            customAttributeData.push_back(distance(line.getVertices()[i], vertexTwo));
         }
         
         ofSetColor(color);

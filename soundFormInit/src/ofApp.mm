@@ -159,15 +159,15 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             //Setup the kind of brush depending on selection!
             switch(guiBrushSelector){
                 case 0:
-                    b.setup("pd/sinxy.pd", 0);
+                    b.setup("pd/sinxy.pd", 0, "0", "0");
                     break;
                 case 1:
                     //b.setup("pd/addsin.pd", 1);
-                    b.setup("pd/sinxy.pd", 0);
+                    b.setup("pd/sinxy.pd", 0, "0", "0");
                     break;
                 case 2:
 //                    b.setup("pd/granular-redux.pd", 0);
-                    b.setup("pd/basslinergb.pd", 1);
+                    b.setup("pd/basslinergb.pd", 1, "0", "0");
                     break;
                 case 3:
                     b.setup("pd/karplus.pd", 2);

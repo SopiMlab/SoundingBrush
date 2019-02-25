@@ -49,11 +49,8 @@ float noise (vec2 st) {
 void main() {
 	vec4 color = texture2D(tex0, texCoordVarying);
 
-	vec2 p = vec2(texCoordVarying	 * 3.0);
-	float n = noise(p) * seed/100.;
-
 	if(color.a != 0.0){
-		color = vec4(color.rgb, alpha * n);
+		color = vec4(color.rgb, alpha);
 	} else {
 		color = vec4(1.0, 0., 0., 0.);
 	}

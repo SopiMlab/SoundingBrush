@@ -15,6 +15,7 @@ public:
     
     void setup(string _patch); //constructor with patch name!
     void setup(string _patch, int _bType);
+    void setup(string _patch, int _bType, string _baseShader, string _alphaShader); //construct w/ shaders...
     
     void setVariables(float _w, ofColor _c); //cam dynamic variables work? Check!
     void setBrushType(int _bType) {brushType = _bType;}; //selects the drawing algo to draw - pair with setup?
@@ -88,6 +89,6 @@ private:
     void handleShaders(); //this needs to be wrapped in an update function?
     
     ofVboMesh mesh;
-    vector<float> customData;
+    vector<float> customAttributeData; //custom attribute data going to the base shader.
     
 };
