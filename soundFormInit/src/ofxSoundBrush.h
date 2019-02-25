@@ -71,8 +71,7 @@ private:
     void drawWithThicknessFunction(int thickness);
     void drawJigglyLines(int thickness, int jiggleAmount);
     void drawJigglyLinesByDist(int weight);
-    
-    void drawTestLine();
+    void drawMeshLine();
     
     ofShader mainShader;
     ofShader alphaShader;

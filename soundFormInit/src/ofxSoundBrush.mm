@@ -311,10 +311,7 @@ void ofxSoundBrush::computeMesh(){
         drawWithThicknessFunction(size);
         break;
         case 2:
-        drawJigglyLines(size, size/25.0);
-        break;
-        case 3:
-        drawJigglyLinesByDist(1);
+        drawMeshLine();
         break;
     }
 }
@@ -350,13 +347,13 @@ void ofxSoundBrush::drawThickLine(){
             if (i == 0) angleSmooth = angle;
             else {
                 
-                angleSmooth = ofLerpRadians(angleSmooth, angle, 1.0);
+                angleSmooth = ofLerpDegrees(angleSmooth, angle, 1.0);
                 
             }
             
             float dist = diff.length();
             
-            float w = ofMap(dist, 0, size, 40, 2, true);
+            float w = ofMap(dist, 0, size, 80, 2, true);
             
             widthSmooth = 0.9f * widthSmooth + 0.1f * w;
             
@@ -364,9 +361,22 @@ void ofxSoundBrush::drawThickLine(){
             offset.x = cos(angleSmooth + PI/2) * widthSmooth;
             offset.y = sin(angleSmooth + PI/2) * widthSmooth;
             
-            meshy.addVertex(  line.getVertices()[i] +  offset );
-            meshy.addVertex(  line.getVertices()[i] -  offset );
+            auto vertexOne = line.getVertices()[i] + offset;
+            mesh.addVertex(vertexOne);
             
+            auto nIndex = fabs(float(i) - line.getVertices().size()/2.0); // absolute distance from centre of the array
+            nIndex /= line.getVertices().size()/2.0; // normalized between 1 - 0.
+            
+            customAttributeData.push_back(nIndex);
+            customAttributeData.push_back(distance(line.getVertices()[i], vertexOne));
+            
+            auto vertexTwo = line.getVertices()[i] - offset;
+            meshy.addVertex(vertexTwo);
+            customAttributeData.push_back(nIndex);
+            customAttributeData.push_back(distance(line.getVertices()[i], vertexTwo));
+            
+//            meshy.addVertex(  line.getVertices()[i] +  offset );
+//            meshy.addVertex(  line.getVertices()[i] -  offset );
         }
         
         ofSetColor(color);
@@ -398,7 +408,6 @@ void ofxSoundBrush::drawWithThicknessFunction(int thickness){
         float widthSmooth = 10;
         float angleSmooth;
         
-        
         for (int i = 0;  i < line.getVertices().size(); i++){
             int me_m_one = i-1;
             int me_p_one = i+1;
@@ -417,7 +426,7 @@ void ofxSoundBrush::drawWithThicknessFunction(int thickness){
             nIndex /= line.getVertices().size()/2.0; // normalized between 1 - 0.
             
             customAttributeData.push_back(nIndex);
-            cout << nIndex << endl;
+            //cout << nIndex << endl;
             customAttributeData.push_back(distance(line.getVertices()[i], vertexOne));
             
             auto vertexTwo = line.getVertices()[i] - offset;
@@ -577,7 +586,7 @@ void ofxSoundBrush::drawJigglyLinesByDist(int weight){
 
 //--------------------------------------------------------------------------------------------
 
-void ofxSoundBrush::drawTestLine(){
+void ofxSoundBrush::drawMeshLine(){
     
     if(drawing){
         ofVboMesh meshy;
@@ -613,18 +622,29 @@ void ofxSoundBrush::drawTestLine(){
             offset.x = cos(angleSmooth + PI/2) * widthSmooth + 20 * ofNoise(line.getVertices()[i].x/100.0 + rSeed);
             offset.y = sin(angleSmooth + PI/2) * widthSmooth + 20 * ofNoise(line.getVertices()[i].y/100.0 + rSeed);
             
-            meshy.addVertex(  line.getVertices()[i] +  offset );
-            meshy.addVertex(  line.getVertices()[i] -  offset );
+            auto vertexOne = line.getVertices()[i] + offset;
+            meshy.addVertex(vertexOne);
+            auto nIndex = fabs(float(i) - line.getVertices().size()/2.0); // absolute distance from centre of the array
+            nIndex /= line.getVertices().size()/2.0; // normalized between 1 - 0.
+            
+            customAttributeData.push_back(nIndex);
+            //cout << nIndex << endl;
+            customAttributeData.push_back(distance(line.getVertices()[i], vertexOne));
+            
+            auto vertexTwo = line.getVertices()[i] - offset;
+            meshy.addVertex(vertexTwo);
+            customAttributeData.push_back(nIndex);
+            customAttributeData.push_back(distance(line.getVertices()[i], vertexTwo));
             
         }
         
         ofSetColor(color);
         mesh = meshy;
-        meshy.draw();
+        //meshy.draw();
         
     } else {
         
-        mesh.draw();
+        //mesh.draw();
     }
     
     //    ofSetColor(100,100,100);

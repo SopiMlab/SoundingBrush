@@ -66,8 +66,8 @@ void ofApp::setup(){
     cycles = 0;
     
     //Let's load up the sampleSynth patch.
-    Patch p = pd.openPatch("pd/SampleSynth.pd");
-    brushPatches.push_back(p);
+//    Patch p = pd.openPatch("pd/SampleSynth.pd");
+//    brushPatches.push_back(p);
     
     //screen.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
     
@@ -170,7 +170,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     b.setup("pd/basslinergb.pd", 1, "3", "3");
                     break;
                 case 3:
-                    b.setup("pd/karplus.pd", 2);
+                    b.setup("pd/karplus.pd", 2, "1", "2");
                     break;
                 case 4:
                     b.setup("pd/granular_andy.pd", 0);
