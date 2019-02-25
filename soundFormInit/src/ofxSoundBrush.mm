@@ -105,6 +105,7 @@ void ofxSoundBrush::handleShaders(){
     mainShader.setUniform1f("time", ofGetElapsedTimef());
     mainShader.setUniform1f("seed", rSeed);
     mainShader.setUniform1f("length", points.size());
+    mainShader.setUniform1f("width", size);
     //    mainShader.setUniform1f("alpha", color.a/float(255));
     int vertices = mesh.getVertices().size();
     mesh.getVbo().setAttributeData(attLoc, &customAttributeData[0], 2, vertices * 2, GL_STATIC_DRAW, sizeof(float)*2);
