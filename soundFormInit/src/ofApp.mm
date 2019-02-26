@@ -36,6 +36,7 @@ void ofApp::setup(){
     gBrushSelector->setPosition(0, 0);
 //    gBrushSelector->setWidth(100);
     gBrushSelector->select(0);
+//    gBrushSelector->setTheme(new ofxDatGuiThemeWireframe());
     gBrushSelector->onDropdownEvent(this, &ofApp::onDropDownEvent);
     selectedBrushFromGui = 0; //placeholder
     
@@ -50,6 +51,7 @@ void ofApp::setup(){
     gColorSelectorF->addSlider("Saturation", 0, 100, 0);
     gColorSelectorF->addSlider("Brightness", 0, 1, 0);
     gColorSelectorF->setPosition(550, 0);
+//    gColorSelectorF->setTheme(new ofxDatGuiThemeWireframe());
     gColorSelectorF->onSliderEvent(this, &ofApp::onSliderEvent);
     
 
@@ -67,10 +69,12 @@ void ofApp::setup(){
 //    gBrushWidth->setWidth(100, 100);
     gBrushWidth->onSliderEvent(this, &ofApp::onSliderEvent);
     gBrushWidth->setValue(brushWidthFromGui);
+//    gBrushWidth->setTheme(new ofxDatGuiThemeWireframe());
     
     gClearScreen = new ofxDatGuiButton("Clear canvas");
     gClearScreen->setPosition(1650, 0);
     gClearScreen->setWidth(ofGetWidth() - 1650);
+//    gClearScreen->setTheme(new ofxDatGuiThemeWireframe());
     gClearScreen->onButtonEvent(this, &ofApp::onButtonEvent);
     
     //Doing audio setup now.
