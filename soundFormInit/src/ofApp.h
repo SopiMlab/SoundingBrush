@@ -9,6 +9,7 @@
 #include "ofxPd.h"
 #include "ofxGui.h"
 #include "ofxCoreMotion.h"
+#include "ofxDatGui.h"
 
 //Classes
 #include "ofxSoundBrush.h"
@@ -68,10 +69,11 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     float setAVSessionSampleRate(float preferredSampleRate);
     
     //----------------------------ofxGuiStuff here.
-    ofParameter<float> guiWidth;
-    ofParameter<ofColor> guiColor;
-    ofParameter<int> guiBrushSelector;
-    ofxPanel gui;
+//    ofParameter<float> guiWidth;
+//    ofParameter<ofColor> guiColor;
+//    ofParameter<int> guiBrushSelector;
+//    ofxPanel gui;
+
     
 //    int guiBrushSelector;
     
@@ -105,6 +107,25 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     //ofFbo screen;
     
     //TODO: SETUP AND STORE A STRUCT FOR INFO BEING SENT.
+    
+    //------------------------------------ofxDatGui Integration!
+    ofxDatGuiDropdown* gBrushSelector;
+    vector<string> gBrushOptions;
+    
+    ofxDatGuiColorPicker* gColorPicker;
+    
+    ofxDatGuiSlider* gBrushWidth;
+    
+    ofxDatGuiButton* gClearScreen;
+    
+    float brushWidthFromGui;
+    ofColor colorFromGui;
+    int selectedBrushFromGui;
+    
+    void onDropDownEvent(ofxDatGuiDropdownEvent e);
+    void onColorPickerEvent(ofxDatGuiColorPickerEvent e);
+    void onSliderEvent(ofxDatGuiSliderEvent e);
+    void onButtonEvent(ofxDatGuiButtonEvent e);
     
     
     //-------------------------------------ofxCoreMotion variables.

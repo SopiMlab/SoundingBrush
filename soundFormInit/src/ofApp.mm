@@ -17,16 +17,42 @@ void ofApp::setup(){
     ofxiOSAlerts.addListener(this);
     
     //GUI stuff.
-    ofxGuiSetFont("Questrial-Regular.ttf",20,true,true);
-    ofxGuiSetTextPadding(8);
-    ofxGuiSetDefaultWidth(300);
-    ofxGuiSetDefaultHeight(50);
+//    ofxGuiSetFont("Questrial-Regular.ttf",20,true,true);
+//    ofxGuiSetTextPadding(8);
+//    ofxGuiSetDefaultWidth(300);
+//    ofxGuiSetDefaultHeight(50);
     
     
-    gui.setup();
-    gui.add(guiBrushSelector.set("Brush", 0, 0, 8));
-    gui.add(guiWidth.set("Width", 1, 1, 150));
-    gui.add(guiColor.set("Color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255)));
+//    gui.setup();
+//    gui.add(guiBrushSelector.set("Brush", 0, 0, 8));
+//    gui.add(guiWidth.set("Width", 1, 1, 150));
+//    gui.add(guiColor.set("Color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255)));
+    
+    //DATGUISTUFF.
+    gBrushOptions = {"ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"};
+    gBrushSelector = new ofxDatGuiDropdown("Brush selector", gBrushOptions);
+    gBrushSelector->setPosition(0, 0);
+//    gBrushSelector->setWidth(100);
+    gBrushSelector->onDropdownEvent(this, &ofApp::onDropDownEvent);
+    selectedBrushFromGui = 0; //placeholder
+    
+    colorFromGui = ofColor::black;
+    gColorPicker = new ofxDatGuiColorPicker("Select Color!", colorFromGui);
+    gColorPicker->setPosition(400, 0);
+//    gColorPicker->ofxDatGuiComponent::setWidth(100, 100);
+    gColorPicker->onColorPickerEvent(this, &ofApp::onColorPickerEvent);
+    
+    brushWidthFromGui = 20.0;
+    gBrushWidth = new ofxDatGuiSlider("Brush size", 1, 100);
+    gBrushWidth->setPosition(800, 0);
+//    gBrushWidth->setWidth(100, 100);
+    gBrushWidth->onSliderEvent(this, &ofApp::onSliderEvent);
+    gBrushWidth->setValue(brushWidthFromGui);
+    
+    gClearScreen = new ofxDatGuiButton("Clear canvas");
+    gClearScreen->setPosition(1200, 0);
+//    gClearScreen->setWidth(100);
+    gClearScreen->onButtonEvent(this, &ofApp::onButtonEvent);
     
     //Doing audio setup now.
     float sampleRate = setAVSessionSampleRate(44100);
@@ -76,6 +102,11 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     
+    gBrushSelector->update();
+    gColorPicker->update();
+    gBrushWidth->update();
+    gClearScreen->update();
+    
     if(pd.isQueued()) {
         pd.receiveMessages();
         //pd.receiveMidi();
@@ -96,7 +127,7 @@ void ofApp::update(){
     coreMotion.update();
     accel = coreMotion.getAccelerometerData();
     
-    if(guiBrushSelector == 8){
+    if(selectedBrushFromGui == 8){
         if(bFingerDown == false){
             pd.startMessage();
             
@@ -132,7 +163,12 @@ void ofApp::draw(){
     
     ofDrawBitmapStringHighlight(debug.str(), glm::vec2(0, ofGetHeight() - 10.0f));
     
-    gui.draw();
+//    gui.draw();
+    
+    gBrushSelector->draw();
+    gColorPicker->draw();
+    gBrushWidth->draw();
+    gClearScreen->draw();
 }
 
 //--------------------------------------------------------------
@@ -145,11 +181,12 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
     
     bFingerDown = true;
     
-    ofRectangle s = gui.getShape();
+//    ofRectangle s = gui.getShape();
     if(touch.id == 0) firstTouch = glm::vec2(touch.x, touch.y);
     if(touch.id == 1) secondTouch = glm::vec2(touch.x, touch.y);
     
-    (s.inside(touch.x, touch.y)) ? bGuiMode = true : bGuiMode = false;
+//    (s.inside(touch.x, touch.y)) ? bGuiMode = true : bGuiMode = false;
+    bGuiMode = false; //Temporary!
     
     if(!bGuiMode){
         if(init){
@@ -157,7 +194,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             ofxSoundBrush b = ofxSoundBrush();
             
             //Setup the kind of brush depending on selection!
-            switch(guiBrushSelector){
+            switch(selectedBrushFromGui){
                 case 0:
                     b.setup("pd/sinxy.pd", 2, "0", "0");
                     break;
@@ -186,7 +223,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     break;
             }
             
-            b.setVariables(guiWidth, guiColor); //Setup the colour and width of the brush.
+            b.setVariables(brushWidthFromGui, colorFromGui); //Setup the colour and width of the brush.
             
             brushes.push_back(b);
             
@@ -206,15 +243,15 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             std::cout << "Brushpatches size is now: " << brushPatches.size() << endl;
             
             //Map brush size to frequency
-            float f = nlMap(guiWidth, 1.f, 150.f, 4186.009f, 27.5f, .3); //frequency mapping.
-            int fm = ofMap(guiWidth, 1.f, 150.f, 108, 21); //midi mapping
+            float f = nlMap(brushWidthFromGui, 1.f, 150.f, 4186.009f, 27.5f, .3); //frequency mapping.
+            int fm = ofMap(brushWidthFromGui, 1.f, 150.f, 108, 21); //midi mapping
             
             //This will initialize the brush/synth combo.
             pd.startMessage();
             
             //next part depends on the kind of brush...
             //init goes to $0-fromOFinit
-            switch(guiBrushSelector){
+            switch(selectedBrushFromGui){
                 case 0: //sinewithamp, needs just one parameter.
                     //                    pd.addFloat(f);
                     break;
@@ -231,23 +268,23 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     //Do stuff.
 //                    pd.addFloat(100); //???
                     
-                    pd.addFloat(guiColor->r/255.0);
-                    pd.addFloat(guiColor->g/255.0);
-                    pd.addFloat(guiColor->b/255.0);
-                    pd.addFloat(guiWidth * 10); //not 100% why I'm doing this anymore 13.2
+                    pd.addFloat(colorFromGui.r/255.0);
+                    pd.addFloat(colorFromGui.g/255.0);
+                    pd.addFloat(colorFromGui.b/255.0);
+                    pd.addFloat(brushWidthFromGui * 10); //not 100% why I'm doing this anymore 13.2
                     break;
                 case 3:
                     //Do stuff.
                     break;
                 case 4:
-                    pd.addFloat(ofMap(guiWidth, 1, 100, 2, 0.1, true));
+                    pd.addFloat(ofMap(brushWidthFromGui, 1, 100, 2, 0.1, true));
                     break;
                 case 5:
                     //Do stuff.
                     break;
                 case 6:
                     pd.addFloat(f);
-                    pd.addFloat(guiWidth * 10);
+                    pd.addFloat(brushWidthFromGui * 10);
                     pd.addFloat(ofRandomuf());
                     break;
                 case 7:
@@ -310,7 +347,7 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
             pd.startMessage();
             
             //Again, switch according to brush type!
-            switch(guiBrushSelector){
+            switch(selectedBrushFromGui){
                 case 0:
                     //pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 800, 0, 1, true));
                     //pd.addFloat(ofMap(currentBrush->getLastVertex().x, 0, ofGetWidth(), 80, 1000));
@@ -390,7 +427,7 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
             }
             
             
-            if(guiBrushSelector != 8){
+            if(selectedBrushFromGui != 8){
                 pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOF");
             } else {
                 pd.finishList(brushPatches[0].dollarZeroStr()+"-fromOF");
@@ -409,7 +446,7 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
         //If there's an EOC to send, send it here.
         
         pd.startMessage();
-        switch(guiBrushSelector){
+        switch(selectedBrushFromGui){
             case 0:
                 //do stuff.
                 break;
@@ -465,19 +502,19 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
 //--------------------------------------------------------------
 void ofApp::touchDoubleTap(ofTouchEventArgs & touch){
     
-    ofRectangle s = gui.getShape();
-    
-    if(s.inside(touch)){
-        if(brushPatches.size() > 0){
-            for(int i = 0; i<brushPatches.size(); ++i){
-                pd.closePatch(brushPatches[i]);
-            }
-            brushes.clear();
-            brushPatches.clear();
-            std::cout << "All patches cleared!" << endl;
-        }
-        //Anything else on double tap can come here!
-    }
+//    ofRectangle s = gui.getShape();
+//
+//    if(s.inside(touch)){
+//        if(brushPatches.size() > 0){
+//            for(int i = 0; i<brushPatches.size(); ++i){
+//                pd.closePatch(brushPatches[i]);
+//            }
+//            brushes.clear();
+//            brushPatches.clear();
+//            std::cout << "All patches cleared!" << endl;
+//        }
+//        //Anything else on double tap can come here!
+//    }
 }
 
 //--------------------------------------------------------------
@@ -630,3 +667,29 @@ float ofApp::setAVSessionSampleRate(float preferredSampleRate) {
     // our actual samplerate, might be differnt aka 48k on iPhone 6S
     return session.sampleRate;
 }
+
+//--------------------------------------------------------------
+//DATGUI EVENT HANDLERS.
+//--------------------------------------------------------------
+void ofApp::onDropDownEvent(ofxDatGuiDropdownEvent e){
+    
+}
+
+//--------------------------------------------------------------
+void ofApp::onColorPickerEvent(ofxDatGuiColorPickerEvent e){
+    
+}
+
+//--------------------------------------------------------------
+void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
+    
+}
+
+//--------------------------------------------------------------
+void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
+    
+}
+
+//--------------------------------------------------------------
+
+
