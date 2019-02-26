@@ -112,18 +112,23 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     ofxDatGuiDropdown* gBrushSelector;
     vector<string> gBrushOptions;
     
-    ofxDatGuiColorPicker* gColorPicker;
+//    ofxDatGuiColorPicker* gColorPicker;
     
     ofxDatGuiSlider* gBrushWidth;
     
     ofxDatGuiButton* gClearScreen;
     
     float brushWidthFromGui;
+    
+    ofxDatGuiFolder* gColorSelectorF;
+    
     ofColor colorFromGui;
+    int hue, sat, bright;
+    
     int selectedBrushFromGui;
     
     void onDropDownEvent(ofxDatGuiDropdownEvent e);
-    void onColorPickerEvent(ofxDatGuiColorPickerEvent e);
+//    void onColorPickerEvent(ofxDatGuiColorPickerEvent e);
     void onSliderEvent(ofxDatGuiSliderEvent e);
     void onButtonEvent(ofxDatGuiButtonEvent e);
     

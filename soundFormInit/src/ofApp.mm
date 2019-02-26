@@ -12,6 +12,8 @@ void ofApp::setup(){
     ofEnableAntiAliasing();
     ofDisableArbTex();
     //    ofEnableDepthTest();
+//    ofSetOrientation(OFXIOS_ORIENTATION_LANDSCAPE_LEFT);
+    
     
     ofRegisterTouchEvents(this);
     ofxiOSAlerts.addListener(this);
@@ -33,25 +35,42 @@ void ofApp::setup(){
     gBrushSelector = new ofxDatGuiDropdown("Brush selector", gBrushOptions);
     gBrushSelector->setPosition(0, 0);
 //    gBrushSelector->setWidth(100);
+    gBrushSelector->select(0);
     gBrushSelector->onDropdownEvent(this, &ofApp::onDropDownEvent);
     selectedBrushFromGui = 0; //placeholder
     
-    colorFromGui = ofColor::black;
-    gColorPicker = new ofxDatGuiColorPicker("Select Color!", colorFromGui);
-    gColorPicker->setPosition(400, 0);
+    hue = 0;
+    sat = 0;
+    bright = 0;
+    
+    colorFromGui = ofColor::fromHsb(hue, sat, bright);
+    
+    gColorSelectorF = new ofxDatGuiFolder("Color Selector", ofColor::white);
+    gColorSelectorF->addSlider("Hue", 0, 360, 0);
+    gColorSelectorF->addSlider("Saturation", 0, 100, 0);
+    gColorSelectorF->addSlider("Brightness", 0, 1, 0);
+    gColorSelectorF->setPosition(550, 0);
+    gColorSelectorF->onSliderEvent(this, &ofApp::onSliderEvent);
+    
+
+    
+//    gColorPicker = new ofxDatGuiColorPicker("Select Color!", ofColor::yellow);
+//    gColorPicker->setPosition(600, 0);
 //    gColorPicker->ofxDatGuiComponent::setWidth(100, 100);
-    gColorPicker->onColorPickerEvent(this, &ofApp::onColorPickerEvent);
+//    gColorPicker->onColorPickerEvent(this, &ofApp::onColorPickerEvent);
+    
+    
     
     brushWidthFromGui = 20.0;
     gBrushWidth = new ofxDatGuiSlider("Brush size", 1, 100);
-    gBrushWidth->setPosition(800, 0);
+    gBrushWidth->setPosition(1100, 0);
 //    gBrushWidth->setWidth(100, 100);
     gBrushWidth->onSliderEvent(this, &ofApp::onSliderEvent);
     gBrushWidth->setValue(brushWidthFromGui);
     
     gClearScreen = new ofxDatGuiButton("Clear canvas");
-    gClearScreen->setPosition(1200, 0);
-//    gClearScreen->setWidth(100);
+    gClearScreen->setPosition(1650, 0);
+    gClearScreen->setWidth(ofGetWidth() - 1650);
     gClearScreen->onButtonEvent(this, &ofApp::onButtonEvent);
     
     //Doing audio setup now.
@@ -103,7 +122,8 @@ void ofApp::setup(){
 void ofApp::update(){
     
     gBrushSelector->update();
-    gColorPicker->update();
+//    gColorPicker->update();
+    gColorSelectorF->update();
     gBrushWidth->update();
     gClearScreen->update();
     
@@ -143,6 +163,8 @@ void ofApp::update(){
         }
     }
     
+//    cout << ofGetMouseX() << endl;
+    
 }
 
 //--------------------------------------------------------------
@@ -166,9 +188,11 @@ void ofApp::draw(){
 //    gui.draw();
     
     gBrushSelector->draw();
-    gColorPicker->draw();
+    gColorSelectorF->draw();
+//    gColorPicker->draw();
     gBrushWidth->draw();
     gClearScreen->draw();
+    
 }
 
 //--------------------------------------------------------------
@@ -186,7 +210,16 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
     if(touch.id == 1) secondTouch = glm::vec2(touch.x, touch.y);
     
 //    (s.inside(touch.x, touch.y)) ? bGuiMode = true : bGuiMode = false;
-    bGuiMode = false; //Temporary!
+//    bGuiMode = false; //Temporary!
+    
+    if((gBrushSelector->hitTest(touch)) || (gClearScreen->hitTest(touch)) || (gColorSelectorF->hitTest(touch)) || (gBrushWidth->hitTest(touch))){
+        bGuiMode = true;
+    } else if ((gBrushSelector->getIsExpanded()) || (gColorSelectorF->getIsExpanded())){
+        bGuiMode = true;
+    } else {
+        bGuiMode = false;
+    }
+    
     
     if(!bGuiMode){
         if(init){
@@ -672,22 +705,42 @@ float ofApp::setAVSessionSampleRate(float preferredSampleRate) {
 //DATGUI EVENT HANDLERS.
 //--------------------------------------------------------------
 void ofApp::onDropDownEvent(ofxDatGuiDropdownEvent e){
-    
+    selectedBrushFromGui = e.child;
 }
 
-//--------------------------------------------------------------
-void ofApp::onColorPickerEvent(ofxDatGuiColorPickerEvent e){
-    
-}
+////--------------------------------------------------------------
+//void ofApp::onColorPickerEvent(ofxDatGuiColorPickerEvent e){
+////    cout << e.color << endl;
+//}
 
 //--------------------------------------------------------------
 void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
+    string label = e.target->getLabel();
     
+    if (label == "Hue"){
+        hue = (e.value / 360.0) * 255;
+    } else if (label == "Saturation"){
+        sat = (e.value / 100.0) * 255;
+    } else if (label == "Brightness"){
+        bright = e.value * 255;
+    } else {
+        brushWidthFromGui = e.value;
+    }
+    
+    colorFromGui = ofColor::fromHsb(hue, sat, bright);
+    gColorSelectorF->setBackgroundColor(colorFromGui);
 }
 
 //--------------------------------------------------------------
 void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
-    
+    if(brushPatches.size() > 0){
+        for(int i = 0; i<brushPatches.size(); ++i){
+            pd.closePatch(brushPatches[i]);
+        }
+        brushes.clear();
+        brushPatches.clear();
+        std::cout << "All patches cleared!" << endl;
+    }
 }
 
 //--------------------------------------------------------------
