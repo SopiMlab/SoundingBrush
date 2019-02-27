@@ -330,6 +330,7 @@ void ofxSoundBrush::drawThickLine(){
     if(drawing){
         ofVboMesh meshy;
         meshy.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+        customAttributeData.clear();
         
         float widthSmooth = 10;
         float angleSmooth;
@@ -591,6 +592,7 @@ void ofxSoundBrush::drawMeshLine(){
     if(drawing){
         ofVboMesh meshy;
         meshy.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
+        customAttributeData.clear();
         
         float widthSmooth = 10;
         float angleSmooth;
