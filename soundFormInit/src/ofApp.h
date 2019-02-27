@@ -132,6 +132,10 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     void onSliderEvent(ofxDatGuiSliderEvent e);
     void onButtonEvent(ofxDatGuiButtonEvent e);
     
+    //TUNING!
+    vector<int> tuningRange;
+    int rootNote;
+    
     
     //-------------------------------------ofxCoreMotion variables.
     ofxCoreMotion coreMotion;

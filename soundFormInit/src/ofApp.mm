@@ -113,7 +113,8 @@ void ofApp::setup(){
     coreMotion.setupAccelerometer();
     
     cycles = 0;
-    
+    tuningRange = {0 , 2, 3, 5, 7, 8, 10, 12, 14, 15, 17, 19, 20, 22, 24};
+    rootNote = 45;
     //Let's load up the sampleSynth patch.
 //    Patch p = pd.openPatch("pd/SampleSynth.pd");
 //    brushPatches.push_back(p);
@@ -183,11 +184,11 @@ void ofApp::draw(){
     
     //    screen.draw(0, 0);
     
-    stringstream debug;
-    
-    debug << "Number of instances and strokes is: " << ofToString(brushPatches.size()) << " Frame rate is: " << ofGetFrameRate() << endl;
-    
-    ofDrawBitmapStringHighlight(debug.str(), glm::vec2(0, ofGetHeight() - 10.0f));
+//    stringstream debug;
+//
+//    debug << "Number of instances and strokes is: " << ofToString(brushPatches.size()) << " Frame rate is: " << ofGetFrameRate() << endl;
+//
+//    ofDrawBitmapStringHighlight(debug.str(), glm::vec2(0, ofGetHeight() - 10.0f));
     
 //    gui.draw();
     
@@ -497,9 +498,16 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
                 pd.addFloat(v);
                 break;
             case 3:
-                float karpValue;
-                karpValue = brushes[brushes.size()-1].getNumVertices();
-                karpValue = ofMap(karpValue, 0, 1000, 40, 70);
+                float mappedValue, karpValue;
+                //map the number of vertices to the range of notes available.
+                mappedValue = brushes[brushes.size()-1].getNumVertices();
+                cout << "RAW: " << mappedValue << endl;
+                mappedValue = ofMap(mappedValue, 5, 100, 0, 15);
+                cout << "MAPPED: " << mappedValue << endl;
+                karpValue = rootNote + tuningRange[int(mappedValue)];
+//                karpValue = brushes[brushes.size()-1].getNumVertices();
+//                karpValue = ofMap(karpValue, 0, 1000, 40, 70);
+                cout << "NOTE: " << karpValue << endl;
                 pd.addFloat(karpValue);
                 break;
             case 4:
