@@ -4,6 +4,7 @@ uniform sampler2D tex0;
 uniform float useTexture;
 uniform float useColors;
 uniform vec4 globalColor;
+varying vec2 xyz;
 
 varying float depth;
 varying vec4 colorVarying;
@@ -89,6 +90,7 @@ color.rgb += (yuv2rgb * vec3(st.x, st.y, 0.)) * 0.1; //THIS IS HOW IT WORKS!
 //do other stuff here!
 //color.rgb -= max((gl_FragCoord.x/screenResolution.x * gl_FragCoord.y/screenResolution.y), .33);
 color += sin(noise(gl_FragCoord.xy)) * .33;
+color.a = 1. - xyz.x;
 
 gl_FragColor = color;
 }

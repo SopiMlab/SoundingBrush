@@ -10,6 +10,8 @@ uniform mat4 projectionMatrix;
 varying vec4 colorVarying;
 varying vec2 texCoordVarying;
 
+varying vec2 xyz;
+
 uniform vec4 c;
 uniform vec2 screenResolution;
 uniform vec2 area;
@@ -46,5 +48,8 @@ void main() {
 	vec4 modifiedPosition = projectionMatrix * modelViewMatrix * position;
 	modifiedPosition.y += displacementY * displacementHeight * (1. - myCustomAttribute.x);
 
+	xyz = myCustomAttribute;
   gl_Position = modifiedPosition;
+
+	// customAtt = myCustomAttribute;
 }
