@@ -17,6 +17,7 @@ ofxSoundBrush::ofxSoundBrush(){
     brushType = 0;
     isDebug = false;
     drawing = true;
+    isEnabled = true;
     
     baseFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
     
@@ -158,7 +159,7 @@ void ofxSoundBrush::draw(){
     //    baseFbo.draw(0, 0);
     //    blurX.draw(0, 0);
     //    blurY.draw(0, 0);
-    finalFbo.draw(0, 0);
+    if(isEnabled) finalFbo.draw(0, 0);
     
     //------TESTTESTTEST
     

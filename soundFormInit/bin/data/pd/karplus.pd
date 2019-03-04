@@ -31,8 +31,8 @@
 #X obj 597 405 loadbang;
 #X msg 384 594 1;
 #X obj 153 667 expr ($f1 == 0 && $f2 == 0 && $f3 == 1);
-#X obj 201 775 f \$0;
-#X obj 200 830 s toOFKill;
+#X obj 196 786 f \$0;
+#X obj 195 841 s toOFKill;
 #X msg 412 667 0;
 #X obj 678 655 f \$0;
 #X obj 678 622 t b f;
@@ -43,6 +43,7 @@
 #X obj 486 721 f \$0;
 #X obj 487 790 pack \$1 \$2;
 #X obj 499 684 t b b;
+#X obj 195 759 t b b;
 #X connect 0 0 3 1;
 #X connect 0 0 30 1;
 #X connect 1 0 14 0;
@@ -75,13 +76,12 @@
 #X connect 23 0 1 0;
 #X connect 24 0 13 0;
 #X connect 25 0 26 0;
-#X connect 26 1 31 0;
+#X connect 26 1 43 0;
 #X connect 27 0 7 0;
 #X connect 28 0 27 0;
 #X connect 29 0 30 2;
 #X connect 30 0 25 0;
 #X connect 31 0 32 0;
-#X connect 31 0 33 0;
 #X connect 33 0 30 2;
 #X connect 34 0 36 0;
 #X connect 35 0 34 0;
@@ -92,3 +92,5 @@
 #X connect 40 0 41 0;
 #X connect 42 0 38 0;
 #X connect 42 1 40 0;
+#X connect 43 0 31 0;
+#X connect 43 1 33 0;

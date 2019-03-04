@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 #include "ofMain.h"
 
 //TODO: Patch names? Methods of sending params?
@@ -43,6 +43,8 @@ public:
     
     glm::vec3 getLastVertex() {return points[points.size() - 1];};
     float getLastDistance();
+    
+    void disable(){isEnabled = false;};
     
 private:
     string patch;
@@ -89,5 +91,7 @@ private:
     
     ofVboMesh mesh;
     vector<float> customAttributeData; //custom attribute data going to the base shader.
+    
+    bool isEnabled;
     
 };

@@ -90,7 +90,7 @@ color.rgb += (yuv2rgb * vec3(st.x, st.y, 0.)) * 0.1; //THIS IS HOW IT WORKS!
 //do other stuff here!
 //color.rgb -= max((gl_FragCoord.x/screenResolution.x * gl_FragCoord.y/screenResolution.y), .33);
 color += sin(noise(gl_FragCoord.xy)) * .33;
-color.r = 1. - xyz.x;
+color.a = 1.0 - xyz.x;
 
 gl_FragColor = color;
 }

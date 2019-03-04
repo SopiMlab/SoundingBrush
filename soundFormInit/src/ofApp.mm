@@ -18,6 +18,9 @@ void ofApp::setup(){
     ofRegisterTouchEvents(this);
     ofxiOSAlerts.addListener(this);
     
+//    thread.setup();
+    
+    
     //GUI stuff.
 //    ofxGuiSetFont("Questrial-Regular.ttf",20,true,true);
 //    ofxGuiSetTextPadding(8);
@@ -121,10 +124,15 @@ void ofApp::setup(){
     
     //screen.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
     
+    dollarIndexes.resize(8);
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    
+//    if(ofGetFrameNum() == 3) thread.startThread();
+//    cout << thread.isThreadRunning() << endl;
     
     gBrushSelector->update();
 //    gColorPicker->update();
@@ -167,6 +175,11 @@ void ofApp::update(){
             pd.finishList(brushPatches[0].dollarZeroStr()+"-fromOF");
         }
     }
+    
+//    if(brushPatches.size() == 4){
+//        string s = brushPatches[0].dollarZeroStr();
+//        closePatchByDollarString(ofToInt(s));
+//    }
     
 //    cout << ofGetMouseX() << endl;
     
@@ -277,6 +290,15 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             //This will come in handy when I'm receiving stuff from PD.
             string s = brushPatches[brushPatches.size() - 1].dollarZeroStr();
             currentBrush->setDollarZeroString(s);
+            
+            //store the $0-string in the vector too.
+            dollarIndexes[selectedBrushFromGui].push_back(ofToInt(s));
+            
+            //check if there's more than 4 here and then delete accordingly!
+            if(dollarIndexes[selectedBrushFromGui].size() > 4){
+                closePatchByDollarString(dollarIndexes[selectedBrushFromGui][0]);
+                dollarIndexes[selectedBrushFromGui].erase(dollarIndexes[selectedBrushFromGui].begin());
+            }
             
             std::cout << "Brushpatches size is now: " << brushPatches.size() << endl;
             
@@ -560,6 +582,9 @@ void ofApp::touchDoubleTap(ofTouchEventArgs & touch){
 //        }
 //        //Anything else on double tap can come here!
 //    }
+    
+//    string s = brushPatches[0].dollarZeroStr();
+//    closePatchByDollarString(ofToInt(s));
 }
 
 //--------------------------------------------------------------
@@ -611,7 +636,32 @@ void ofApp::receiveBang(const std::string& dest){
 void ofApp::receiveFloat(const std::string& dest, float value){
     cout << "OF: Float " << dest << ": " << value << endl;
     
-    if (dest == "toOFKill") closePatchByDollarString(value);
+//    if (dest == "toOFKill"){
+//        //closePatchByDollarString(value);
+//        int x, y;
+//        //also find the value and delete it from the dollar indexes...
+//        for(int i = 0; i<dollarIndexes.size(); i++){
+//            for(int j = 0; j < dollarIndexes[i].size(); j++){
+//                if(value == dollarIndexes[i][j]){
+//                    x = i;
+//                    y = j;
+//                    cout << "found x: " << x << " and y: " << y << endl;
+//                }
+//            }
+//        }
+////        cout << dollarIndexes[3].size() << endl;
+//        dollarIndexes[x].erase(dollarIndexes[x].begin() + y);
+////        cout << dollarIndexes[3].size() << endl;
+//        closePatchByDollarString(value);
+//    }
+    
+    if(dest == "toOFKill"){
+    for(int i = 0; i<brushes.size(); i++){
+        if(ofToString(value) == brushes[i].getDollarZeroString()){
+            brushes[i].disable();
+        }
+    }
+    }
     
 }
 
@@ -651,7 +701,7 @@ void ofApp::receiveList(const std::string& dest, const List& list){
 
 //--------------------------------------------------------------
 void ofApp::closePatchByDollarString(int _dString){
-    
+
     int index = -1;
     
     for(int i = 0; i < brushPatches.size(); i++){
@@ -665,7 +715,8 @@ void ofApp::closePatchByDollarString(int _dString){
     //NOTE: This is a bit hacky as the patch itself is not closing - it's causing crashes :(
     //Might need to add in a thing in the pd patch to make sure it gets muted, not necessary for karplus though.
     
-    //pd.closePatch(brushPatches[index]);
+    pd.closePatch(brushPatches[index]);
+    
     brushPatches.erase(brushPatches.begin() + index);
     brushes.erase(brushes.begin() + index);
     
@@ -745,10 +796,14 @@ void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
 
 //--------------------------------------------------------------
 void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
+
     if(brushPatches.size() > 0){
         for(int i = 0; i<brushPatches.size(); ++i){
             pd.closePatch(brushPatches[i]);
         }
+        
+        dollarIndexes.clear();
+        dollarIndexes.resize(8);
         brushes.clear();
         brushPatches.clear();
         std::cout << "All patches cleared!" << endl;
