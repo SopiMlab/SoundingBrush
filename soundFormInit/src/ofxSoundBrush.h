@@ -22,7 +22,7 @@ public:
     
     void addPoint(glm::vec2 _p);
     
-    void update(){handleShaders();};
+    void update(){if (isEnabled) handleShaders();};
     void draw();
     
     void setColor(ofColor _c);
