@@ -14,6 +14,7 @@ uniform vec2 area;
 uniform float length;
 uniform float time;
 uniform float seed;
+uniform float width;
 
 float _Speed = 100.;
 float _Amount = 5.;

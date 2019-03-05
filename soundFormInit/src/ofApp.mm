@@ -261,10 +261,10 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     b.setup("pd/karplus.pd", 2, "1", "2");
                     break;
                 case 4:
-                    b.setup("pd/granular_andy.pd", 0);
+                    b.setup("pd/granular_andy.pd", 2, "4", "4");
                     break;
                 case 5:
-                    b.setup("pd/crackture.pd", 2, "4", "4");
+                    b.setup("pd/crackture.pd", 2, "5", "5");
                     break;
                 case 6:
                     b.setup("pd/BasslineR.pd", 1);
