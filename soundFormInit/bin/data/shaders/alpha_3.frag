@@ -14,6 +14,7 @@ uniform vec2 resolution;
 uniform float length;
 uniform float time;
 uniform float seed;
+uniform float width;
 
 float random (in vec2 _st) {
     return fract(sin(dot(_st.xy,
@@ -59,7 +60,7 @@ float fbm ( in vec2 _st) {
 
 void main() {
 	vec4 color = texture2D(tex0, texCoordVarying);
-	vec2 st = texCoordVarying * 12.;
+	vec2 st = texCoordVarying * (150.0 - width);
 
 	vec2 q = vec2(0.);
     q.x = fbm( st + 0.00*seed);

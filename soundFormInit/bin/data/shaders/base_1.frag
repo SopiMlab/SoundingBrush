@@ -15,6 +15,7 @@ uniform vec2 area;
 uniform float length;
 uniform float time;
 uniform float seed;
+
 // uniform float alpha;
 
 #define PI 3.14159265359

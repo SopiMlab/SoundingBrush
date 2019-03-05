@@ -131,6 +131,7 @@ void ofxSoundBrush::handleShaders(){
     alphaShader.setUniform1f("length", points.size());
     alphaShader.setUniform1f("time", ofGetElapsedTimef());
     alphaShader.setUniform1f("seed", rSeed);
+    alphaShader.setUniform1f("width", size);
     baseFbo.draw(0, 0);
     alphaShader.end();
     finalFbo.end();
