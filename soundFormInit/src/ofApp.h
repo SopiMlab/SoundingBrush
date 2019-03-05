@@ -171,6 +171,7 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
 //    ThreadTest thread;
     
     vector<vector<int>> dollarIndexes;
+    vector<int> storageLimits;
 };
 
 

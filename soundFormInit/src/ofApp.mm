@@ -67,7 +67,7 @@ void ofApp::setup(){
     
     
     brushWidthFromGui = 20.0;
-    gBrushWidth = new ofxDatGuiSlider("Brush size", 1, 100);
+    gBrushWidth = new ofxDatGuiSlider("Character", 1, 100);
     gBrushWidth->setPosition(1100, 0);
 //    gBrushWidth->setWidth(100, 100);
     gBrushWidth->onSliderEvent(this, &ofApp::onSliderEvent);
@@ -125,6 +125,7 @@ void ofApp::setup(){
     //screen.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
     
     dollarIndexes.resize(8);
+    storageLimits = {4, 4, 2, 4, 2, 2, 1, 1, 1};
     
 }
 
@@ -295,7 +296,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             dollarIndexes[selectedBrushFromGui].push_back(ofToInt(s));
             
             //check if there's more than 4 here and then delete accordingly!
-            if(dollarIndexes[selectedBrushFromGui].size() > 4){
+            if(dollarIndexes[selectedBrushFromGui].size() > storageLimits[selectedBrushFromGui]){
                 closePatchByDollarString(dollarIndexes[selectedBrushFromGui][0]);
                 dollarIndexes[selectedBrushFromGui].erase(dollarIndexes[selectedBrushFromGui].begin());
             }
@@ -328,9 +329,9 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     //Do stuff.
 //                    pd.addFloat(100); //???
                     
-                    pd.addFloat(colorFromGui.r/255.0);
-                    pd.addFloat(colorFromGui.g/255.0);
-                    pd.addFloat(colorFromGui.b/255.0);
+                    pd.addFloat(hue/255.0);
+                    pd.addFloat(sat/255.0);
+                    pd.addFloat(1.0 - bright/255.0);
                     pd.addFloat(brushWidthFromGui * 10); //not 100% why I'm doing this anymore 13.2
                     break;
                 case 3:
@@ -524,6 +525,7 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
                 //map the number of vertices to the range of notes available.
                 mappedValue = brushes[brushes.size()-1].getNumVertices();
                 cout << "RAW: " << mappedValue << endl;
+                mappedValue = ofClamp(mappedValue, 5, 100);
                 mappedValue = ofMap(mappedValue, 5, 100, 0, 15);
                 cout << "MAPPED: " << mappedValue << endl;
                 karpValue = rootNote + tuningRange[int(mappedValue)];
@@ -788,6 +790,7 @@ void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
         bright = e.value * 255;
     } else {
         brushWidthFromGui = e.value;
+        rootNote = int(ofMap(e.value, 0, 100, 30, 45));
     }
     
     colorFromGui = ofColor::fromHsb(hue, sat, bright);
