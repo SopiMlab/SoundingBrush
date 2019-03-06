@@ -11,7 +11,7 @@ void ofApp::setup(){
     ofEnableSmoothing();
     ofEnableAntiAliasing();
     ofDisableArbTex();
-    //    ofEnableDepthTest();
+//    ofEnableDepthTest();
 //    ofSetOrientation(OFXIOS_ORIENTATION_LANDSCAPE_LEFT);
     
     
@@ -21,17 +21,6 @@ void ofApp::setup(){
 //    thread.setup();
     
     
-    //GUI stuff.
-//    ofxGuiSetFont("Questrial-Regular.ttf",20,true,true);
-//    ofxGuiSetTextPadding(8);
-//    ofxGuiSetDefaultWidth(300);
-//    ofxGuiSetDefaultHeight(50);
-    
-    
-//    gui.setup();
-//    gui.add(guiBrushSelector.set("Brush", 0, 0, 8));
-//    gui.add(guiWidth.set("Width", 1, 1, 150));
-//    gui.add(guiColor.set("Color",ofColor(100,100,140),ofColor(0,0),ofColor(255,255)));
     
     //DATGUISTUFF.
     gBrushOptions = {"ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"};
@@ -118,11 +107,11 @@ void ofApp::setup(){
     cycles = 0;
     tuningRange = {0 , 2, 3, 5, 7, 8, 10, 12, 14, 15, 17, 19, 20, 22, 24};
     rootNote = 45;
-    //Let's load up the sampleSynth patch.
+    
+//    Let's load up the sampleSynth patch.
+    
 //    Patch p = pd.openPatch("pd/SampleSynth.pd");
 //    brushPatches.push_back(p);
-    
-    //screen.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
     
     dollarIndexes.resize(8);
     storageLimits = {4, 4, 2, 4, 2, 2, 1, 1, 1};
@@ -150,13 +139,6 @@ void ofApp::update(){
         b.update();
     }
     
-    //    screen.begin();
-    //    ofClear(255, 255, 255, 255);
-    //    for(auto &b : brushes){
-    //        b.draw();
-    //    }
-    //    screen.end();
-    
     //Get the core motion data.
     coreMotion.update();
     accel = coreMotion.getAccelerometerData();
@@ -177,13 +159,6 @@ void ofApp::update(){
         }
     }
     
-//    if(brushPatches.size() == 4){
-//        string s = brushPatches[0].dollarZeroStr();
-//        closePatchByDollarString(ofToInt(s));
-//    }
-    
-//    cout << ofGetMouseX() << endl;
-    
 }
 
 //--------------------------------------------------------------
@@ -196,15 +171,11 @@ void ofApp::draw(){
         b.draw();
     }
     
-    //    screen.draw(0, 0);
-    
 //    stringstream debug;
 //
 //    debug << "Number of instances and strokes is: " << ofToString(brushPatches.size()) << " Frame rate is: " << ofGetFrameRate() << endl;
 //
 //    ofDrawBitmapStringHighlight(debug.str(), glm::vec2(0, ofGetHeight() - 10.0f));
-    
-//    gui.draw();
     
     gBrushSelector->draw();
     gColorSelectorF->draw();

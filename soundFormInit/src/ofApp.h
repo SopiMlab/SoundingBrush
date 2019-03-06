@@ -69,15 +69,6 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     
     float setAVSessionSampleRate(float preferredSampleRate);
     
-    //----------------------------ofxGuiStuff here.
-//    ofParameter<float> guiWidth;
-//    ofParameter<ofColor> guiColor;
-//    ofParameter<int> guiBrushSelector;
-//    ofxPanel gui;
-
-    
-//    int guiBrushSelector;
-    
     //*******************************************************
     //App Stuff Below!
     
@@ -104,8 +95,6 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     
     float filterParam;
     unsigned long cycles;
-    
-    //ofFbo screen;
     
     //TODO: SETUP AND STORE A STRUCT FOR INFO BEING SENT.
     
@@ -171,7 +160,7 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
 //    ThreadTest thread;
     
     vector<vector<int>> dollarIndexes;
-    vector<int> storageLimits;
+    vector<int> storageLimits; //sets the max number of instances for each brush type.
 };
 
 
