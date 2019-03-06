@@ -106,11 +106,12 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     
     ofxDatGuiSlider* gBrushWidth;
     
-    ofxDatGuiButton* gClearScreen;
+//    ofxDatGuiButton* gClearScreen;
     
     float brushWidthFromGui;
     
     ofxDatGuiFolder* gColorSelectorF;
+    ofxDatGuiFolder* gBrushErasers;
     
     ofColor colorFromGui;
     int hue, sat, bright;
@@ -161,6 +162,10 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     
     vector<vector<int>> dollarIndexes;
     vector<int> storageLimits; //sets the max number of instances for each brush type.
+    
+    void clearPalette();
+    
+    void clearLastBrush();
 };
 
 

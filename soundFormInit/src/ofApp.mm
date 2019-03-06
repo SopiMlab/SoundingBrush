@@ -63,11 +63,21 @@ void ofApp::setup(){
     gBrushWidth->setValue(brushWidthFromGui);
 //    gBrushWidth->setTheme(new ofxDatGuiThemeWireframe());
     
+    /*
     gClearScreen = new ofxDatGuiButton("Clear canvas");
     gClearScreen->setPosition(1650, 0);
     gClearScreen->setWidth(ofGetWidth() - 1650);
 //    gClearScreen->setTheme(new ofxDatGuiThemeWireframe());
     gClearScreen->onButtonEvent(this, &ofApp::onButtonEvent);
+     */
+    
+    gBrushErasers = new ofxDatGuiFolder("Erase", ofColor::yellow);
+    gBrushErasers->addButton("Last");
+    gBrushErasers->addButton("Palette");
+    gBrushErasers->addButton("Canvas");
+    gBrushErasers->setPosition(1650, 0);
+    gBrushErasers->setWidth(ofGetWidth() - 1650);
+    gBrushErasers->onButtonEvent(this, &ofApp::onButtonEvent);
     
     //Doing audio setup now.
     float sampleRate = setAVSessionSampleRate(44100);
@@ -128,7 +138,8 @@ void ofApp::update(){
 //    gColorPicker->update();
     gColorSelectorF->update();
     gBrushWidth->update();
-    gClearScreen->update();
+//    gClearScreen->update();
+    gBrushErasers->update();
     
     if(pd.isQueued()) {
         pd.receiveMessages();
@@ -181,7 +192,8 @@ void ofApp::draw(){
     gColorSelectorF->draw();
 //    gColorPicker->draw();
     gBrushWidth->draw();
-    gClearScreen->draw();
+    gBrushErasers->draw();
+//    gClearScreen->draw();
     
 }
 
@@ -202,9 +214,9 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
 //    (s.inside(touch.x, touch.y)) ? bGuiMode = true : bGuiMode = false;
 //    bGuiMode = false; //Temporary!
     
-    if((gBrushSelector->hitTest(touch)) || (gClearScreen->hitTest(touch)) || (gColorSelectorF->hitTest(touch)) || (gBrushWidth->hitTest(touch))){
+    if((gBrushSelector->hitTest(touch)) || (gBrushErasers->hitTest(touch)) || (gColorSelectorF->hitTest(touch)) || (gBrushWidth->hitTest(touch))){
         bGuiMode = true;
-    } else if ((gBrushSelector->getIsExpanded()) || (gColorSelectorF->getIsExpanded())){
+    } else if ((gBrushSelector->getIsExpanded()) || (gColorSelectorF->getIsExpanded() || (gBrushErasers->getIsExpanded()))){
         bGuiMode = true;
     } else {
         bGuiMode = false;
@@ -770,20 +782,54 @@ void ofApp::onSliderEvent(ofxDatGuiSliderEvent e){
 
 //--------------------------------------------------------------
 void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
-
-    if(brushPatches.size() > 0){
-        for(int i = 0; i<brushPatches.size(); ++i){
-            pd.closePatch(brushPatches[i]);
+    
+    string label = e.target->getLabel();
+    
+    if(label == "Last"){
+        clearLastBrush();
+    } else if (label == "Palette"){
+        clearPalette();
+    } else if (label == "Canvas"){
+        if(brushPatches.size() > 0){
+            for(int i = 0; i<brushPatches.size(); ++i){
+                pd.closePatch(brushPatches[i]);
+            }
+            
+            dollarIndexes.clear();
+            dollarIndexes.resize(8);
+            brushes.clear();
+            brushPatches.clear();
+            std::cout << "All patches cleared!" << endl;
         }
-        
-        dollarIndexes.clear();
-        dollarIndexes.resize(8);
-        brushes.clear();
-        brushPatches.clear();
-        std::cout << "All patches cleared!" << endl;
     }
+    
 }
 
 //--------------------------------------------------------------
+void ofApp::clearPalette(){
+    
+    for(int i = 0; i < dollarIndexes[selectedBrushFromGui].size(); i++){
+        closePatchByDollarString(dollarIndexes[selectedBrushFromGui][i]);
+    }
+    
+    dollarIndexes[selectedBrushFromGui].clear();
+    
+    cout << "Palette cleared" << endl;
+}
 
+//--------------------------------------------------------------
+void ofApp::clearLastBrush(){
+    
+    if (dollarIndexes[selectedBrushFromGui].size() == 0) return;
+    
+    int dollarString = dollarIndexes[selectedBrushFromGui][dollarIndexes[selectedBrushFromGui].size() - 1];
+    
+    closePatchByDollarString(dollarString);
+    
+    dollarIndexes[selectedBrushFromGui].pop_back();
+    
+    cout << "Last brush cleared" << endl;
+    
+}
+//--------------------------------------------------------------
 
