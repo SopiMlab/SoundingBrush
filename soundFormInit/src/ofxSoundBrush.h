@@ -71,23 +71,20 @@ private:
     
     void drawThickLine();
     void drawWithThicknessFunction(int thickness);
-    void drawJigglyLines(int thickness, int jiggleAmount);
-    void drawJigglyLinesByDist(int weight);
+//    void drawJigglyLines(int thickness, int jiggleAmount);
+//    void drawJigglyLinesByDist(int weight);
     void drawMeshLine();
     
     ofShader mainShader;
     ofShader alphaShader;
     
-//    ofShader sBlurX, sBlurY;
-    
     ofFbo baseFbo;
-//    ofFbo blurX, blurY;
     ofFbo finalFbo;
     
     bool isDebug;
     float rSeed;
     
-    void handleShaders(); //this needs to be wrapped in an update function?
+    void handleShaders(); //this needs to be wrapped in an update function
     
     ofVboMesh mesh;
     vector<float> customAttributeData; //custom attribute data going to the base shader.

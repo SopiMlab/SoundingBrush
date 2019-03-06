@@ -21,11 +21,6 @@ ofxSoundBrush::ofxSoundBrush(){
     
     baseFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
     
-    //    blurX.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
-    //    blurY.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
-    //    sBlurX.load("shaders/blurX");
-    //    sBlurY.load("shaders/blurY");
-    
     finalFbo.allocate(ofGetWidth(), ofGetHeight(), GL_RGBA);
     
     mainShader.load("shaders/base");
@@ -107,21 +102,12 @@ void ofxSoundBrush::handleShaders(){
     mainShader.setUniform1f("seed", rSeed);
     mainShader.setUniform1f("length", points.size());
     mainShader.setUniform1f("width", size);
-    //    mainShader.setUniform1f("alpha", color.a/float(255));
+//    mainShader.setUniform1f("alpha", color.a/float(255));
     int vertices = mesh.getVertices().size();
     mesh.getVbo().setAttributeData(attLoc, &customAttributeData[0], 2, vertices * 2, GL_STATIC_DRAW, sizeof(float)*2);
     mesh.draw();
     mainShader.end();
     baseFbo.end();
-    //}
-    
-    //    blurX.begin();
-    //    sBlurX.begin();
-    //    sBlurX.setUniform2f("resolution", ofGetWidth(), ofGetHeight());
-    //    sBlurX.setUniform1f("bAmount", 10);
-    //    baseFbo.draw(0, 0);
-    //    sBlurX.end();
-    //    blurX.end();
     
     finalFbo.begin();
     ofClear(0, 0);
@@ -135,60 +121,12 @@ void ofxSoundBrush::handleShaders(){
     baseFbo.draw(0, 0);
     alphaShader.end();
     finalFbo.end();
-    
-    //    blurX.begin();
-    //    sBlurX.begin();
-    //    sBlurX.setUniformTexture("tex0", finalFbo.getTexture(), 0);
-    //    sBlurX.setUniform1f("bAmount", size/float(100000));
-    //    finalFbo.draw(0, 0);
-    //    sBlurX.end();
-    //    blurX.end();
-    //
-    //    blurY.begin();
-    //    sBlurY.begin();
-    //    sBlurY.setUniformTexture("tex0", blurX.getTexture(), 0);
-    //    sBlurY.setUniform1f("bAmount", size/float(100000));
-    //    blurX.draw(0, 0);
-    //    sBlurY.end();
-    //    blurY.end();
-    //}
 }
 
 //--------------------------------------------------
 void ofxSoundBrush::draw(){
     
-    //    baseFbo.draw(0, 0);
-    //    blurX.draw(0, 0);
-    //    blurY.draw(0, 0);
     if(isEnabled) finalFbo.draw(0, 0);
-    
-    //------TESTTESTTEST
-    
-//    drawTestLine();
-    //    //This makes sure the size of the vector is always 3n + 1.
-    //    if(points.size() == 0){
-    //        points.push_back(_p);
-    //    } else {
-    //        glm::vec2 lastPoint = points[points.size() - 1];
-    //        float icr = 3;
-    //        for(int i = 1; i <= icr; i++){
-    //            glm::vec2 intermediate = lerp(_p, lastPoint, i/icr);
-    //            points.push_back(intermediate);
-    //        }
-    //    }
-    
-//    interpolatedPoints = evalCR(points, 100);
-//
-//    ofPushStyle();
-//    ofSetColor(color);
-//
-//    for(int i = 0; i<interpolatedPoints.size(); i++){
-//
-//        ofDrawCircle(interpolatedPoints[i], size);
-//    }
-//
-//    ofPopStyle();
-    
     
     //------------------
     
@@ -384,15 +322,15 @@ void ofxSoundBrush::drawThickLine(){
         
         ofSetColor(color);
         mesh = meshy;
-        //meshy.draw();
+//        meshy.draw();
         
     } else {
         
-       // mesh.draw();
+//        mesh.draw();
     }
     
-    //    ofSetColor(100,100,100);
-    //    meshy.drawWireframe();
+//        ofSetColor(100,100,100);
+//        meshy.drawWireframe();
 }
 
 //---------------------------------------------------
@@ -440,17 +378,17 @@ void ofxSoundBrush::drawWithThicknessFunction(int thickness){
         
         ofSetColor(color);
         mesh = meshy;
-        //meshy.draw();
+//        meshy.draw();
         
     } else {
         
-       // mesh.draw();
+//        mesh.draw();
     }
     
 }
 
 //---------------------------------------------------
-
+/*
 void ofxSoundBrush::drawJigglyLines(int thickness, int jiggleAmount){
     
     if(drawing){
@@ -486,7 +424,7 @@ void ofxSoundBrush::drawJigglyLines(int thickness, int jiggleAmount){
         
         ofSetColor(color);
         mesh = meshy;
-        //meshy.draw();
+//        meshy.draw();
         
     } else {
         
@@ -495,7 +433,7 @@ void ofxSoundBrush::drawJigglyLines(int thickness, int jiggleAmount){
             vertex.y += ofRandomf() * jiggleAmount;
         }
         
-       // mesh.draw();
+//        mesh.draw();
     }
     
 }
@@ -586,6 +524,7 @@ void ofxSoundBrush::drawJigglyLinesByDist(int weight){
     
     
 }
+ */
 
 //--------------------------------------------------------------------------------------------
 
@@ -644,13 +583,13 @@ void ofxSoundBrush::drawMeshLine(){
         
         ofSetColor(color);
         mesh = meshy;
-        //meshy.draw();
+//        meshy.draw();
         
     } else {
         
-        //mesh.draw();
+//        mesh.draw();
     }
     
-    //    ofSetColor(100,100,100);
-    //    meshy.drawWireframe();
+//        ofSetColor(100,100,100);
+//        meshy.drawWireframe();
 }
