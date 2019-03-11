@@ -13,7 +13,7 @@
 
 //Classes
 #include "ofxSoundBrush.h"
-#include "ThreadTest.h"
+#include "ThreadedTimer.h"
 
 using namespace pd;
 
@@ -166,6 +166,12 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     void clearPalette();
     
     void clearLastBrush();
+    
+    ThreadedTimer timer;
+    bool qKill;
+    int qKillIndex;
+    
+    vector<int> queuedKillList;
 };
 
 

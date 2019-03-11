@@ -126,6 +126,8 @@ void ofApp::setup(){
     dollarIndexes.resize(8);
     storageLimits = {4, 4, 2, 4, 2, 2, 1, 1, 1};
     
+    qKill = false;
+    
 }
 
 //--------------------------------------------------------------
@@ -169,6 +171,30 @@ void ofApp::update(){
             pd.finishList(brushPatches[0].dollarZeroStr()+"-fromOF");
         }
     }
+    
+    
+    //----------------Check the status of the timer thread + killing info.
+    if(qKill == true){
+        if(timer.isThreadRunning()){
+            //do nothing, wait for envelop to finish!
+        } else {
+            cout << "Thread done counting at: " << ofGetElapsedTimeMillis() << endl;
+            pd.closePatch(brushPatches[qKillIndex]);
+            brushPatches.erase(brushPatches.begin() + qKillIndex);
+            brushes.erase(brushes.begin() + qKillIndex);
+            qKill = false;
+        }
+    }
+    
+    if(qKill == false){
+        if(queuedKillList.size() > 0){
+            qKillIndex = queuedKillList[0];
+            queuedKillList.erase(queuedKillList.begin());
+            timer.startThread();
+            qKill = true;
+        }
+    }
+    //-------------
     
 }
 
@@ -700,12 +726,24 @@ void ofApp::closePatchByDollarString(int _dString){
     //NOTE: This is a bit hacky as the patch itself is not closing - it's causing crashes :(
     //Might need to add in a thing in the pd patch to make sure it gets muted, not necessary for karplus though.
     
-    pd.closePatch(brushPatches[index]);
+    pd.sendBang(brushPatches[index].dollarZeroStr() + "-OFKillMessage");
+//    ofSleepMillis(99);
+//    pd.closePatch(brushPatches[index]);
+
+//    brushPatches.erase(brushPatches.begin() + index);
+//    brushes.erase(brushes.begin() + index);
+//
+//    cout << "Removed element: " << index << endl;
     
-    brushPatches.erase(brushPatches.begin() + index);
-    brushes.erase(brushes.begin() + index);
+    if(timer.isThreadRunning() == false){
+        qKillIndex = index;
+        qKill = true;
+        timer.startThread();
+    } else {
+        queuedKillList.push_back(index);
+    }
     
-    cout << "Removed element: " << index << endl;
+    cout << "Thread started at: " << ofGetElapsedTimeMillis() << endl;
     
 }
 
