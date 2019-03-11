@@ -905,11 +905,11 @@ void ofApp::clearLastBrush(){
     
     if (dollarIndexes[selectedBrushFromGui].size() == 0) return;
     
-    if (timer.isThreadRunning() == true){
-        timer.stopThread();
-        qKill = false;
-        queuedKillList.clear();
-    }
+//    if (timer.isThreadRunning() == true){
+//        timer.stopThread();
+//        qKill = false;
+//        queuedKillList.clear();
+//    }
     
     int dollarString = dollarIndexes[selectedBrushFromGui][dollarIndexes[selectedBrushFromGui].size() - 1];
     

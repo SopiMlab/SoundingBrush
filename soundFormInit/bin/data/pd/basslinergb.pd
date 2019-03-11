@@ -13,17 +13,17 @@
 #X obj 662 253 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
 -1 -1 0 1;
 #X obj 454 195 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 11684 1;
+-1 -1 9398 1;
 #X obj 351 425 +~;
 #X obj 351 473 +~;
 #X obj 662 312 hsl 128 15 0 1 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 4699 1;
+-1 -1 0 1;
 #X obj 428 341 noise~;
 #X obj 428 382 *~;
 #X obj 351 557 bob~;
 #X obj 351 638 *~;
 #X obj 550 624 vline~;
-#X obj 341 706 dac~;
+#X obj 342 886 dac~;
 #X msg 471 543 4;
 #X obj 471 503 loadbang;
 #X obj 36 257 * 3;
@@ -36,8 +36,8 @@
 #X obj 878 555 r \$0-fromOF;
 #X obj 580 23 r \$0-fromOFinit;
 #X obj 799 414 r \$0-fromOFeoc;
-#X floatatom 486 758 5 0 0 0 - - -;
-#X obj 490 822 s \$0-toOF;
+#X floatatom 586 736 5 0 0 0 - - -;
+#X obj 659 767 s \$0-toOF;
 #X text 513 175 pulse width;
 #X text 678 219 sawtooth amplitude;
 #X text 660 277 square wave amplitude;
@@ -60,6 +60,12 @@
 #X obj 580 51 unpack f f f f;
 #X obj 878 589 unpack f f;
 #X obj 935 635 t b f;
+#X obj 410 745 r \$0-OFKillMessage;
+#X msg 475 805 1, f 5;
+#X obj 475 773 loadbang;
+#X obj 475 835 line~;
+#X msg 410 774 0 100;
+#X obj 351 849 *~;
 #X connect 0 0 1 0;
 #X connect 0 0 23 0;
 #X connect 1 0 2 0;
@@ -80,8 +86,7 @@
 #X connect 15 0 16 0;
 #X connect 16 0 13 1;
 #X connect 17 0 18 0;
-#X connect 18 0 20 0;
-#X connect 18 0 20 1;
+#X connect 18 0 62 0;
 #X connect 19 0 18 1;
 #X connect 21 0 17 2;
 #X connect 22 0 21 0;
@@ -120,3 +125,10 @@
 #X connect 55 1 56 0;
 #X connect 56 0 23 0;
 #X connect 56 1 23 1;
+#X connect 57 0 61 0;
+#X connect 58 0 60 0;
+#X connect 59 0 58 0;
+#X connect 60 0 62 1;
+#X connect 61 0 60 0;
+#X connect 62 0 20 0;
+#X connect 62 0 20 1;
