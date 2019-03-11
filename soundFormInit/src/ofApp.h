@@ -164,8 +164,8 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     vector<int> storageLimits; //sets the max number of instances for each brush type.
     
     void clearPalette();
-    
     void clearLastBrush();
+    void clearCanvas();
     
     ThreadedTimer timer;
     bool qKill;

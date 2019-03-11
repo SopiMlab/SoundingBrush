@@ -11,23 +11,23 @@ void ofApp::setup(){
     ofEnableSmoothing();
     ofEnableAntiAliasing();
     ofDisableArbTex();
-//    ofEnableDepthTest();
-//    ofSetOrientation(OFXIOS_ORIENTATION_LANDSCAPE_LEFT);
+    //    ofEnableDepthTest();
+    //    ofSetOrientation(OFXIOS_ORIENTATION_LANDSCAPE_LEFT);
     
     
     ofRegisterTouchEvents(this);
     ofxiOSAlerts.addListener(this);
     
-//    thread.setup();
+    //    thread.setup();
     
     
     //DATGUISTUFF.
     gBrushOptions = {"ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"};
     gBrushSelector = new ofxDatGuiDropdown("Brush selector", gBrushOptions);
     gBrushSelector->setPosition(0, 0);
-//    gBrushSelector->setWidth(100);
+    //    gBrushSelector->setWidth(100);
     gBrushSelector->select(0);
-//    gBrushSelector->setTheme(new ofxDatGuiThemeWireframe());
+    //    gBrushSelector->setTheme(new ofxDatGuiThemeWireframe());
     gBrushSelector->onDropdownEvent(this, &ofApp::onDropDownEvent);
     selectedBrushFromGui = 0; //placeholder
     
@@ -42,32 +42,32 @@ void ofApp::setup(){
     gColorSelectorF->addSlider("Saturation", 0, 100, 0);
     gColorSelectorF->addSlider("Brightness", 0, 1, 0);
     gColorSelectorF->setPosition(550, 0);
-//    gColorSelectorF->setTheme(new ofxDatGuiThemeWireframe());
+    //    gColorSelectorF->setTheme(new ofxDatGuiThemeWireframe());
     gColorSelectorF->onSliderEvent(this, &ofApp::onSliderEvent);
     
-
     
-//    gColorPicker = new ofxDatGuiColorPicker("Select Color!", ofColor::yellow);
-//    gColorPicker->setPosition(600, 0);
-//    gColorPicker->ofxDatGuiComponent::setWidth(100, 100);
-//    gColorPicker->onColorPickerEvent(this, &ofApp::onColorPickerEvent);
+    
+    //    gColorPicker = new ofxDatGuiColorPicker("Select Color!", ofColor::yellow);
+    //    gColorPicker->setPosition(600, 0);
+    //    gColorPicker->ofxDatGuiComponent::setWidth(100, 100);
+    //    gColorPicker->onColorPickerEvent(this, &ofApp::onColorPickerEvent);
     
     
     
     brushWidthFromGui = 20.0;
     gBrushWidth = new ofxDatGuiSlider("Character", 1, 100);
     gBrushWidth->setPosition(1100, 0);
-//    gBrushWidth->setWidth(100, 100);
+    //    gBrushWidth->setWidth(100, 100);
     gBrushWidth->onSliderEvent(this, &ofApp::onSliderEvent);
     gBrushWidth->setValue(brushWidthFromGui);
-//    gBrushWidth->setTheme(new ofxDatGuiThemeWireframe());
+    //    gBrushWidth->setTheme(new ofxDatGuiThemeWireframe());
     
     /*
-    gClearScreen = new ofxDatGuiButton("Clear canvas");
-    gClearScreen->setPosition(1650, 0);
-    gClearScreen->setWidth(ofGetWidth() - 1650);
-//    gClearScreen->setTheme(new ofxDatGuiThemeWireframe());
-    gClearScreen->onButtonEvent(this, &ofApp::onButtonEvent);
+     gClearScreen = new ofxDatGuiButton("Clear canvas");
+     gClearScreen->setPosition(1650, 0);
+     gClearScreen->setWidth(ofGetWidth() - 1650);
+     //    gClearScreen->setTheme(new ofxDatGuiThemeWireframe());
+     gClearScreen->onButtonEvent(this, &ofApp::onButtonEvent);
      */
     
     gBrushErasers = new ofxDatGuiFolder("Erase", ofColor::yellow);
@@ -117,10 +117,10 @@ void ofApp::setup(){
     tuningRange = {0 , 2, 3, 5, 7, 8, 10, 12, 14, 15, 17, 19, 20, 22, 24};
     rootNote = 45;
     
-//    Let's load up the sampleSynth patch.
+    //    Let's load up the sampleSynth patch.
     
-//    Patch p = pd.openPatch("pd/SampleSynth.pd");
-//    brushPatches.push_back(p);
+    //    Patch p = pd.openPatch("pd/SampleSynth.pd");
+    //    brushPatches.push_back(p);
     
     dollarIndexes.resize(8);
     storageLimits = {4, 4, 2, 4, 2, 2, 1, 1, 1};
@@ -132,14 +132,14 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     
-//    if(ofGetFrameNum() == 3) thread.startThread();
-//    cout << thread.isThreadRunning() << endl;
+    //    if(ofGetFrameNum() == 3) thread.startThread();
+    //    cout << thread.isThreadRunning() << endl;
     
     gBrushSelector->update();
-//    gColorPicker->update();
+    //    gColorPicker->update();
     gColorSelectorF->update();
     gBrushWidth->update();
-//    gClearScreen->update();
+    //    gClearScreen->update();
     gBrushErasers->update();
     
     if(pd.isQueued()) {
@@ -181,11 +181,11 @@ void ofApp::update(){
             
             int killDString = brushPatches[qKillIndex].dollarZero();
             
-//            cout << "Closing patch" << endl;
+            //            cout << "Closing patch" << endl;
             pd.closePatch(brushPatches[qKillIndex]);
-//            cout << "Erasing from vector" << endl;
+            //            cout << "Erasing from vector" << endl;
             brushPatches.erase(brushPatches.begin() + qKillIndex);
-//            cout << "Erasing brush" << endl;
+            //            cout << "Erasing brush" << endl;
             brushes.erase(brushes.begin() + qKillIndex);
             
             cout << "Did PD + Brush routine" << endl;
@@ -197,7 +197,7 @@ void ofApp::update(){
                     if(killDString == dollarIndexes[i][j]){
                         x = i;
                         y = j;
-//                        cout << "found x: " << x << " and y: " << y << endl;
+                        //                        cout << "found x: " << x << " and y: " << y << endl;
                     }
                 }
             }
@@ -235,18 +235,18 @@ void ofApp::draw(){
         b.draw();
     }
     
-//    stringstream debug;
-//
-//    debug << "Number of instances and strokes is: " << ofToString(brushPatches.size()) << " Frame rate is: " << ofGetFrameRate() << endl;
-//
-//    ofDrawBitmapStringHighlight(debug.str(), glm::vec2(0, ofGetHeight() - 10.0f));
+    //    stringstream debug;
+    //
+    //    debug << "Number of instances and strokes is: " << ofToString(brushPatches.size()) << " Frame rate is: " << ofGetFrameRate() << endl;
+    //
+    //    ofDrawBitmapStringHighlight(debug.str(), glm::vec2(0, ofGetHeight() - 10.0f));
     
     gBrushSelector->draw();
     gColorSelectorF->draw();
-//    gColorPicker->draw();
+    //    gColorPicker->draw();
     gBrushWidth->draw();
     gBrushErasers->draw();
-//    gClearScreen->draw();
+    //    gClearScreen->draw();
     
 }
 
@@ -260,12 +260,12 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
     
     bFingerDown = true;
     
-//    ofRectangle s = gui.getShape();
+    //    ofRectangle s = gui.getShape();
     if(touch.id == 0) firstTouch = glm::vec2(touch.x, touch.y);
     if(touch.id == 1) secondTouch = glm::vec2(touch.x, touch.y);
     
-//    (s.inside(touch.x, touch.y)) ? bGuiMode = true : bGuiMode = false;
-//    bGuiMode = false; //Temporary!
+    //    (s.inside(touch.x, touch.y)) ? bGuiMode = true : bGuiMode = false;
+    //    bGuiMode = false; //Temporary!
     
     if((gBrushSelector->hitTest(touch)) || (gBrushErasers->hitTest(touch)) || (gColorSelectorF->hitTest(touch)) || (gBrushWidth->hitTest(touch))){
         bGuiMode = true;
@@ -291,7 +291,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     b.setup("pd/sinxy.pd", 2, "0", "0");
                     break;
                 case 2:
-//                    b.setup("pd/granular-redux.pd", 0);
+                    //                    b.setup("pd/granular-redux.pd", 0);
                     b.setup("pd/basslinergb.pd", 1, "3", "3");
                     break;
                 case 3:
@@ -334,7 +334,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             //check if there's more than set limits here and then delete accordingly!
             if(dollarIndexes[selectedBrushFromGui].size() > storageLimits[selectedBrushFromGui]){
                 closePatchByDollarString(dollarIndexes[selectedBrushFromGui][0]);
-//                dollarIndexes[selectedBrushFromGui].erase(dollarIndexes[selectedBrushFromGui].begin());
+                //                dollarIndexes[selectedBrushFromGui].erase(dollarIndexes[selectedBrushFromGui].begin());
             }
             
             std::cout << "Brushpatches size is now: " << brushPatches.size() << endl;
@@ -363,7 +363,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     break;
                 case 2:
                     //Do stuff.
-//                    pd.addFloat(100); //???
+                    //                    pd.addFloat(100); //???
                     
                     pd.addFloat(hue/255.0);
                     pd.addFloat(sat/255.0);
@@ -479,7 +479,7 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
                 case 6:
                     //do stuff.
                     //pd.addFloat(ofMap(currentBrush->getLastVertex().x, 0, ofGetWidth(), 80, 1000));
-//                    pd.addFloat(guiColor->getBrightness() * 4.0);
+                    //                    pd.addFloat(guiColor->getBrightness() * 4.0);
                     //                cout << guiColor->getBrightness() << endl;
                     break;
                 case 7:
@@ -565,8 +565,8 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
                 mappedValue = ofMap(mappedValue, 5, 100, 0, 15);
                 cout << "MAPPED: " << mappedValue << endl;
                 karpValue = rootNote + tuningRange[int(mappedValue)];
-//                karpValue = brushes[brushes.size()-1].getNumVertices();
-//                karpValue = ofMap(karpValue, 0, 1000, 40, 70);
+                //                karpValue = brushes[brushes.size()-1].getNumVertices();
+                //                karpValue = ofMap(karpValue, 0, 1000, 40, 70);
                 cout << "NOTE: " << karpValue << endl;
                 pd.addFloat(karpValue);
                 break;
@@ -577,9 +577,9 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
                 //do stuff.
                 break;
             case 6:
-//                float v;
-//                v = brushes[brushes.size()-1].getNumVertices();
-//                pd.addFloat(v);
+                //                float v;
+                //                v = brushes[brushes.size()-1].getNumVertices();
+                //                pd.addFloat(v);
                 break;
             case 7:
                 pd.addFloat(1.0); //value doesn't matter.
@@ -607,22 +607,22 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
 //--------------------------------------------------------------
 void ofApp::touchDoubleTap(ofTouchEventArgs & touch){
     
-//    ofRectangle s = gui.getShape();
-//
-//    if(s.inside(touch)){
-//        if(brushPatches.size() > 0){
-//            for(int i = 0; i<brushPatches.size(); ++i){
-//                pd.closePatch(brushPatches[i]);
-//            }
-//            brushes.clear();
-//            brushPatches.clear();
-//            std::cout << "All patches cleared!" << endl;
-//        }
-//        //Anything else on double tap can come here!
-//    }
+    //    ofRectangle s = gui.getShape();
+    //
+    //    if(s.inside(touch)){
+    //        if(brushPatches.size() > 0){
+    //            for(int i = 0; i<brushPatches.size(); ++i){
+    //                pd.closePatch(brushPatches[i]);
+    //            }
+    //            brushes.clear();
+    //            brushPatches.clear();
+    //            std::cout << "All patches cleared!" << endl;
+    //        }
+    //        //Anything else on double tap can come here!
+    //    }
     
-//    string s = brushPatches[0].dollarZeroStr();
-//    closePatchByDollarString(ofToInt(s));
+    //    string s = brushPatches[0].dollarZeroStr();
+    //    closePatchByDollarString(ofToInt(s));
 }
 
 //--------------------------------------------------------------
@@ -674,31 +674,31 @@ void ofApp::receiveBang(const std::string& dest){
 void ofApp::receiveFloat(const std::string& dest, float value){
     cout << "OF: Float " << dest << ": " << value << endl;
     
-//    if (dest == "toOFKill"){
-//        //closePatchByDollarString(value);
-//        int x, y;
-//        //also find the value and delete it from the dollar indexes...
-//        for(int i = 0; i<dollarIndexes.size(); i++){
-//            for(int j = 0; j < dollarIndexes[i].size(); j++){
-//                if(value == dollarIndexes[i][j]){
-//                    x = i;
-//                    y = j;
-//                    cout << "found x: " << x << " and y: " << y << endl;
-//                }
-//            }
-//        }
-////        cout << dollarIndexes[3].size() << endl;
-//        dollarIndexes[x].erase(dollarIndexes[x].begin() + y);
-////        cout << dollarIndexes[3].size() << endl;
-//        closePatchByDollarString(value);
-//    }
+    //    if (dest == "toOFKill"){
+    //        //closePatchByDollarString(value);
+    //        int x, y;
+    //        //also find the value and delete it from the dollar indexes...
+    //        for(int i = 0; i<dollarIndexes.size(); i++){
+    //            for(int j = 0; j < dollarIndexes[i].size(); j++){
+    //                if(value == dollarIndexes[i][j]){
+    //                    x = i;
+    //                    y = j;
+    //                    cout << "found x: " << x << " and y: " << y << endl;
+    //                }
+    //            }
+    //        }
+    ////        cout << dollarIndexes[3].size() << endl;
+    //        dollarIndexes[x].erase(dollarIndexes[x].begin() + y);
+    ////        cout << dollarIndexes[3].size() << endl;
+    //        closePatchByDollarString(value);
+    //    }
     
     if(dest == "toOFKill"){
-    for(int i = 0; i<brushes.size(); i++){
-        if(ofToString(value) == brushes[i].getDollarZeroString()){
-            brushes[i].disable();
+        for(int i = 0; i<brushes.size(); i++){
+            if(ofToString(value) == brushes[i].getDollarZeroString()){
+                brushes[i].disable();
+            }
         }
-    }
     }
     
 }
@@ -728,9 +728,11 @@ void ofApp::receiveList(const std::string& dest, const List& list){
             //need an update params function here by brush type, hmm.
         }
         
-        if (brushes[index].drawing == false){
-            float mappedValue = nlMap(values[0], 0, 100, 0, 255, 2);
-            brushes[index].setAlpha(mappedValue);
+        if((index > 0) && (index < brushes.size())){
+            if (brushes[index].drawing == false){
+                float mappedValue = nlMap(values[0], 0, 100, 0, 255, 2);
+                brushes[index].setAlpha(mappedValue);
+            }
         }
         
     }
@@ -739,14 +741,14 @@ void ofApp::receiveList(const std::string& dest, const List& list){
 
 //--------------------------------------------------------------
 void ofApp::closePatchByDollarString(int _dString){
-
+    
     int index = -1;
     
     for(int i = 0; i < brushPatches.size(); i++){
-//        cout << brushPatches[i].dollarZeroStr() << endl;
+        //        cout << brushPatches[i].dollarZeroStr() << endl;
         if(brushPatches[i].dollarZeroStr() == ofToString(_dString)){
             index = i;
-//            cout << "Index updated to: " << index << endl;
+            //            cout << "Index updated to: " << index << endl;
         }
     }
     
@@ -754,13 +756,13 @@ void ofApp::closePatchByDollarString(int _dString){
     //Might need to add in a thing in the pd patch to make sure it gets muted, not necessary for karplus though.
     
     pd.sendBang(brushPatches[index].dollarZeroStr() + "-OFKillMessage");
-//    ofSleepMillis(99);
-//    pd.closePatch(brushPatches[index]);
-
-//    brushPatches.erase(brushPatches.begin() + index);
-//    brushes.erase(brushes.begin() + index);
-//
-//    cout << "Removed element: " << index << endl;
+    //    ofSleepMillis(99);
+    //    pd.closePatch(brushPatches[index]);
+    
+    //    brushPatches.erase(brushPatches.begin() + index);
+    //    brushes.erase(brushes.begin() + index);
+    //
+    //    cout << "Removed element: " << index << endl;
     
     cout << ofToString(_dString) << endl;
     
@@ -859,25 +861,26 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
     } else if (label == "Palette"){
         clearPalette();
     } else if (label == "Canvas"){
+        clearCanvas();
         
-        if (timer.isThreadRunning() == true){
-            timer.stopThread();
-            qKill = false;
-            queuedKillList.clear();
-        }
+//        if (timer.isThreadRunning() == true){
+//            timer.stopThread();
+//            qKill = false;
+//            queuedKillList.clear();
+//        }
+//
+//        if(brushPatches.size() > 0){
+//            for(int i = 0; i<brushPatches.size(); ++i){
+//                pd.closePatch(brushPatches[i]);
+//            }
+//
+//            dollarIndexes.clear();
+//            dollarIndexes.resize(8);
+//            brushes.clear();
+//            brushPatches.clear();
+//            std::cout << "All patches cleared!" << endl;
+//        }
         
-        if(brushPatches.size() > 0){
-            for(int i = 0; i<brushPatches.size(); ++i){
-                pd.closePatch(brushPatches[i]);
-            }
-            
-            dollarIndexes.clear();
-            dollarIndexes.resize(8);
-            brushes.clear();
-            brushPatches.clear();
-            std::cout << "All patches cleared!" << endl;
-        }
-    
     }
     
 }
@@ -885,17 +888,17 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
 //--------------------------------------------------------------
 void ofApp::clearPalette(){
     
-//    if (timer.isThreadRunning() == true){
-//        timer.stopThread();
-//        qKill = false;
-//        queuedKillList.clear();
-//    }
+    //    if (timer.isThreadRunning() == true){
+    //        timer.stopThread();
+    //        qKill = false;
+    //        queuedKillList.clear();
+    //    }
     
     for(int i = 0; i < dollarIndexes[selectedBrushFromGui].size(); i++){
         closePatchByDollarString(dollarIndexes[selectedBrushFromGui][i]);
     }
     
-//    dollarIndexes[selectedBrushFromGui].clear();
+    //    dollarIndexes[selectedBrushFromGui].clear();
     
     cout << "Palette cleared" << endl;
 }
@@ -905,20 +908,25 @@ void ofApp::clearLastBrush(){
     
     if (dollarIndexes[selectedBrushFromGui].size() == 0) return;
     
-//    if (timer.isThreadRunning() == true){
-//        timer.stopThread();
-//        qKill = false;
-//        queuedKillList.clear();
-//    }
+    //    if (timer.isThreadRunning() == true){
+    //        timer.stopThread();
+    //        qKill = false;
+    //        queuedKillList.clear();
+    //    }
     
     int dollarString = dollarIndexes[selectedBrushFromGui][dollarIndexes[selectedBrushFromGui].size() - 1];
     
     closePatchByDollarString(dollarString);
     
-//    dollarIndexes[selectedBrushFromGui].pop_back();
+    //    dollarIndexes[selectedBrushFromGui].pop_back();
     
     cout << "Last brush cleared" << endl;
     
 }
 //--------------------------------------------------------------
+void ofApp::clearCanvas(){
+    for(int i = 0; i<brushPatches.size(); i++){
+        closePatchByDollarString(brushPatches[i].dollarZero());
+    }
+}
 
