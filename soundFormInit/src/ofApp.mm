@@ -21,7 +21,6 @@ void ofApp::setup(){
 //    thread.setup();
     
     
-    
     //DATGUISTUFF.
     gBrushOptions = {"ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"};
     gBrushSelector = new ofxDatGuiDropdown("Brush selector", gBrushOptions);
@@ -179,10 +178,38 @@ void ofApp::update(){
             //do nothing, wait for envelop to finish!
         } else {
             cout << "Thread done counting at: " << ofGetElapsedTimeMillis() << endl;
+            
+            int killDString = brushPatches[qKillIndex].dollarZero();
+            
+//            cout << "Closing patch" << endl;
             pd.closePatch(brushPatches[qKillIndex]);
+//            cout << "Erasing from vector" << endl;
             brushPatches.erase(brushPatches.begin() + qKillIndex);
+//            cout << "Erasing brush" << endl;
             brushes.erase(brushes.begin() + qKillIndex);
+            
+            cout << "Did PD + Brush routine" << endl;
+            
+            int x, y;
+            //also find the value and delete it from the dollar indexes...
+            for(int i = 0; i<dollarIndexes.size(); i++){
+                for(int j = 0; j < dollarIndexes[i].size(); j++){
+                    if(killDString == dollarIndexes[i][j]){
+                        x = i;
+                        y = j;
+//                        cout << "found x: " << x << " and y: " << y << endl;
+                    }
+                }
+            }
+            dollarIndexes[x].erase(dollarIndexes[x].begin() + y);
+            
+            //The indexes have moved by -1 now, so update the queue list, if there's stuff in there.
+            for(int i = 0; i<queuedKillList.size(); i++){
+                queuedKillList[i] -= 1;
+            }
+            
             qKill = false;
+            
         }
     }
     
@@ -304,10 +331,10 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             //store the $0-string in the vector too.
             dollarIndexes[selectedBrushFromGui].push_back(ofToInt(s));
             
-            //check if there's more than 4 here and then delete accordingly!
+            //check if there's more than set limits here and then delete accordingly!
             if(dollarIndexes[selectedBrushFromGui].size() > storageLimits[selectedBrushFromGui]){
                 closePatchByDollarString(dollarIndexes[selectedBrushFromGui][0]);
-                dollarIndexes[selectedBrushFromGui].erase(dollarIndexes[selectedBrushFromGui].begin());
+//                dollarIndexes[selectedBrushFromGui].erase(dollarIndexes[selectedBrushFromGui].begin());
             }
             
             std::cout << "Brushpatches size is now: " << brushPatches.size() << endl;
@@ -716,10 +743,10 @@ void ofApp::closePatchByDollarString(int _dString){
     int index = -1;
     
     for(int i = 0; i < brushPatches.size(); i++){
-        cout << brushPatches[i].dollarZeroStr() << endl;
+//        cout << brushPatches[i].dollarZeroStr() << endl;
         if(brushPatches[i].dollarZeroStr() == ofToString(_dString)){
             index = i;
-            cout << "Index updated to: " << index << endl;
+//            cout << "Index updated to: " << index << endl;
         }
     }
     
@@ -735,11 +762,15 @@ void ofApp::closePatchByDollarString(int _dString){
 //
 //    cout << "Removed element: " << index << endl;
     
+    cout << ofToString(_dString) << endl;
+    
     if(timer.isThreadRunning() == false){
+        cout << "Starting timer to kill patch" << endl;
         qKillIndex = index;
         qKill = true;
         timer.startThread();
     } else {
+        cout << "Timer is running to adding to queue" << endl;
         queuedKillList.push_back(index);
     }
     
@@ -828,6 +859,13 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
     } else if (label == "Palette"){
         clearPalette();
     } else if (label == "Canvas"){
+        
+        if (timer.isThreadRunning() == true){
+            timer.stopThread();
+            qKill = false;
+            queuedKillList.clear();
+        }
+        
         if(brushPatches.size() > 0){
             for(int i = 0; i<brushPatches.size(); ++i){
                 pd.closePatch(brushPatches[i]);
@@ -839,6 +877,7 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
             brushPatches.clear();
             std::cout << "All patches cleared!" << endl;
         }
+    
     }
     
 }
@@ -846,11 +885,17 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
 //--------------------------------------------------------------
 void ofApp::clearPalette(){
     
+//    if (timer.isThreadRunning() == true){
+//        timer.stopThread();
+//        qKill = false;
+//        queuedKillList.clear();
+//    }
+    
     for(int i = 0; i < dollarIndexes[selectedBrushFromGui].size(); i++){
         closePatchByDollarString(dollarIndexes[selectedBrushFromGui][i]);
     }
     
-    dollarIndexes[selectedBrushFromGui].clear();
+//    dollarIndexes[selectedBrushFromGui].clear();
     
     cout << "Palette cleared" << endl;
 }
@@ -860,11 +905,17 @@ void ofApp::clearLastBrush(){
     
     if (dollarIndexes[selectedBrushFromGui].size() == 0) return;
     
+    if (timer.isThreadRunning() == true){
+        timer.stopThread();
+        qKill = false;
+        queuedKillList.clear();
+    }
+    
     int dollarString = dollarIndexes[selectedBrushFromGui][dollarIndexes[selectedBrushFromGui].size() - 1];
     
     closePatchByDollarString(dollarString);
     
-    dollarIndexes[selectedBrushFromGui].pop_back();
+//    dollarIndexes[selectedBrushFromGui].pop_back();
     
     cout << "Last brush cleared" << endl;
     
