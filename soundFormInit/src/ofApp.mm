@@ -22,7 +22,7 @@ void ofApp::setup(){
     
     
     //DATGUISTUFF.
-    gBrushOptions = {"ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"};
+    gBrushOptions = {"ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX"};
     gBrushSelector = new ofxDatGuiDropdown("Brush selector", gBrushOptions);
     gBrushSelector->setPosition(0, 0);
     //    gBrushSelector->setWidth(100);
@@ -31,16 +31,16 @@ void ofApp::setup(){
     gBrushSelector->onDropdownEvent(this, &ofApp::onDropDownEvent);
     selectedBrushFromGui = 0; //placeholder
     
-    hue = 0;
-    sat = 0;
-    bright = 0;
+    hue = 127;
+    sat = 127;
+    bright = 127;
     
     colorFromGui = ofColor::fromHsb(hue, sat, bright);
     
     gColorSelectorF = new ofxDatGuiFolder("Color Selector", ofColor::white);
-    gColorSelectorF->addSlider("Hue", 0, 360, 0);
-    gColorSelectorF->addSlider("Saturation", 0, 100, 0);
-    gColorSelectorF->addSlider("Brightness", 0, 1, 0);
+    gColorSelectorF->addSlider("Hue", 0, 360, 180);
+    gColorSelectorF->addSlider("Saturation", 0, 100, 50);
+    gColorSelectorF->addSlider("Brightness", 0, 1, 0.5);
     gColorSelectorF->setPosition(550, 0);
     //    gColorSelectorF->setTheme(new ofxDatGuiThemeWireframe());
     gColorSelectorF->onSliderEvent(this, &ofApp::onSliderEvent);
