@@ -176,7 +176,7 @@ void ofApp::update(){
             cout << "Erasing from vector" << endl;
             brushPatches.erase(brushPatches.begin() + qKillIndex);
             cout << "Erasing brush" << endl;
-            brushes.erase(brushes.begin() + qKillIndex);
+            brushes.erase(brushes.begin() + qKillIndex - 1); //qKillIndex is always going to be offset by one thanks to the gesture brush.
             
             cout << "Did PD + Brush routine" << endl;
             
@@ -263,7 +263,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
         bGuiMode = false;
     }
     
-//    if(!bGuiMode) bFingerDown = true;
+    if(!bGuiMode) bFingerDown = true;
     if(selectedBrushFromGui == 6) return;
     
     if(!bGuiMode){
