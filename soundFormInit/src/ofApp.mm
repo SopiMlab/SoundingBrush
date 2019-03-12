@@ -17,9 +17,7 @@ void ofApp::setup(){
     
     ofRegisterTouchEvents(this);
     ofxiOSAlerts.addListener(this);
-    
-    //    thread.setup();
-    
+
     
     //DATGUISTUFF.
     gBrushOptions = {"ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX"};
@@ -45,14 +43,10 @@ void ofApp::setup(){
     //    gColorSelectorF->setTheme(new ofxDatGuiThemeWireframe());
     gColorSelectorF->onSliderEvent(this, &ofApp::onSliderEvent);
     
-    
-    
     //    gColorPicker = new ofxDatGuiColorPicker("Select Color!", ofColor::yellow);
     //    gColorPicker->setPosition(600, 0);
     //    gColorPicker->ofxDatGuiComponent::setWidth(100, 100);
     //    gColorPicker->onColorPickerEvent(this, &ofApp::onColorPickerEvent);
-    
-    
     
     brushWidthFromGui = 20.0;
     gBrushWidth = new ofxDatGuiSlider("Character", 1, 100);
@@ -118,7 +112,6 @@ void ofApp::setup(){
     rootNote = 45;
     
     //    Let's load up the sampleSynth patch.
-    
     //    Patch p = pd.openPatch("pd/SampleSynth.pd");
     //    brushPatches.push_back(p);
     
@@ -131,9 +124,6 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    
-    //    if(ofGetFrameNum() == 3) thread.startThread();
-    //    cout << thread.isThreadRunning() << endl;
     
     gBrushSelector->update();
     //    gColorPicker->update();
@@ -177,7 +167,7 @@ void ofApp::update(){
         if(timer.isThreadRunning()){
             //do nothing, wait for envelop to finish!
         } else {
-            cout << "Thread done counting at: " << ofGetElapsedTimeMillis() << endl;
+//            cout << "Thread done counting at: " << ofGetElapsedTimeMillis() << endl;
             
             int killDString = brushPatches[qKillIndex].dollarZero();
             
@@ -191,7 +181,7 @@ void ofApp::update(){
             cout << "Did PD + Brush routine" << endl;
             
             int x, y;
-            //also find the value and delete it from the dollar indexes...
+            //also find the relevant index and delete it from the dollar indexes...
             for(int i = 0; i<dollarIndexes.size(); i++){
                 for(int j = 0; j < dollarIndexes[i].size(); j++){
                     if(killDString == dollarIndexes[i][j]){
@@ -201,6 +191,7 @@ void ofApp::update(){
                     }
                 }
             }
+            
             dollarIndexes[x].erase(dollarIndexes[x].begin() + y);
             
             //The indexes have moved by -1 now, so update the queue list, if there's stuff in there.
@@ -607,22 +598,6 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
 //--------------------------------------------------------------
 void ofApp::touchDoubleTap(ofTouchEventArgs & touch){
     
-    //    ofRectangle s = gui.getShape();
-    //
-    //    if(s.inside(touch)){
-    //        if(brushPatches.size() > 0){
-    //            for(int i = 0; i<brushPatches.size(); ++i){
-    //                pd.closePatch(brushPatches[i]);
-    //            }
-    //            brushes.clear();
-    //            brushPatches.clear();
-    //            std::cout << "All patches cleared!" << endl;
-    //        }
-    //        //Anything else on double tap can come here!
-    //    }
-    
-    //    string s = brushPatches[0].dollarZeroStr();
-    //    closePatchByDollarString(ofToInt(s));
 }
 
 //--------------------------------------------------------------
@@ -672,26 +647,7 @@ void ofApp::receiveBang(const std::string& dest){
 
 //--------------------------------------------------------------
 void ofApp::receiveFloat(const std::string& dest, float value){
-    cout << "OF: Float " << dest << ": " << value << endl;
-    
-    //    if (dest == "toOFKill"){
-    //        //closePatchByDollarString(value);
-    //        int x, y;
-    //        //also find the value and delete it from the dollar indexes...
-    //        for(int i = 0; i<dollarIndexes.size(); i++){
-    //            for(int j = 0; j < dollarIndexes[i].size(); j++){
-    //                if(value == dollarIndexes[i][j]){
-    //                    x = i;
-    //                    y = j;
-    //                    cout << "found x: " << x << " and y: " << y << endl;
-    //                }
-    //            }
-    //        }
-    ////        cout << dollarIndexes[3].size() << endl;
-    //        dollarIndexes[x].erase(dollarIndexes[x].begin() + y);
-    ////        cout << dollarIndexes[3].size() << endl;
-    //        closePatchByDollarString(value);
-    //    }
+    //cout << "OF: Float " << dest << ": " << value << endl;
     
     if(dest == "toOFKill"){
         for(int i = 0; i<brushes.size(); i++){
