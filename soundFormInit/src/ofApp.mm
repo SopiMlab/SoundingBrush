@@ -27,7 +27,7 @@ void ofApp::setup(){
     gBrushSelector->select(gBrushOptions.size() - 1);
     gBrushSelector->setTheme(new ofxDatGuiThemeSoundingBrush());
     gBrushSelector->onDropdownEvent(this, &ofApp::onDropDownEvent);
-    selectedBrushFromGui = 6; //placeholder
+    selectedBrushFromGui = 6; //placeholder -> make sure this corresponds to gBrushSelector->select(index) otherwise nasty things will happen /s
     
     hue = 127;
     sat = 127;
