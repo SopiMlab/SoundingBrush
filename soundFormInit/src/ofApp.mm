@@ -22,7 +22,7 @@ void ofApp::setup(){
     //DATGUISTUFF.
     gBrushOptions = {"Across", "Line", "Three Waves", "Kar+Paint", "Particles", "Crackler", "Gesture"};
     gBrushSelector = new ofxDatGuiDropdown("Brush selector", gBrushOptions);
-    gBrushSelector->setPosition(0, 10);
+    gBrushSelector->setPosition(0, 20);
     //    gBrushSelector->setWidth(100);
     gBrushSelector->select(gBrushOptions.size() - 1);
     gBrushSelector->setTheme(new ofxDatGuiThemeSoundingBrush());
@@ -39,7 +39,7 @@ void ofApp::setup(){
     gColorSelectorF->addSlider("Hue", 0, 360, 180);
     gColorSelectorF->addSlider("Saturation", 0, 100, 50);
     gColorSelectorF->addSlider("Brightness", 0, 1, 0.5);
-    gColorSelectorF->setPosition(550, 10);
+    gColorSelectorF->setPosition(550, 20);
     gColorSelectorF->setTheme(new ofxDatGuiThemeSoundingBrush());
     gColorSelectorF->onSliderEvent(this, &ofApp::onSliderEvent);
     
@@ -50,7 +50,7 @@ void ofApp::setup(){
     
     brushWidthFromGui = 20.0;
     gBrushWidth = new ofxDatGuiSlider("Character", 1, 100);
-    gBrushWidth->setPosition(1100, 10);
+    gBrushWidth->setPosition(1100, 20);
     //    gBrushWidth->setWidth(100, 100);
     gBrushWidth->onSliderEvent(this, &ofApp::onSliderEvent);
     gBrushWidth->setValue(brushWidthFromGui);
@@ -68,7 +68,7 @@ void ofApp::setup(){
     gBrushErasers->addButton("Last");
     gBrushErasers->addButton("Palette");
     gBrushErasers->addButton("Canvas");
-    gBrushErasers->setPosition(1650, 10);
+    gBrushErasers->setPosition(1650, 20);
     gBrushErasers->setTheme(new ofxDatGuiThemeSoundingBrush());
     gBrushErasers->setWidth(ofGetWidth() - 1650);
     gBrushErasers->onButtonEvent(this, &ofApp::onButtonEvent);
