@@ -20,12 +20,12 @@ void ofApp::setup(){
     
     
     //DATGUISTUFF.
-    gBrushOptions = {"ACROSS", "UPWARDS", "THREE WAVEFORMS", "KAR+PAINT", "PARTICLES", "CRACKLER", "GESTURE"};
+    gBrushOptions = {"Across", "Line", "Three Waves", "Kar+Paint", "Particles", "Crackler", "Gesture"};
     gBrushSelector = new ofxDatGuiDropdown("Brush selector", gBrushOptions);
-    gBrushSelector->setPosition(0, 0);
+    gBrushSelector->setPosition(0, 10);
     //    gBrushSelector->setWidth(100);
     gBrushSelector->select(gBrushOptions.size() - 1);
-    //    gBrushSelector->setTheme(new ofxDatGuiThemeWireframe());
+    gBrushSelector->setTheme(new ofxDatGuiThemeSoundingBrush());
     gBrushSelector->onDropdownEvent(this, &ofApp::onDropDownEvent);
     selectedBrushFromGui = 6; //placeholder
     
@@ -39,8 +39,8 @@ void ofApp::setup(){
     gColorSelectorF->addSlider("Hue", 0, 360, 180);
     gColorSelectorF->addSlider("Saturation", 0, 100, 50);
     gColorSelectorF->addSlider("Brightness", 0, 1, 0.5);
-    gColorSelectorF->setPosition(550, 0);
-    //    gColorSelectorF->setTheme(new ofxDatGuiThemeWireframe());
+    gColorSelectorF->setPosition(550, 10);
+    gColorSelectorF->setTheme(new ofxDatGuiThemeSoundingBrush());
     gColorSelectorF->onSliderEvent(this, &ofApp::onSliderEvent);
     
     //    gColorPicker = new ofxDatGuiColorPicker("Select Color!", ofColor::yellow);
@@ -50,17 +50,17 @@ void ofApp::setup(){
     
     brushWidthFromGui = 20.0;
     gBrushWidth = new ofxDatGuiSlider("Character", 1, 100);
-    gBrushWidth->setPosition(1100, 0);
+    gBrushWidth->setPosition(1100, 10);
     //    gBrushWidth->setWidth(100, 100);
     gBrushWidth->onSliderEvent(this, &ofApp::onSliderEvent);
     gBrushWidth->setValue(brushWidthFromGui);
-    //    gBrushWidth->setTheme(new ofxDatGuiThemeWireframe());
+    gBrushWidth->setTheme(new ofxDatGuiThemeSoundingBrush());
     
     /*
      gClearScreen = new ofxDatGuiButton("Clear canvas");
      gClearScreen->setPosition(1650, 0);
      gClearScreen->setWidth(ofGetWidth() - 1650);
-     //    gClearScreen->setTheme(new ofxDatGuiThemeWireframe());
+     //    gClearScreen->setTheme(new ofxDatGuiThemeSoundingBrush());
      gClearScreen->onButtonEvent(this, &ofApp::onButtonEvent);
      */
     
@@ -68,7 +68,8 @@ void ofApp::setup(){
     gBrushErasers->addButton("Last");
     gBrushErasers->addButton("Palette");
     gBrushErasers->addButton("Canvas");
-    gBrushErasers->setPosition(1650, 0);
+    gBrushErasers->setPosition(1650, 10);
+    gBrushErasers->setTheme(new ofxDatGuiThemeSoundingBrush());
     gBrushErasers->setWidth(ofGetWidth() - 1650);
     gBrushErasers->onButtonEvent(this, &ofApp::onButtonEvent);
     
@@ -263,6 +264,18 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
         bGuiMode = false;
     }
     
+//    if(gBrushSelector->getIsExpanded()){
+//        if (gBrushSelector->hitTest(touch) == false) gBrushSelector->collapse();
+//    }
+//
+//    if(gBrushErasers->getIsExpanded()){
+//        if (gBrushErasers->hitTest(touch) == false) gBrushErasers->collapse();
+//    }
+//
+//    if(gColorSelectorF->getIsExpanded()){
+//        if (gColorSelectorF->hitTest(touch) == false) gColorSelectorF->collapse();
+//    }
+    
     if(!bGuiMode) bFingerDown = true;
     if(selectedBrushFromGui == 6) return;
     
@@ -278,7 +291,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     break;
                 case 1:
                     //b.setup("pd/addsin.pd", 1);
-                    b.setup("pd/sinxy.pd", 2, "0", "0");
+                    b.setup("pd/sinenv.pd", 2, "0", "0");
                     break;
                 case 2:
                     //                    b.setup("pd/granular-redux.pd", 0);
@@ -449,7 +462,7 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
                     //pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 700, 200, 500, true));
                     //pd.addFloat(ofMap(currentBrush->getJitterOnMinorAxis(), 0, 800, 0.1, 0.3, true));
                     //pd.addFloat(ofClamp(pinchParam, 0.1, 1));
-                    pd.addFloat(ofMap(currentBrush->getLastVertex().y, ofGetHeight(), 0.0, 80, 1000));
+                    pd.addFloat(ofMap(currentBrush->getLastVertex().x, ofGetWidth(), 0.0, 80, 1000));
                     pd.addFloat(ofClamp(pinchParam, 0.1, 1));
                     break;
                 case 2:
@@ -539,7 +552,10 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
                 //do stuff.
                 break;
             case 1:
-                //do stuff.
+                float nv;
+                nv = brushes[brushes.size()-1].getNumVertices();
+                nv = ofClamp(nv, 100, 3000);
+                pd.addFloat(nv);
                 break;
             case 2:
                 //do stuff.
@@ -812,10 +828,13 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
     
     if(label == "Last"){
         clearLastBrush();
+        gBrushErasers->collapse();
     } else if (label == "Palette"){
         clearPalette();
+        gBrushErasers->collapse();
     } else if (label == "Canvas"){
         clearCanvas();
+        gBrushErasers->collapse();
         
         //        if (timer.isThreadRunning() == true){
         //            timer.stopThread();
