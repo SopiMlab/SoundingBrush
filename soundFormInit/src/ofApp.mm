@@ -20,7 +20,7 @@ void ofApp::setup(){
     
     
     //DATGUISTUFF.
-    gBrushOptions = {"ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "GESTURE"};
+    gBrushOptions = {"ACROSS", "UPWARDS", "THREE WAVEFORMS", "KAR+PAINT", "PARTICLES", "CRACKLER", "GESTURE"};
     gBrushSelector = new ofxDatGuiDropdown("Brush selector", gBrushOptions);
     gBrushSelector->setPosition(0, 0);
     //    gBrushSelector->setWidth(100);
