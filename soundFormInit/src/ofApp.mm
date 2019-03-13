@@ -429,7 +429,7 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
             auto distanceToLastVertex = ofDist(lastVertex.x, lastVertex.y, firstTouch.x, firstTouch.y);
             
             //Add points to the last brush instance.
-            if(distanceToLastVertex > 10) currentBrush->addPoint(firstTouch);
+            if(distanceToLastVertex > 3) currentBrush->addPoint(firstTouch);
             
             //Updates go to $0-fromOF
             pd.startMessage();
