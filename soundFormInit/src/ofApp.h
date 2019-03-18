@@ -172,6 +172,7 @@ class ofApp : public ofxiOSApp, public PdReceiver, public PdMidiReceiver {
     int qKillIndex;
     
     vector<int> queuedKillList;
+    ofMutex scopeLock;
 };
 
 

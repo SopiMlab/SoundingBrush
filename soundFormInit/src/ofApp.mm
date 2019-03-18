@@ -117,7 +117,7 @@ void ofApp::setup(){
     brushPatches.push_back(p);
     
     dollarIndexes.resize(8);
-    storageLimits = {4, 4, 2, 4, 2, 2, 1, 1, 1};
+    storageLimits = {6, 4, 2, 4, 2, 2, 1, 1, 1};
     
     qKill = false;
     
@@ -125,6 +125,7 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    ofScopedLock lock(scopeLock);
     
     gBrushSelector->update();
     //    gColorPicker->update();
@@ -301,17 +302,19 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     b.setup("pd/karplus.pd", 2, "1", "2");
                     break;
                 case 4:
-                    b.setup("pd/granular_andy.pd", 2, "4", "4");
+                    b.setup("pd/granular_andy.pd", 1, "4", "4");
+                    brushWidthFromGui *= 1.5; //override to make fatter
                     break;
                 case 5:
-                    b.setup("pd/crackture.pd", 2, "5", "5");
+                    b.setup("pd/crackture.pd", 1, "5", "5");
+                    brushWidthFromGui *= 1.25; //same as above
                     break;
-                case 6:
-                    b.setup("pd/BasslineR.pd", 1);
-                    break;
-                case 7:
-                    b.setup("pd/testadsr.pd", 0);
-                    break;
+//                case 6:
+//                    b.setup("pd/BasslineR.pd", 1);
+//                    break;
+//                case 7:
+//                    b.setup("pd/testadsr.pd", 0);
+//                    break;
             }
             
             b.setVariables(brushWidthFromGui, colorFromGui); //Setup the colour and width of the brush.
@@ -442,7 +445,8 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
             auto distanceToLastVertex = ofDist(lastVertex.x, lastVertex.y, firstTouch.x, firstTouch.y);
             
             //Add points to the last brush instance.
-            if(distanceToLastVertex > 3) currentBrush->addPoint(firstTouch);
+            if(distanceToLastVertex > 6) currentBrush->addPoint(firstTouch);
+//            cout << currentBrush->getNumVertices() << endl;
             
             //Updates go to $0-fromOF
             pd.startMessage();
