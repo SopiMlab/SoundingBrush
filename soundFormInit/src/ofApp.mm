@@ -466,7 +466,7 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
                     //pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 700, 200, 500, true));
                     //pd.addFloat(ofMap(currentBrush->getJitterOnMinorAxis(), 0, 800, 0.1, 0.3, true));
                     //pd.addFloat(ofClamp(pinchParam, 0.1, 1));
-                    pd.addFloat(ofMap(currentBrush->getLastVertex().x, ofGetWidth(), 0.0, 80, 1000));
+                    pd.addFloat(ofMap(currentBrush->getLastVertex().x, 0.0, ofGetWidth(), 80, 1000));
                     pd.addFloat(ofClamp(pinchParam, 0.1, 1));
                     break;
                 case 2:
