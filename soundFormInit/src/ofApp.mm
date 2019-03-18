@@ -169,18 +169,18 @@ void ofApp::update(){
         if(timer.isThreadRunning()){
             //do nothing, wait for envelop to finish!
         } else {
-            cout << "Thread done counting at: " << ofGetElapsedTimeMillis() << endl;
+//            cout << "Thread done counting at: " << ofGetElapsedTimeMillis() << endl;
             
             int killDString = brushPatches[qKillIndex].dollarZero();
             
-            cout << "Closing patch" << endl;
+//            cout << "Closing patch" << endl;
             pd.closePatch(brushPatches[qKillIndex]);
-            cout << "Erasing from vector" << endl;
+//            cout << "Erasing from vector" << endl;
             brushPatches.erase(brushPatches.begin() + qKillIndex);
-            cout << "Erasing brush" << endl;
+//            cout << "Erasing brush" << endl;
             brushes.erase(brushes.begin() + qKillIndex - 1); //qKillIndex is always going to be offset by one thanks to the gesture brush.
             
-            cout << "Did PD + Brush routine" << endl;
+//            cout << "Did PD + Brush routine" << endl;
             
             int x, y;
             //also find the relevant index and delete it from the dollar indexes...
@@ -343,7 +343,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                 //                dollarIndexes[selectedBrushFromGui].erase(dollarIndexes[selectedBrushFromGui].begin());
             }
             
-            std::cout << "Brushpatches size is now: " << brushPatches.size() << endl;
+//            std::cout << "Brushpatches size is now: " << brushPatches.size() << endl;
             
             //Map brush size to frequency
             float f = nlMap(brushWidthFromGui, 1.f, 150.f, 4186.009f, 27.5f, .3); //frequency mapping.
@@ -500,12 +500,12 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
                     dd = ofMap(d, 0, 100, 0, .5);
                     
                     if (d > .1){
-                        cout << "adding" << endl;
+//                        cout << "adding" << endl;
                         filterParam += dd;
                         filterParam *= filterParam;
                         env = 1;
                     } else {
-                        cout << "zeroing out!" << endl;
+//                        cout << "zeroing out!" << endl;
                         filterParam -= 0.1;
                         //                    filterParam = 0;
                         env = 0;
@@ -662,7 +662,7 @@ void ofApp::print(const std::string& message) {
 
 //--------------------------------------------------------------
 void ofApp::receiveBang(const std::string& dest){
-    cout << "OF: Bang " << dest << endl;
+//    cout << "OF: Bang " << dest << endl;
 }
 
 //--------------------------------------------------------------
@@ -737,19 +737,19 @@ void ofApp::closePatchByDollarString(int _dString){
     //
     //    cout << "Removed element: " << index << endl;
     
-    cout << ofToString(_dString) << endl;
+//    cout << ofToString(_dString) << endl;
     
     if(timer.isThreadRunning() == false){
-        cout << "Starting timer to kill patch" << endl;
+//        cout << "Starting timer to kill patch" << endl;
         qKillIndex = index;
         qKill = true;
         timer.startThread();
     } else {
-        cout << "Timer is running to adding to queue" << endl;
+//        cout << "Timer is running to adding to queue" << endl;
         queuedKillList.push_back(index);
     }
     
-    cout << "Thread started at: " << ofGetElapsedTimeMillis() << endl;
+//    cout << "Thread started at: " << ofGetElapsedTimeMillis() << endl;
     
 }
 
@@ -879,7 +879,7 @@ void ofApp::clearPalette(){
     
     //    dollarIndexes[selectedBrushFromGui].clear();
     
-    cout << "Palette cleared" << endl;
+//    cout << "Palette cleared" << endl;
 }
 
 //--------------------------------------------------------------
@@ -900,7 +900,7 @@ void ofApp::clearLastBrush(){
     
     //    dollarIndexes[selectedBrushFromGui].pop_back();
     
-    cout << "Last brush cleared" << endl;
+//    cout << "Last brush cleared" << endl;
     
 }
 //--------------------------------------------------------------
