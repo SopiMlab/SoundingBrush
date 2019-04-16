@@ -11,7 +11,7 @@ Additional dependencies: ofxCoreMotion, ofxDatGui, ofxPd.
 Note: ofxDatGui needs to be modified to use on the iPad, you can grab a (tested) fork with those modifications as well as some theme tweaks for this project from [here](https://github.com/sourya-sen/ofxDatGui/tree/iosfriendly).
 
 # Installing
-If you don't have openFrameworks already, install the iOS version of openFrameworks and follow instructions from [here]().
+If you don't have openFrameworks already, install the iOS version of openFrameworks and follow instructions from [here](https://openframeworks.cc/download/).
 
 Clone this repository and check the folder hierarchy of the app follows the openFrameworks guidelines.
 
@@ -97,3 +97,8 @@ pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOFinit")
 Therefore, when implementing custom Pd patches, be sure to update the functions within touchUp(), touchMoved() and touchUp() depending on the requirements. The setup function of the selected brush will load the relevant Pd patch.
 
 Communication from the the Pure Data patch to the openFrameworks application is also implemented, in a naive manner. The Pure Data patch can ask the openFrameworks application to close the patch and remove the brush instance by sending its dollar zero string value to `s toOFKill` (see the Karplus patch for details). Streaming information has also been implemented but not in its entirety and lists can be sent to `s toOFStream`. The list should always contain the dollar zero string value as the first variable so that the openFrameworks application can tie it to the relevant instance.
+
+## Other important features
+Due to the limitations on the iPad, certain memory management features have been implemented. Primarily, there are limits set on how many instances of each brush can exist before a threaded function takes over to clear older instances. Note that this is handled on a per brush basis and not on a global scale. This can be changed in the setup function of the application with this line `storageLimits = {6, 4, 2, 4, 2, 2, 1, 1, 1};`. If more brushes are being added, be sure to add additional entries to this array. Again, for memeory management, dollar zero strings of the Pure Data patches are maintained within a vector of vector. This may need to be resized as well if new brushes are being added to the program.
+
+The Kar+Paint brush is the only brush that is tuned to discreet MIDI notes. The `rootNote` variable in the setup function determines the root note of the scale and the `intervals `

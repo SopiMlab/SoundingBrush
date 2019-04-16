@@ -7,7 +7,7 @@
 
 //Addons
 #include "ofxPd.h"
-#include "ofxGui.h"
+//#include "ofxGui.h"
 #include "ofxCoreMotion.h"
 #include "ofxDatGui.h"
 

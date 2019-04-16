@@ -3,7 +3,7 @@
 
 //TODO: Patch names? Methods of sending params?
 
-#include "ofxCurve.h"
+//#include "ofxCurve.h"
 
 static glm::vec2 lerp( const glm::vec2 A, const glm::vec2 B, float t ){
     return A*t + B*(1.0f-t) ;
