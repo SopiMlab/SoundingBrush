@@ -332,8 +332,6 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             
 //            std::cout << "Brushpatches size is now: " << brushPatches.size() << endl;
             
-            //Map brush size to frequency
-            float f = nlMap(brushWidthFromGui, 1.f, 150.f, 4186.009f, 27.5f, .3); //frequency mapping.
             
             //This will initialize the brush/synth combo.
             pd.startMessage();
@@ -384,7 +382,7 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
 void ofApp::touchMoved(ofTouchEventArgs & touch){
     
     bFingerDown = true;
-    cycles ++;
+    cycles ++; //This is a bug in 0f 10.0.1 where touchMoved is evaluted twice, this is to solve that.
     
     if(cycles%2 == 0){
         
