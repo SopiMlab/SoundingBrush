@@ -11,23 +11,21 @@ void ofApp::setup(){
     ofEnableSmoothing();
     ofEnableAntiAliasing();
     ofDisableArbTex();
-    //    ofEnableDepthTest();
-    //    ofSetOrientation(OFXIOS_ORIENTATION_LANDSCAPE_LEFT);
-    
+    //ofEnableDepthTest();
+    //ofSetOrientation(OFXIOS_ORIENTATION_LANDSCAPE_LEFT);
     
     ofRegisterTouchEvents(this);
     ofxiOSAlerts.addListener(this);
-    
     
     //DATGUISTUFF.
     gBrushOptions = {"Across", "Line", "Three Waves", "Kar+Paint", "Particles", "Crackler", "Gesture"};
     gBrushSelector = new ofxDatGuiDropdown("Brush selector", gBrushOptions);
     gBrushSelector->setPosition(0, 20);
-    //    gBrushSelector->setWidth(100);
+    //gBrushSelector->setWidth(100);
     gBrushSelector->select(gBrushOptions.size() - 1);
     gBrushSelector->setTheme(new ofxDatGuiThemeSoundingBrush());
     gBrushSelector->onDropdownEvent(this, &ofApp::onDropDownEvent);
-    selectedBrushFromGui = 6; //placeholder -> make sure this corresponds to gBrushSelector->select(index) otherwise nasty things will happen /s
+    selectedBrushFromGui = gBrushOptions.size() - 1; //placeholder -> make sure this corresponds to gBrushSelector->select(index) otherwise nasty things will happen
     
     hue = 127;
     sat = 127;
@@ -43,15 +41,15 @@ void ofApp::setup(){
     gColorSelectorF->setTheme(new ofxDatGuiThemeSoundingBrush());
     gColorSelectorF->onSliderEvent(this, &ofApp::onSliderEvent);
     
-    //    gColorPicker = new ofxDatGuiColorPicker("Select Color!", ofColor::yellow);
-    //    gColorPicker->setPosition(600, 0);
-    //    gColorPicker->ofxDatGuiComponent::setWidth(100, 100);
-    //    gColorPicker->onColorPickerEvent(this, &ofApp::onColorPickerEvent);
+//    gColorPicker = new ofxDatGuiColorPicker("Select Color!", ofColor::yellow);
+//    gColorPicker->setPosition(600, 0);
+//    gColorPicker->ofxDatGuiComponent::setWidth(100, 100);
+//    gColorPicker->onColorPickerEvent(this, &ofApp::onColorPickerEvent);
     
     brushWidthFromGui = 20.0;
     gBrushWidth = new ofxDatGuiSlider("Character", 1, 100);
     gBrushWidth->setPosition(1100, 20);
-    //    gBrushWidth->setWidth(100, 100);
+//    gBrushWidth->setWidth(100, 100);
     gBrushWidth->onSliderEvent(this, &ofApp::onSliderEvent);
     gBrushWidth->setValue(brushWidthFromGui);
     gBrushWidth->setTheme(new ofxDatGuiThemeSoundingBrush());
@@ -116,7 +114,8 @@ void ofApp::setup(){
     Patch p = pd.openPatch("pd/SampleSynth.pd");
     brushPatches.push_back(p);
     
-    dollarIndexes.resize(8);
+    //These are for memory management.
+    dollarIndexes.resize(8); //Number of arrays for number of instances.
     storageLimits = {6, 4, 2, 4, 2, 2, 1, 1, 1};
     
     qKill = false;
@@ -147,7 +146,7 @@ void ofApp::update(){
     coreMotion.update();
     accel = coreMotion.getAccelerometerData();
     
-    if(selectedBrushFromGui == 6){
+    if(selectedBrushFromGui == 6){ //6 == the gesture brush.
         if(bFingerDown == true){
             pd.startMessage();
             
@@ -157,7 +156,6 @@ void ofApp::update(){
             pd.addFloat(bFingerDown);
             pd.addFloat(firstTouch.x);
             pd.addFloat(firstTouch.y);
-            
             
             pd.finishList(brushPatches[0].dollarZeroStr()+"-fromOF");
         }
@@ -170,16 +168,13 @@ void ofApp::update(){
             //do nothing, wait for envelop to finish!
         } else {
 //            cout << "Thread done counting at: " << ofGetElapsedTimeMillis() << endl;
-            
             int killDString = brushPatches[qKillIndex].dollarZero();
-            
 //            cout << "Closing patch" << endl;
             pd.closePatch(brushPatches[qKillIndex]);
 //            cout << "Erasing from vector" << endl;
             brushPatches.erase(brushPatches.begin() + qKillIndex);
 //            cout << "Erasing brush" << endl;
             brushes.erase(brushes.begin() + qKillIndex - 1); //qKillIndex is always going to be offset by one thanks to the gesture brush.
-            
 //            cout << "Did PD + Brush routine" << endl;
             
             int x, y;
@@ -189,7 +184,7 @@ void ofApp::update(){
                     if(killDString == dollarIndexes[i][j]){
                         x = i;
                         y = j;
-                        //                        cout << "found x: " << x << " and y: " << y << endl;
+//                        cout << "found x: " << x << " and y: " << y << endl;
                     }
                 }
             }
@@ -291,11 +286,9 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     b.setup("pd/sinxy.pd", 2, "0", "0");
                     break;
                 case 1:
-                    //b.setup("pd/addsin.pd", 1);
                     b.setup("pd/sinenv.pd", 2, "0", "0");
                     break;
                 case 2:
-                    //                    b.setup("pd/granular-redux.pd", 0);
                     b.setup("pd/basslinergb.pd", 1, "3", "3");
                     break;
                 case 3:
@@ -303,18 +296,12 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
                     break;
                 case 4:
                     b.setup("pd/granular_andy.pd", 1, "4", "4");
-                    brushWidthFromGui *= 1.25; //override to make fatter
+//                    brushWidthFromGui *= 1.25; //override to make fatter / Note: wrong way, it accumulates for successive instances
                     break;
                 case 5:
                     b.setup("pd/crackture.pd", 1, "5", "5");
-                    brushWidthFromGui *= 1.1; //same as above
+//                    brushWidthFromGui *= 1.1; //same as above / Note: wrong way, see above.
                     break;
-//                case 6:
-//                    b.setup("pd/BasslineR.pd", 1);
-//                    break;
-//                case 7:
-//                    b.setup("pd/testadsr.pd", 0);
-//                    break;
             }
             
             b.setVariables(brushWidthFromGui, colorFromGui); //Setup the colour and width of the brush.
@@ -347,7 +334,6 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             
             //Map brush size to frequency
             float f = nlMap(brushWidthFromGui, 1.f, 150.f, 4186.009f, 27.5f, .3); //frequency mapping.
-            int fm = ofMap(brushWidthFromGui, 1.f, 150.f, 108, 21); //midi mapping
             
             //This will initialize the brush/synth combo.
             pd.startMessage();
@@ -355,44 +341,26 @@ void ofApp::touchDown(ofTouchEventArgs & touch){
             //next part depends on the kind of brush...
             //init goes to $0-fromOFinit
             switch(selectedBrushFromGui){
-                case 0: //sinewithamp, needs just one parameter.
-                    //                    pd.addFloat(f);
+                case 0:
+                    //does not need any initialisation variables.
                     break;
-                case 1: //detune chorus, need midi note, type of waveform, index and ratio.
-                    //                    pd.addFloat(fm);
-                    //                    pd.addFloat(ofRandom(3)); //selects waveform randomly :)
-                    //                    pd.addFloat(200);
-                    //                    pd.addFloat(.1); //These two are the lowest values of index and ratio, sending to initialize them.
-                    //                    pd.addFloat(255.0/guiColor->r);
-                    //                    pd.addFloat(255.0/guiColor->g);
-                    //                    pd.addFloat(255.0/guiColor->b);
+                case 1:
+                    //does not need any initialisation variables.
                     break;
                 case 2:
-                    //Do stuff.
-                    //                    pd.addFloat(100); //???
-                    
                     pd.addFloat(hue/255.0);
                     pd.addFloat(sat/255.0);
                     pd.addFloat(1.0 - bright/255.0);
                     pd.addFloat(brushWidthFromGui * 10); //not 100% why I'm doing this anymore 13.2
                     break;
                 case 3:
-                    //Do stuff.
+                    //does not need any initialisation variables.
                     break;
                 case 4:
                     pd.addFloat(ofMap(brushWidthFromGui, 1, 100, 2, 0.1, true));
                     break;
                 case 5:
-                    //Do stuff.
-                    break;
-                case 6:
-                    pd.addFloat(f);
-                    pd.addFloat(brushWidthFromGui * 10);
-                    pd.addFloat(ofRandomuf());
-                    break;
-                case 7:
-                    //do stuff.
-                    filterParam = 0;
+                    //does not need any initialization variables.
                     break;
             }
             
@@ -454,28 +422,19 @@ void ofApp::touchMoved(ofTouchEventArgs & touch){
             //Again, switch according to brush type!
             switch(selectedBrushFromGui){
                 case 0:
-                    //pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 800, 0, 1, true));
-                    //pd.addFloat(ofMap(currentBrush->getLastVertex().x, 0, ofGetWidth(), 80, 1000));
-                    //pd.addFloat(ofMap(currentBrush->getLastVertex().x, 0, ofGetWidth(), 10 * (150 - guiWidth), 30 * (150 - guiWidth)));
-                    //pd.addFloat(ofMap(currentBrush->getLastVertex().x, 0, ofGetWidth(), 10 * (150 - guiWidth), 30 * (150 - guiWidth)));
-                    //pd.addFloat(ofMap(currentBrush->getLastVertex().y, 0, ofGetHeight(), 10 * (150 - guiWidth), 30 * (150 - guiWidth)));
                     pd.addFloat(ofMap(currentBrush->getLastVertex().x, 0.0, ofGetWidth(), 80, 1000));
                     pd.addFloat(ofClamp(pinchParam, 0.1, 1));
                     break;
                 case 1:
-                    //pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 700, 200, 500, true));
-                    //pd.addFloat(ofMap(currentBrush->getJitterOnMinorAxis(), 0, 800, 0.1, 0.3, true));
-                    //pd.addFloat(ofClamp(pinchParam, 0.1, 1));
                     pd.addFloat(ofMap(currentBrush->getLastVertex().x, 0.0, ofGetWidth(), 80, 1000));
                     pd.addFloat(ofClamp(pinchParam, 0.1, 1));
                     break;
                 case 2:
-                    //Do stuff.
                     pd.addFloat(ofMap(currentBrush->getLastVertex().y, ofGetHeight(), 0, 80, 1000));
                     pd.addFloat(ofMap(currentBrush->getLastVertex().x, 0.0, ofGetWidth(), 1.0, 3.0));
                     break;
                 case 3:
-                    //Do stuff.
+                    //No streaming data while drawing.
                     break;
                 case 4:
                     pd.addFloat(ofMap(currentBrush->getNumVertices(), 1, 1000, 0, 2000));
@@ -553,7 +512,7 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
         pd.startMessage();
         switch(selectedBrushFromGui){
             case 0:
-                //do stuff.
+                //nothing to send.
                 break;
             case 1:
                 float nv;
@@ -562,7 +521,7 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
                 pd.addFloat(nv);
                 break;
             case 2:
-                //do stuff.
+                //nothing to send.
                 float v;
                 v = brushes[brushes.size()-1].getNumVertices();
                 pd.addFloat(v);
@@ -571,29 +530,21 @@ void ofApp::touchUp(ofTouchEventArgs & touch){
                 float mappedValue, karpValue;
                 //map the number of vertices to the range of notes available.
                 mappedValue = brushes[brushes.size()-1].getNumVertices();
-                //                cout << "RAW: " << mappedValue << endl;
+//                cout << "RAW: " << mappedValue << endl;
                 mappedValue = ofClamp(mappedValue, 5, 100);
                 mappedValue = ofMap(mappedValue, 5, 100, 0, 15);
-                //                cout << "MAPPED: " << mappedValue << endl;
+//                cout << "MAPPED: " << mappedValue << endl;
                 karpValue = rootNote + tuningRange[int(mappedValue)];
-                //                karpValue = brushes[brushes.size()-1].getNumVertices();
-                //                karpValue = ofMap(karpValue, 0, 1000, 40, 70);
-                //                cout << "NOTE: " << karpValue << endl;
+//                karpValue = brushes[brushes.size()-1].getNumVertices();
+//                karpValue = ofMap(karpValue, 0, 1000, 40, 70);
+//                cout << "NOTE: " << karpValue << endl;
                 pd.addFloat(karpValue);
                 break;
             case 4:
-                //do stuff.
+                //nothing to send.
                 break;
             case 5:
-                //do stuff.
-                break;
-            case 6:
-                //                float v;
-                //                v = brushes[brushes.size()-1].getNumVertices();
-                //                pd.addFloat(v);
-                break;
-            case 7:
-                pd.addFloat(1.0); //value doesn't matter.
+                //nothing to send.
                 break;
         }
         
@@ -721,23 +672,14 @@ void ofApp::closePatchByDollarString(int _dString){
     int index = -1;
     
     for(int i = 0; i < brushPatches.size(); i++){
-        //        cout << brushPatches[i].dollarZeroStr() << endl;
+//        cout << brushPatches[i].dollarZeroStr() << endl;
         if(brushPatches[i].dollarZeroStr() == ofToString(_dString)){
             index = i;
-            //            cout << "Index updated to: " << index << endl;
+//            cout << "Index updated to: " << index << endl;
         }
     }
     
     pd.sendBang(brushPatches[index].dollarZeroStr() + "-OFKillMessage");
-    //    ofSleepMillis(99);
-    //    pd.closePatch(brushPatches[index]);
-    
-    //    brushPatches.erase(brushPatches.begin() + index);
-    //    brushes.erase(brushes.begin() + index);
-    //
-    //    cout << "Removed element: " << index << endl;
-    
-//    cout << ofToString(_dString) << endl;
     
     if(timer.isThreadRunning() == false){
 //        cout << "Starting timer to kill patch" << endl;
@@ -840,24 +782,6 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
         clearCanvas();
         gBrushErasers->collapse();
         
-        //        if (timer.isThreadRunning() == true){
-        //            timer.stopThread();
-        //            qKill = false;
-        //            queuedKillList.clear();
-        //        }
-        //
-        //        if(brushPatches.size() > 0){
-        //            for(int i = 0; i<brushPatches.size(); ++i){
-        //                pd.closePatch(brushPatches[i]);
-        //            }
-        //
-        //            dollarIndexes.clear();
-        //            dollarIndexes.resize(8);
-        //            brushes.clear();
-        //            brushPatches.clear();
-        //            std::cout << "All patches cleared!" << endl;
-        //        }
-        
     }
     
 }
@@ -865,11 +789,11 @@ void ofApp::onButtonEvent(ofxDatGuiButtonEvent e){
 //--------------------------------------------------------------
 void ofApp::clearPalette(){
     
-    //    if (timer.isThreadRunning() == true){
-    //        timer.stopThread();
-    //        qKill = false;
-    //        queuedKillList.clear();
-    //    }
+//    if (timer.isThreadRunning() == true){
+//        timer.stopThread();
+//        qKill = false;
+//        queuedKillList.clear();
+//    }
     
     if (selectedBrushFromGui == 6) return;
     
@@ -877,8 +801,7 @@ void ofApp::clearPalette(){
         closePatchByDollarString(dollarIndexes[selectedBrushFromGui][i]);
     }
     
-    //    dollarIndexes[selectedBrushFromGui].clear();
-    
+//    dollarIndexes[selectedBrushFromGui].clear();
 //    cout << "Palette cleared" << endl;
 }
 
@@ -888,18 +811,18 @@ void ofApp::clearLastBrush(){
     if (dollarIndexes[selectedBrushFromGui].size() == 0) return;
     if (selectedBrushFromGui == 6) return;
     
-    //    if (timer.isThreadRunning() == true){
-    //        timer.stopThread();
-    //        qKill = false;
-    //        queuedKillList.clear();
-    //    }
+//    if (timer.isThreadRunning() == true){
+//        timer.stopThread();
+//        qKill = false;
+//        queuedKillList.clear();
+//    }
     
     int dollarString = dollarIndexes[selectedBrushFromGui][dollarIndexes[selectedBrushFromGui].size() - 1];
     
     closePatchByDollarString(dollarString);
     
-    //    dollarIndexes[selectedBrushFromGui].pop_back();
-    
+//    dollarIndexes[selectedBrushFromGui].pop_back();
+//
 //    cout << "Last brush cleared" << endl;
     
 }
