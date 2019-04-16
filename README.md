@@ -60,3 +60,36 @@ Pure Data patches are embedded within the application using the ofxPd addon. Ess
 When a new brush is initialized, the Pd patch which is part of the setup function is immediately executed. There are also parameters passed on to the Pure Data patch primarily in three different places - when a brush is initialized, when touch is moving and when touch is cancelled or moved up. Each of these three are separate receive boxes within the Pure Data patch and the parameters are sent as lists from within the main application.
 
 For example, during touchDown, parameters are sent to `r $0-fromOFinit`. During drawing, parameters are sent to `r $0-fromOF` and when touch is cancelled, they are received within `r $0-fromOFeoc`.
+
+From within the main application, these are handled on a case by case basis. For example, the current implementation on `touchDown()` looks like this:
+```
+pd.startMessage();
+           
+ //next part depends on the kind of brush...
+ //init goes to $0-fromOFinit
+ switch(selectedBrushFromGui){
+     case 0:
+         //does not need any initialisation variables.
+         break;
+     case 1:
+         //does not need any initialisation variables.
+         break;
+     case 2:
+         pd.addFloat(hue/255.0);
+         pd.addFloat(sat/255.0);
+         pd.addFloat(1.0 - bright/255.0);
+         pd.addFloat(brushWidthFromGui * 10); //not 100% why I'm doing this anymore 13.2
+         break;
+     case 3:
+         //does not need any initialisation variables.
+         break;
+     case 4:
+         pd.addFloat(ofMap(brushWidthFromGui, 1, 100, 2, 0.1, true));
+         break;
+     case 5:
+         //does not need any initialization variables.
+         break;
+ }
+
+ pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOFinit");
+```
