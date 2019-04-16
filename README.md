@@ -64,32 +64,36 @@ For example, during touchDown, parameters are sent to `r $0-fromOFinit`. During 
 From within the main application, these are handled on a case by case basis. For example, the current implementation on `touchDown()` looks like this:
 ```
 pd.startMessage();
-           
- //next part depends on the kind of brush...
- //init goes to $0-fromOFinit
- switch(selectedBrushFromGui){
-     case 0:
-         //does not need any initialisation variables.
-         break;
-     case 1:
-         //does not need any initialisation variables.
-         break;
-     case 2:
-         pd.addFloat(hue/255.0);
-         pd.addFloat(sat/255.0);
-         pd.addFloat(1.0 - bright/255.0);
-         pd.addFloat(brushWidthFromGui * 10); //not 100% why I'm doing this anymore 13.2
-         break;
-     case 3:
-         //does not need any initialisation variables.
-         break;
-     case 4:
-         pd.addFloat(ofMap(brushWidthFromGui, 1, 100, 2, 0.1, true));
-         break;
-     case 5:
-         //does not need any initialization variables.
-         break;
- }
 
- pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOFinit");
+//next part depends on the kind of brush...
+//init goes to $0-fromOFinit
+switch(selectedBrushFromGui){
+   case 0:
+       //does not need any initialisation variables.
+       break;
+   case 1:
+       //does not need any initialisation variables.
+       break;
+   case 2:
+       pd.addFloat(hue/255.0);
+       pd.addFloat(sat/255.0);
+       pd.addFloat(1.0 - bright/255.0);
+       pd.addFloat(brushWidthFromGui * 10); //not 100% why I'm doing this anymore 13.2
+       break;
+   case 3:
+       //does not need any initialisation variables.
+       break;
+   case 4:
+       pd.addFloat(ofMap(brushWidthFromGui, 1, 100, 2, 0.1, true));
+       break;
+   case 5:
+       //does not need any initialization variables.
+       break;
+}
+
+pd.finishList(brushPatches[brushPatches.size()-1].dollarZeroStr()+"-fromOFinit");
 ```
+
+Therefore, when implementing custom Pd patches, be sure to update the functions within touchUp(), touchMoved() and touchUp() depending on the requirements. The setup function of the selected brush will load the relevant Pd patch.
+
+Communication from the the Pure Data patch to the openFrameworks application is also implemented, in a naive manner. The Pure Data patch can ask the openFrameworks application to close the patch and remove the brush instance by sending its dollar zero string value to `s toOFKill` (see the Karplus patch for details). Streaming information has also been implemented but not in its entirety and lists can be sent to `s toOFStream`. The list should always contain the dollar zero string value as the first variable so that the openFrameworks application can tie it to the relevant instance.
